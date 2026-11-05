@@ -1,0 +1,9 @@
+{
+  "tool": "plan-review",
+  "files": [
+    { "file": "plan-review.md", "target": "commands/plan-review.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}

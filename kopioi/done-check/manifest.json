@@ -1,0 +1,9 @@
+{
+  "tool": "done-check",
+  "files": [
+    { "file": "done-check.md", "target": "commands/done-check.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}

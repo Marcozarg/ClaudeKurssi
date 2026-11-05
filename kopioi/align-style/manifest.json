@@ -1,0 +1,9 @@
+{
+  "tool": "align-style",
+  "files": [
+    { "file": "align-style.md", "target": "commands/align-style.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}

@@ -1,0 +1,11 @@
+{
+  "tool": "codex-plan-review",
+  "files": [
+    { "file": "SKILL.md", "target": "skills/codex-plan-review/SKILL.md" },
+    { "file": "codex-review.ps1", "target": "skills/codex-plan-review/codex-review.ps1" }
+  ],
+  "prerequisites": ["Claude Code", "PowerShell 7", "OpenAI Codex CLI", "plan-review and review-intake commands"],
+  "hook": null,
+  "run": null,
+  "missing": { "hide": "codex", "args": ["pwsh", "-NoProfile", "-File", "{claude}/skills/codex-plan-review/codex-review.ps1", "-PlanPath", "plan.md", "-OutFile", "out.md"], "expect": "(?i)codex.*not found.*install" }
+}

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "pwsh -NoProfile -NonInteractive -File \"$HOME/.claude/skills/optimize-testsuite/testsuite.ps1\" evaluate",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

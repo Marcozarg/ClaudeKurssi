@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "pwsh -NoProfile -File \"$HOME/.claude/routing/routing.ps1\" context"
+          }
+        ]
+      }
+    ]
+  }
+}

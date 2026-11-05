@@ -1,0 +1,15 @@
+{
+  "tool": "routing",
+  "files": [
+    { "file": "commands/routing.md", "target": "commands/routing.md" },
+    { "file": "routing/routing.ps1", "target": "routing/routing.ps1" },
+    { "file": "routing/rule.md", "target": "routing/rule.md" },
+    { "file": "routing/prices.json", "target": "routing/prices.json" },
+    { "file": "agents/scout.md", "target": "agents/scout.md" },
+    { "file": "agents/runner.md", "target": "agents/runner.md" },
+    { "file": "agents/implementer.md", "target": "agents/implementer.md" }
+  ],
+  "prerequisites": ["Claude Code", "PowerShell 7", "Matt Pocock's skills plugin (for the skill-step table)"],
+  "hook": "hook.json",
+  "run": { "args": ["pwsh", "-NoProfile", "-File", "{claude}/routing/routing.ps1", "status"], "expect": "Model routing: off", "stdin": "" }
+}

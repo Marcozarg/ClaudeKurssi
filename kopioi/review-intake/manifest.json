@@ -1,0 +1,9 @@
+{
+  "tool": "review-intake",
+  "files": [
+    { "file": "review-intake.md", "target": "commands/review-intake.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}

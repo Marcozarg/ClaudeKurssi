@@ -1,0 +1,21 @@
+{
+  "tool": "optimize-testsuite",
+  "files": [
+    { "file": "SKILL.md", "target": "skills/optimize-testsuite/SKILL.md" },
+    { "file": "python.md", "target": "skills/optimize-testsuite/python.md" },
+    { "file": "testsuite.ps1", "target": "skills/optimize-testsuite/testsuite.ps1" },
+    { "file": "tsm_report.py", "target": "skills/optimize-testsuite/tsm_report.py" }
+  ],
+  "prerequisites": ["Claude Code", "PowerShell 7", "Python 3 with pytest", "Windows"],
+  "hook": "hook.json",
+  "run": {
+    "args": ["pwsh", "-NoProfile", "-NonInteractive", "-File", "{claude}/skills/optimize-testsuite/testsuite.ps1", "evaluate"],
+    "expect": "\\A\\s*\\Z",
+    "stdin": "{\"hook_event_name\":\"SessionStart\",\"cwd\":\"nowhere\"}"
+  },
+  "missing": {
+    "hide": "python",
+    "args": ["pwsh", "-NoProfile", "-NonInteractive", "-File", "{claude}/skills/optimize-testsuite/testsuite.ps1", "measure", "-Root", "."],
+    "expect": "No Python interpreter at"
+  }
+}

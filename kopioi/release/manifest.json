@@ -1,0 +1,9 @@
+{
+  "tool": "release",
+  "files": [
+    { "file": "release.md", "target": "commands/release.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}

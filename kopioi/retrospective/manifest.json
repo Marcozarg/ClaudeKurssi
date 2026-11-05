@@ -1,0 +1,10 @@
+{
+  "tool": "retrospective",
+  "files": [
+    { "file": "SKILL.md", "target": "skills/retrospective/SKILL.md" },
+    { "file": "mine-transcripts.ps1", "target": "skills/retrospective/mine-transcripts.ps1" }
+  ],
+  "prerequisites": ["Claude Code", "PowerShell 7", "plan-review command"],
+  "hook": null,
+  "run": { "args": ["pwsh", "-NoProfile", "-File", "{claude}/skills/retrospective/mine-transcripts.ps1", "-ProjectsDir", "{claude}", "-Project", "skills"], "expect": "report: ", "stdin": "" }
+}
