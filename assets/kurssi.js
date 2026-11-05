@@ -10,7 +10,7 @@
     { n: 6, istunto: 2, nimi: "Claude Code: asennus", valmis: true },
     { n: 7, istunto: 3, nimi: "Peruskäyttö", valmis: true },
     { n: 8, istunto: 3, nimi: "Git ja GitHub / GitLab", valmis: true },
-    { n: 9, istunto: 4, nimi: "Työtapa", valmis: false },
+    { n: 9, istunto: 4, nimi: "Työtapa", valmis: true },
     { n: 10, istunto: 4, nimi: "Omat skillit ja agentit", valmis: false },
     { n: 11, istunto: 4, nimi: "Demot ja jatko", valmis: false },
   ];

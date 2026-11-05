@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>9 Työtapa - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="9">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-8.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 9 &middot; Istunto 4</span>
+  <h1>Työtapa</h1>
+  <div class="meta"><span class="chip">Ydin ~35 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Miksi työtapa ratkaisee</h2>
+    <p>Claude tekee nopeasti paljon, myös vääriä asioita. Hyvä lopputulos ei synny yhdestä täydellisestä kehotteesta vaan toistuvista tavoista: suunnitelma ennen koodia, kysymys arvaamisen sijaan, testi ennen korjausta, tarkistus ennen kuin työ julistetaan valmiiksi. Tässä moduulissa otat käyttöön ydintavat, asennat Matt Pocockin skills-liitännäisen ja käyt läpi koko kulun ideasta toteutukseen.</p>
+    <p>Moduuli nojaa aiempiin: suunnittelutila ja <code>CLAUDE.md</code> (moduuli 7) sekä git (moduuli 8) ovat tässä työkaluina.</p>
+  </section>
+
+  <section id="ydintavat">
+    <h2>Ydintavat</h2>
+    <p>Tarkistuslista, jonka voit antaa Claudelle omana ohjeenaan. Jokaisella säännöllä on syy, ja syyt löytyvät tämän sivun <a href="#kopioi-coding-style">coding-style.md-pohjasta</a>.</p>
+    <ol>
+      <li><b>Suunnitelma ensin.</b> Ei-triviaalissa muutoksessa Claude kertoo ensin lähestymistavan, vaihtoehdot ja suosituksen. Koodi vasta kun sanot "jatka". Suunnittelutila (<code>Shift+Tab</code>) tekee tämän pakolliseksi.</li>
+      <li><b>Kysy, älä arvaa.</b> Tuntematon polku, versio tai asetus selvitetään repositoriosta tai kysytään sinulta. Varma arvaus näyttää täsmälleen samalta kuin tosiasia.</li>
+      <li><b>Testi ensin.</b> Jokainen uusi toiminta ja jokainen vahvistettu virhe saa testin, joka epäonnistuu ilman muutosta. Testi ajetaan ensin punaisena, sitten tehdään muutos, jolla se menee vihreäksi.</li>
+      <li><b>Tarkista ennen "valmis".</b> Claude ajaa testit ja kertoo, mitä ajettiin ja mitä ei. Sanat "toimii" ja "varmistettu" kuuluvat vain ajetuille asioille.</li>
+      <li><b>Lyhyet commitit.</b> Yksi lyhyt rivi, yksi looginen muutos. Commit ja push ovat eri vaiheita.</li>
+      <li><b>Ei salaisuuksia.</b> Salasanat, avaimet ja <code>.env</code>-tiedostot eivät kuulu keskusteluun, suunnitelmiin eivätkä committeihin. Viittaa paikkaan, jossa salaisuus on.</li>
+    </ol>
+    <div class="note">Noudata organisaatiosi sääntöjä siitä, mitä tietoa tekoälypalvelulle saa antaa. Epäselvässä tilanteessa kysy ensin.</div>
+  </section>
+
+  <section>
+    <h2>Matt Pocockin skills-liitännäinen</h2>
+    <p><b>Matt Pocock</b> on julkaissut kokoelman skillejä, jotka toteuttavat yllä olevan työtavan valmiina komentoina: haastattelu, speksi, tiketit, testilähtöinen toteutus ja koodikatselmointi. Lähde ja kuvaukset: <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>. Skillien sisältö on hänen työtään, joten tällä sivulla ne vain kuvataan eikä niitä kopioida.</p>
+    <h3>Asennus</h3>
+    <p>Liitännäisen README antaa Claude Codelle yhden komennon. Aja se tavallisessa terminaalissa:</p>
+    <div class="codebox"><pre><code>claude plugin install mattpocock-skills@claude-plugins-official</code></pre></div>
+    <p>Saman voi ajaa Claude Coden sisällä komennolla <code>/plugin install mattpocock-skills@claude-plugins-official</code>. Silloin avautuu <code>/plugin</code>-paneeli, jossa valitset asennusalueen: <b>Install for you (user scope)</b> riittää omaan käyttöön. Claude Code lisää virallisen <code>claude-plugins-official</code>-katalogin itse, kun käynnistät interaktiivisen istunnon ensimmäisen kerran. Ohje: <a href="https://code.claude.com/docs/en/discover-plugins">code.claude.com/docs/en/discover-plugins</a>.</p>
+    <p>Varmista asennus kirjoittamalla <code>/</code>: liitännäisen skillit näkyvät muodossa <code>/mattpocock-skills:nimi</code>.</p>
+    <div class="note">Liitännäinen voi sisältää ohjeita, joita Claude noudattaa. Lue asennusnäkymän kuvaus ennen kuin hyväksyt asennuksen.</div>
+    <h3>Repokohtainen asetus: kerran jokaiseen repoon</h3>
+    <p>Avaa <code>claude</code> repon kansiossa ja aja <code>/setup-matt-pocock-skills</code>. Skill kysyy, missä issuet ja tiketit pidetään (GitHub, GitLab tai paikalliset markdown-tiedostot), mitä tilalabeleja käytetään ja mihin dokumentaatio tallennetaan. Vastaukset tallentuvat repoon, joten muut skillit tietävät, mihin tulos kirjoitetaan. Jos komento ei löydy lyhyellä nimellä, kirjoita <code>/setup</code> ja valitse listasta rivi, joka alkaa liitännäisen nimellä.</p>
+    <div class="shot">[KUVA: m9-asennus - /plugin install -näkymä ja asennuksen jälkeinen /-lista, jossa mattpocock-skills näkyy]</div>
+  </section>
+
+  <section>
+    <h2>Kulku: haastattelusta toteutukseen</h2>
+    <p>Esimerkkitehtävä: kirjoita PowerShell-skripti, joka raportoi pian vanhenevat sertifikaatit tai käytöstä poistetut AD-tunnukset. Tehtävä on sopivan iso: se tarvitsee päätöksiä, jotka kannattaa tehdä ennen koodia.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Vaihe</th><th>Sinä kirjoitat</th><th>Claude tekee</th></tr></thead>
+      <tbody>
+        <tr><td>1. Haastattelu</td><td><code>/mattpocock-skills:grilling</code> ja kuvaus: "Haluan skriptin, joka raportoi 30 päivän sisällä vanhenevat sertifikaatit."</td><td>Kysyy kysymyksiä ja ehdottaa jokaiseen suositellun vastauksen: mitkä sertifikaattivarastot, mikä on raja, mihin raportti menee, saako skripti muuttaa mitään. Tämä on suunnitelma ennen koodia.</td></tr>
+        <tr><td>2. Speksi</td><td><code>/mattpocock-skills:to-spec</code></td><td>Kokoaa keskustelun speksiksi ilman uutta haastattelua ja tallentaa sen siihen tikettijärjestelmään, jonka valitsit asetuksessa.</td></tr>
+        <tr><td>3. Tiketit</td><td><code>/mattpocock-skills:to-tickets</code></td><td>Pilkkoo speksin pieniksi tiketeiksi, joista jokainen toimii alusta loppuun (esimerkiksi "lue yksi varasto ja tulosta lista"), ja merkitsee, mikä tiketti odottaa mitäkin.</td></tr>
+        <tr><td>4. Puhdas konteksti</td><td><code>/clear</code></td><td>Tyhjentää keskustelun. Speksi ja tiketit ovat tiedostoissa tai trackerissa, joten mitään ei mene hukkaan, ja toteutus alkaa ilman haastattelun painolastia.</td></tr>
+        <tr><td>5. Toteutus</td><td><code>/mattpocock-skills:implement #1</code></td><td>Hakee tiketin, kirjoittaa ensin testin (esimerkiksi Pester), tekee koodin, ajaa testit ja katselmoi muutoksen ennen committia.</td></tr>
+        <tr><td>6. Seuraava</td><td><code>/clear</code>, sitten <code>/mattpocock-skills:implement #2</code></td><td>Sama kierros seuraavalle tiketille. Yksi tiketti, yksi commit.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Suunnittelutila liittyy tähän näin: haastattelu ja speksi ovat suunnittelua, joten ne voi tehdä suunnittelutilassa (<code>Shift+Tab</code>), jolloin Claude ei muokkaa tiedostoja. Toteutus aloitetaan vasta, kun sinä hyväksyt. Pienessä korjauksessa koko ketju on liian raskas: pyydä silloin vain suunnitelma ja jatka.</p>
+    <p>Muita hyödyllisiä skillejä samasta kokoelmasta: <code>tdd</code> (testilähtöinen kehitys), <code>code-review</code> (katselmointi speksiä ja repon käytäntöjä vasten) ja <code>diagnosing-bugs</code> (vikojen etsintä).</p>
+    <div class="shot">[KUVA: m9-grilling - grilling-skill kysyy sertifikaattiraportin rajauksesta ja ehdottaa vastausta]</div>
+    <div class="note">Speksi ja tiketit ovat Clauden kirjoittamia: lue ne ennen toteutusta. Virhe speksissä on halvin korjata ennen kuin koodia on olemassa.</div>
+  </section>
+
+  <section>
+    <h2>Testisarjan optimointi ja tyylin tasaus</h2>
+    <p>Kaksi kurssin mukana tulevaa työkalua jatkavat samaa ajattelua. Molempien asennusohje ja koko sisältö ovat moduulissa 10.</p>
+    <ul>
+      <li><b>optimize-testsuite</b> mittaa projektin testisarjan, leikkaa mittausten osoittaman turhan viiveen, todistaa sarjan pysyvän vakaana ja raportoi ennen/jälkeen-ajat. Käytä, kun testit ovat hitaat. Kopioitava: <a href="moduuli-10.html#kopioi-optimize-testsuite">optimize-testsuite moduulissa 10</a>.</li>
+      <li><b>align-style</b> vertaa projektin ohjeita (CLAUDE.md, git-tiedostot, asetukset) tämän sivun työtapaan, löytää ristiriidat, kaksoiskappaleet ja vanhentuneet tiedot, kysyy jokaisesta päätöksestä ja vie muutokset läpi. Käytä, kun otat työtavan käyttöön olemassa olevassa projektissa. Kopioitava: <a href="moduuli-10.html#kopioi-align-style">align-style moduulissa 10</a>.</li>
+    </ul>
+    <div class="note">Aja nämä aina haaralla, jonka voi hylätä, ja lue ehdotetut muutokset ennen hyväksyntää.</div>
+  </section>
+
+  <section id="kopioi-coding-style" data-tool="coding-style">
+    <h2>Kopioitava: coding-style ja globaali CLAUDE.md</h2>
+    <p>Kaksi tiedostoa: <code>coding-style.md</code> sisältää työtavan säännöt perusteluineen, ja <code>CLAUDE.md</code> on lyhyt globaali ohje, joka tuo sen jokaiseen istuntoon. Muokkaa tekstit omiksesi asennuksen jälkeen.</p>
+    <div class="tablewrap manifest"><table>
+      <tbody>
+        <tr><th>Tiedostot</th><td><code>coding-style.md</code> &rarr; <code>%USERPROFILE%\.claude\coding-style.md</code><br><code>CLAUDE.md</code> &rarr; <code>%USERPROFILE%\.claude\CLAUDE.md</code></td></tr>
+        <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+        <tr><th>Hook</th><td>Ei hookia.</td></tr>
+        <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin <code>.bak</code>-päätteiseksi (esim. CLAUDE.md.bak). Jos .bak on jo olemassa, älä jatka: selvitä ensin, mikä tiedosto on mikä. Lisää omat aiemmat ohjeesi tarvittaessa uuden tiedoston loppuun.</td></tr>
+        <tr><th>Poisto</th><td>Ota ensin talteen omat muutoksesi, jotka teit tiedostoihin asennuksen jälkeen. Poista sitten tiedostot ja palauta .bak-tiedostot alkuperäisille nimilleen.</td></tr>
+      </tbody></table></div>
+    <h3>Asennus</h3>
+    <ol>
+      <li>Avaa kansio <code>%USERPROFILE%\.claude</code> Resurssienhallinnassa tai PowerShellissä: <code>explorer "$HOME\.claude"</code>. Jos kansiota ei ole, käynnistä <code>claude</code> kerran.</li>
+      <li>Jos kansiossa on jo <code>CLAUDE.md</code> tai <code>coding-style.md</code>, nimeä se <code>.bak</code>-päätteiseksi. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+      <li>Lataa alla olevat kaksi tiedostoa napeista ja tallenna ne kansioon <code>%USERPROFILE%\.claude</code> nimillä <code>coding-style.md</code> ja <code>CLAUDE.md</code>.</li>
+      <li>Jos sinulla oli aiempi <code>CLAUDE.md</code>, kopioi omat ohjeesi uuden tiedoston loppuun.</li>
+      <li>Käynnistä uusi <code>claude</code>-istunto ja kysy: "Mitä sääntöjä sinulla on työtavasta?" Vastauksen pitää kuvata ydintavat.</li>
+    </ol>
+    <div class="codebox" data-file="coding-style/coding-style.md"><pre><code># Coding style
+
+How I want Claude Code to work with me, with the reason behind each rule. My global `CLAUDE.md` imports this file,
+so every session reads it. A project's own `CLAUDE.md` adds to these rules or overrides them for that project.
+
+## Workflow
+
+- **Plan before code.** For anything non-trivial, explain the approach first: the options, a recommendation, the
+  files it touches. Write code only after I say "proceed". *Why: a wrong approach found in the plan costs a minute;
+  found in the code it costs an hour.*
+- **Small steps.** One change, one check, then the next change. *Why: a small diff is easy to review and easy to undo.*
+- **No guessing.** When a path, version, setting, credential or name is unknown, look it up in the repo or ask me.
+  *Why: a confident guess looks exactly like a fact.*
+- **Stay in scope.** Fix what was asked. No unrequested refactoring, renames or clean-ups. *Why: unrelated changes
+  hide the real change in the diff.*
+
+## Questions
+
+- Ask instead of guessing. Put several independent questions in one round, each with a recommended answer first.
+- Never answer your own question and carry on as if I had decided.
+- Answer my direct questions in the reply, not only inside a plan or a file.
+
+## Verification
+
+- **Test first.** Every new behaviour and every confirmed bug gets a test that fails without the change. Run it, see it
+  fail, then make it pass. *Why: a test that never failed may not test anything.*
+- **Check before "done".** Before saying a change is finished, run the tests and the checks you can reach yourself and
+  report what was run and what was not. Never write "verified" or "works" for something that was not run.
+- **Test plan.** When something needs me (a login, hardware, a judgement by eye), give numbered steps with the exact
+  commands and the expected result of each step.
+- **Read before you call.** Read a function's definition before calling or changing it; never assume its parameters
+  or what it returns.
+
+## Git
+
+- **Short commits.** One short line per commit message, in English, imperative: `Fix login timeout`,
+  `Add CSV export`. One logical change per commit.
+- **Commit and push are separate steps.** Push only when I ask or when the project's rules say so.
+- **Never commit secrets:** passwords, API keys, tokens, `.env` files, private keys, customer data. If one gets
+  tracked, stop and tell me; removing it from history is my decision.
+- **Look before you overwrite.** Check what a file holds before deleting or replacing it; never force-push without
+  asking.
+
+## Code
+
+- **Comments explain why, not what.** Add one only for a hidden constraint, a workaround or a surprising rule.
+- **Never fail silently.** A failed read, request or parse is shown or allowed to surface; it is never swallowed or
+  counted as success.
+- **Minimal scope.** No feature flags, compatibility layers or abstractions the task does not need.
+
+## Safety
+
+- **No secrets in chat, plans, memory or commits.** Refer to where a secret lives (a file name, a vault entry), never
+  to its value.
+- **Ask before destructive actions:** deleting files, dropping data, changing permissions, anything that cannot be
+  undone. Also ask before adding, removing or weakening a confirmation step.
+- **Follow my organization's rules** on what data may be given to an AI service. When unsure, ask me first.
+
+## Communication
+
+- Short and direct: one or two sentences per update, no long summary at the end.
+- No emoji.
+</code></pre></div>
+    <p><a class="btn" href="../kopioi/coding-style/coding-style.md" download>Lataa coding-style.md</a></p>
+    <div class="codebox" data-file="coding-style/CLAUDE.md"><pre><code># Global instructions
+
+These apply to every project. The full rule set with the reasons is imported here:
+
+@~/.claude/coding-style.md
+
+## Always
+
+- Plan before code: explain the approach and wait for "proceed" before writing code for anything non-trivial.
+- Ask instead of guessing; put questions to me with a recommended answer first.
+- Test first: a new behaviour or a fixed bug gets a test that fails without the change.
+- Check before "done": run the tests and say what was run and what was not.
+- Commit messages are one short English line. Never commit secrets.
+- Answer me in the language I write in. No emoji.
+</code></pre></div>
+    <p><a class="btn" href="../kopioi/coding-style/CLAUDE.md" download>Lataa CLAUDE.md</a></p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Asenna liitännäinen ja aseta repo</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja Git for Windows. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna <code>mattpocock-skills</code>, tee uusi kansio, aja <code>git init</code> ja käynnistä <code>claude</code>. Aja <code>/setup-matt-pocock-skills</code> ja valitse trackeriksi paikalliset markdown-tiedostot.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Kun kirjoitat <code>/</code>, listassa on rivejä muodossa <code>/mattpocock-skills:...</code>. Asetus kysyy trackerin, labelit ja dokumentaation paikan ja kirjoittaa vastaukset repoon (tyypillisesti CLAUDE.md-tiedostoon ja <code>docs/</code>-kansioon). Tarkista tulos komennolla <code>git status</code>: uudet tai muuttuneet tiedostot ovat näkyvissä, ja voit lukea ne ennen committia.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Haastattelusta tiketteihin</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja harjoituksen 1 repo. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Aja <code>/mattpocock-skills:grilling</code> ja kuvaa tehtävä: PowerShell-skripti, joka listaa AD:n käytöstä poistetut tunnukset, joilla on edelleen ryhmäjäsenyyksiä. Vastaa kysymyksiin ja aja sitten <code>to-spec</code> ja <code>to-tickets</code>. Lue tiketit.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Hyvässä lopputuloksessa on speksi ja 3-5 tikettiä, esimerkiksi: (1) listaa käytöstä poistetut tunnukset, (2) lisää ryhmäjäsenyydet, (3) vie CSV:ksi, (4) aikataulutus. Ensimmäinen tiketti tuottaa jo toimivan, pienen raportin. Jos jokin tiketti on pelkkä "kirjoita kaikki", pyydä Claudea pilkkomaan se. Kirjaa speksiin rajaukseksi, että skripti vain lukee eikä muuta mitään.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Toteuta yksi tiketti</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja harjoituksen 2 tiketit; Pester-moduuli on hyvä olla asennettuna. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Aja <code>/clear</code> ja sitten <code>/mattpocock-skills:implement #1</code> (tai tiketin numero). Seuraa, tekeekö Claude testin ensin, ja tarkista lopuksi <code>git diff</code> ja <code>git log --oneline</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude hakee tiketin, kirjoittaa epäonnistuvan testin, tekee koodin, ajaa testit ja ehdottaa lyhyttä commit-viestiä. Jos testejä ei ajettu, Clauden pitää sanoa se suoraan: kysy "Mitä ajoit ja mitä et?". Jos Active Directorya ei ole käytettävissä, testit käyttävät esimerkkidataa. Älä anna Clauden ajaa skriptiä oikeaa AD:ta vasten ilman, että luet komennon.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: ota työtapa käyttöön pysyvästi</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Globaali ohje:</b> sivun lopun Kopioitavasta saat <code>coding-style.md</code>-pohjan ja <code>CLAUDE.md</code>:n, joka tuo sen kaikkiin istuntoihisi. Muokkaa säännöt omiksesi: poista ne, joita et halua, ja lisää omasi.</li>
+        <li><b>Projektikohtainen CLAUDE.md</b> lisää säännöt tai ohittaa globaalit vain sille projektille (moduuli 7).</li>
+        <li><b>Pidä lista lyhyenä:</b> jokainen sääntö kuluttaa kontekstia joka istunnossa. Poista sääntö, jota Claude noudattaa muutenkin.</li>
+        <li><b>align-style</b> vie olemassa olevan projektin linjaan: ks. <a href="moduuli-10.html#kopioi-align-style">moduuli 10</a>.</li>
+        <li>Lue lisää: <a href="https://github.com/mattpocock/skills">mattpocock/skills</a> ja <a href="https://code.claude.com/docs/en/discover-plugins">liitännäisten asennus</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+</div>
+</body>
+</html>
