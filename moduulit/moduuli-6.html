@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6 Claude Code: asennus - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="6">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-5.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 6 &middot; Istunto 2</span>
+  <h1>Claude Code: asennus</h1>
+  <div class="meta"><span class="chip">Ydin ~20 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Mikä Claude Code on?</h2>
+    <p>Claude Code on Clauden versio, joka toimii koneellasi omassa kansiossasi. Se lukee tiedostoja, muokkaa niitä ja ajaa komentoja (esimerkiksi PowerShell-skriptejä ja git-komentoja), kun hyväksyt sen. Chatissa sinä kopioit tekstin Claudelle ja takaisin. Claude Codessa Claude työskentelee suoraan tiedostojesi kanssa.</p>
+    <ul>
+      <li>Sopii skriptien, lokien, ohjeiden ja konfiguraatioiden työstämiseen, ei vain ohjelmointiin.</li>
+      <li>Käytettävissä komentorivillä, VS Code -laajennuksena ja työpöytäsovelluksen <b>Code</b>-välilehdellä. Kaikki käyttävät samoja asetuksia.</li>
+      <li>Käyttö kuluttaa samaa käyttörajaa kuin claude.ai (<a href="moduuli-0.html#kayttorajat">moduuli 0, käyttörajat</a>).</li>
+    </ul>
+    <div class="note">Claude Code vaatii Pro-, Max-, Ultra-, Team- tai Enterprise-tilauksen tai Console-tilin. <b>Ilmainen claude.ai-tilaus ei sisällä Claude Codea.</b> Ei Prota? Seuraa kouluttajan demoa tai tee parin kanssa.</div>
+  </section>
+
+  <section>
+    <h2>Ennen asennusta</h2>
+    <ul>
+      <li><b>Windows:</b> Windows 10 versio 1809 tai uudempi, tai Windows Server 2019 tai uudempi.</li>
+      <li><b>Laitteisto:</b> vähintään 4 Gt RAM, x64- tai ARM64-suoritin, internet-yhteys.</li>
+      <li><b>Järjestelmänvalvojan oikeuksia ei tarvita.</b> Älä avaa terminaalia järjestelmänvalvojana.</li>
+      <li><b>Git for Windows</b> on valinnainen mutta suositeltava. Ilman sitä Claude Code käyttää komentojen ajamiseen PowerShelliä; sen kanssa se käyttää Git Bashia. Moduulissa 8 tarvitaan joka tapauksessa git.</li>
+    </ul>
+    <p>Kurssin testattu Claude Code -versio on <b>2.1.318</b> (tarkistettu 11/2026). Uudemmassa versiossa valikot ja komennot voivat poiketa hieman; <a href="https://code.claude.com/docs/en/setup">asennusohje</a> on aina ajantasainen.</p>
+  </section>
+
+  <section>
+    <h2>Asennus Windowsiin</h2>
+    <p>Avaa PowerShell (Käynnistä-valikosta) ja aja:</p>
+    <div class="codebox"><pre><code>irm https://claude.ai/install.ps1 | iex</code></pre></div>
+    <p>Asennus ei näytä edistymistä latauksen aikana. Kun se on valmis, <b>avaa uusi terminaali-ikkuna</b> ja tarkista:</p>
+    <div class="codebox"><pre><code>claude --version</code></pre></div>
+    <p>Komento tulostaa versionumeron. Jos terminaali sanoo, ettei <code>claude</code> ole tunnettu komento, asennushakemisto ei ole vielä PATH-muuttujassa; uusi terminaali ratkaisee yleensä asian.</p>
+    <h3>Vaihtoehdot</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tapa</th><th>Komento</th><th>Päivitys</th></tr></thead>
+      <tbody>
+        <tr><td>PowerShell (suositus)</td><td><code>irm https://claude.ai/install.ps1 | iex</code></td><td>Automaattinen</td></tr>
+        <tr><td>CMD (komentokehote)</td><td><code>curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code></td><td>Automaattinen</td></tr>
+        <tr><td>WinGet</td><td><code>winget install Anthropic.ClaudeCode</code></td><td>Käsin: <code>winget upgrade Anthropic.ClaudeCode</code></td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">PowerShell- ja CMD-komennot eivät ole vaihdettavissa keskenään. Jos näet virheen <code>The token '&amp;&amp;' is not a valid statement separator</code>, olet PowerShellissä, mutta ajoit CMD-komennon. Jos näet virheen <code>'irm' is not recognized</code>, olet CMD:ssä.</div>
+    <div class="shot">[KUVA: m6-install - PowerShell, asennuskomento ja claude --version]</div>
+  </section>
+
+  <section>
+    <h2>Ensimmäinen käynnistys ja kirjautuminen</h2>
+    <ol>
+      <li>Siirry kansioon, jossa haluat työskennellä, esimerkiksi harjoituskansioon: <code>cd %USERPROFILE%\Documents\harjoitus</code> (CMD) tai <code>cd $env:USERPROFILE\Documents\harjoitus</code> (PowerShell).</li>
+      <li>Kirjoita <code>claude</code>.</li>
+      <li>Ensimmäisellä kerralla Claude Code avaa selaimen. Kirjaudu samalla Claude-tilillä, jolla on Pro tai Max.</li>
+      <li>Claude Code kysyy, luotatko kansioon. Vastaa kyllä vain kansioille, joiden sisällön tunnet.</li>
+      <li>Kirjoita viesti, esimerkiksi "Mitä tässä kansiossa on?", ja katso, miten Claude pyytää lupaa lukea tiedostoja.</li>
+    </ol>
+    <div class="shot">[KUVA: m6-login - selaimen kirjautumisikkuna ja valmis istunto]</div>
+    <p>Voit tarkistaa asennuksen tilan komennolla <code>claude doctor</code>. Natiivi asennus päivittyy itse; muut asennustavat tarvitsevat päivityksen käsin (<code>claude update</code> natiiville asennukselle).</p>
+  </section>
+
+  <section>
+    <h2>VS Code -laajennus</h2>
+    <ol>
+      <li>Avaa VS Code (versio 1.94.0 tai uudempi).</li>
+      <li>Avaa Extensions (<b>Ctrl+Shift+X</b>), hae "Claude Code" ja valitse <b>Install</b>. Laajennuksen tunnus on <code>anthropic.claude-code</code>.</li>
+      <li>Avaa Claude: napsauta Spark-kuvaketta editorin oikeasta yläkulmasta (näkyy, kun tiedosto on auki) tai alapalkin <b>Claude Code</b> -tekstiä.</li>
+      <li>Jos laajennus ei näy asennuksen jälkeen, käynnistä VS Code uudelleen tai aja komentopaletista (<b>Ctrl+Shift+P</b>) <b>Developer: Reload Window</b>.</li>
+    </ol>
+    <p>Hyöty: Claude näkee avoimen tiedostosi ja valintasi, ja muutokset näkyvät editorissa diffinä, jonka hyväksyt tai hylkäät. <b>Alt+K</b> lisää keskusteluun viittauksen nykyiseen tiedostoon ja valintaan.</p>
+    <div class="shot">[KUVA: m6-vscode - VS Code, Claude Code -paneeli ja ehdotettu muutos diffinä]</div>
+  </section>
+
+  <section>
+    <h2>Työpöytäsovellus: Code-välilehti</h2>
+    <p>Jos olet jo asentanut Clauden työpöytäsovelluksen (moduuli 4), Claude Code on sen <b>Code</b>-välilehdellä. Erillistä komentorivi-asennusta tai Node.js:ää ei tarvita.</p>
+    <ol>
+      <li>Avaa sovellus ja kirjaudu sisään.</li>
+      <li>Valitse sivupalkin yläreunasta <b>Code</b>.</li>
+      <li>Valitse ympäristöksi <b>Local</b> ja avaa työkansio (<b>Open folder...</b>).</li>
+      <li>Valitse malli ja kirjoita, mitä Claude tekee.</li>
+    </ol>
+    <p>Lupatila näkyy kehotekentän alla: <b>Manual</b> kysyy ennen muutoksia, <b>Accept edits</b> hyväksyy tiedostomuutokset itse, <b>Plan</b> vain suunnittelee. Aloita Manualilla. Muutokset näet diff-näkymässä.</p>
+    <div class="shot">[KUVA: m6-desktop - työpöytäsovelluksen Code-välilehti ja Local-kansio valittuna]</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Käyttötapa</th><th>Hyvä, kun</th></tr></thead>
+      <tbody>
+        <tr><td>Komentorivi</td><td>haluat täyden hallinnan ja kaikki komennot; kurssin esimerkit ovat tästä</td></tr>
+        <tr><td>VS Code</td><td>muokkaat koodia tai skriptejä editorissa ja haluat nähdä diffit siinä</td></tr>
+        <tr><td>Työpöytäsovellus</td><td>et halua käyttää terminaalia; useita istuntoja rinnakkain</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Asenna ja tarkista</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna Claude Code PowerShellillä, avaa uusi terminaali ja kirjaudu sisään. Pyydä Claudea kertomaan, mikä Windows-versio koneessa on ja onko git asennettu. Vertaa vastausta itse ajamiisi komentoihin <code>winver</code> ja <code>git --version</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude ehdottaa komentoja (esimerkiksi <code>Get-ComputerInfo</code> ja <code>git --version</code>) ja pyytää lupaa ajaa ne. Kun hyväksyt, se kertoo version ja sen, onko git käytettävissä. Jos git puuttuu, Claude kertoo sen virheilmoituksesta; asenna silloin Git for Windows ennen moduulia 8. Tarkista, että Clauden kertoma versio täsmää <code>winver</code>-ikkunan kanssa.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Kysy tiedostoista</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Tee tyhjä kansio, jossa on yksi PowerShell-skripti (esimerkiksi levytilaa tarkistava) ja pieni lokitiedosto. Käynnistä <code>claude</code> kansiossa ja kysy: "Mitä näissä tiedostoissa on? Tiivistä skripti kahteen lauseeseen ja kerro, mitä lokissa näkyy." Huomaa, miten Claude pyytää lupaa lukea tiedostot.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude lukee kansion tiedostot (lukeminen työkansiossa ei yleensä kysy lupaa), tiivistää skriptin ja nostaa lokista toistuvat virheet. Tarkista, että tiivistys vastaa skriptin todellista toimintaa: avaa skripti ja vertaa. Jos Claude ehdottaa skriptin muuttamista, hylkää ehdotus; muokkaamista harjoitellaan moduulissa 7.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Sama VS Codessa</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja VS Code. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna VS Code -laajennus, avaa harjoituksen 2 kansio VS Codessa ja avaa skripti. Valitse skriptistä muutama rivi, lisää valinta keskusteluun (<b>Alt+K</b>) ja pyydä: "Selitä nämä rivit rivi riviltä."</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude selittää juuri valitut rivit ilman, että kopioit niitä keskusteluun. Jos laajennus ei näy, käynnistä VS Code uudelleen tai aja <b>Developer: Reload Window</b>. Huomaa, että tämä on sama Claude Code kuin komentorivillä: istunnot ja asetukset ovat yhteisiä.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: ongelmatilanteet ja WSL</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Asennus epäonnistuu (403 tai muu virhe):</b> yritysverkon välityspalvelin tai suodatin voi estää latauksen. Kokeile CMD- tai WinGet-vaihtoehtoa ja katso <a href="https://code.claude.com/docs/en/troubleshoot-install">asennuksen vianmääritys</a>.</li>
+        <li><b>Claude Code ei löydä Git Bashia:</b> asetustiedoston <code>env</code>-lohkoon voi asettaa muuttujan <code>CLAUDE_CODE_GIT_BASH_PATH</code>, jonka arvo on bash.exe:n polku.</li>
+        <li><b>WSL:</b> jos työskentelet Linux-työkalujen kanssa, asenna Claude Code WSL:n sisälle Linux-komennolla ja käynnistä se WSL-terminaalissa. Silloin käytettävissä on myös hiekkalaatikko (sandboxing), jota natiivi Windows ei tue.</li>
+        <li><b>Asennuksen poisto:</b> natiivi asennus poistetaan poistamalla ohjelmatiedosto ja versiohakemisto (ohjeet asennussivulla); WinGet-asennus komennolla <code>winget uninstall Anthropic.ClaudeCode</code>.</li>
+        <li><b>Versio:</b> <code>claude --version</code> kertoo version. Jos jokin tämän kurssin valikko tai komento ei vastaa omaasi, tarkista versio ja vertaa kurssin testattuun versioon 2.1.318.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

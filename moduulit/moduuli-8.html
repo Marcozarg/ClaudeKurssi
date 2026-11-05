@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>8 Git ja GitHub / GitLab - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="8">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-7.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 8 &middot; Istunto 3</span>
+  <h1>Git ja GitHub / GitLab</h1>
+  <div class="meta"><span class="chip">Ydin ~45 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Miksi git?</h2>
+    <p>Git tallentaa tiedostojesi historian: voit palata aiempaan versioon, verrata muutoksia ja työskennellä turvallisesti rinnakkain. Claude voi tehdä paljon muutoksia nopeasti, joten git on turvaverkkosi. Moduulissa 7 näit, ettei /rewind seuraa shell-komentojen muutoksia. Git seuraa kaikkea, mikä on tallennettu.</p>
+    <p>Git on koneellasi oleva työkalu. <b>GitHub</b> ja <b>GitLab</b> ovat palveluja, joihin repo (koodivarasto) voidaan tallentaa ja joissa työtä seurataan issueilla ja muutospyynnöillä.</p>
+    <div class="note">Tarvitset Git for Windowsin (<code>git --version</code> toimii terminaalissa). Jos ei toimi, asenna se osoitteesta <a href="https://git-scm.com/downloads/win">git-scm.com</a> ja avaa uusi terminaali.</div>
+  </section>
+
+  <section>
+    <h2>Gitin peruskomennot</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Komento</th><th>Mitä se tekee</th></tr></thead>
+      <tbody>
+        <tr><td><code>git clone &lt;osoite&gt;</code></td><td>Kopioi repon koneellesi</td></tr>
+        <tr><td><code>git status</code></td><td>Näyttää, mitä on muuttunut</td></tr>
+        <tr><td><code>git diff</code></td><td>Näyttää muutokset rivi riviltä</td></tr>
+        <tr><td><code>git add &lt;tiedosto&gt;</code></td><td>Valitsee tiedoston seuraavaan tallennukseen</td></tr>
+        <tr><td><code>git commit -m "viesti"</code></td><td>Tallentaa valitut muutokset historiaan</td></tr>
+        <tr><td><code>git branch</code> ja <code>git switch -c &lt;nimi&gt;</code></td><td>Listaa haarat / luo uuden haaran ja siirtyy siihen</td></tr>
+        <tr><td><code>git push</code></td><td>Lähettää commitit palvelimelle (GitHub tai GitLab)</td></tr>
+        <tr><td><code>git pull</code></td><td>Hakee muiden muutokset palvelimelta</td></tr>
+      </tbody>
+    </table></div>
+    <div class="codebox"><pre><code>git clone https://github.com/Marcozarg/ClaudeKurssi
+cd ClaudeKurssi
+git status
+git switch -c oma-kokeilu</code></pre></div>
+    <p>Työtapa: tee muutokset omalle haaralle, tarkista <code>git diff</code>, tallenna commit ja vasta sitten lähetä.</p>
+  </section>
+
+  <section>
+    <h2>Näin Claude Code käyttää gitiä</h2>
+    <p>Claude Code ajaa git-komentoja samalla tavalla kuin muutkin komennot ja kysyy luvan, ellet ole sallinut niitä. Lukevat komennot (esimerkiksi <code>git status</code> ja <code>git diff</code>) sujuvat yleensä ilman kysymystä.</p>
+    <ul>
+      <li><b>Muutosten katselu:</b> "Mitä olen muuttanut? Kerro suomeksi." Claude lukee diffin ja tiivistää sen.</li>
+      <li><b>Commit-viestit:</b> "Tee commit viestillä, joka kuvaa muutoksen." Claude tarkistaa muutokset, valitsee tiedostot ja kirjoittaa viestin.</li>
+      <li><b>Haarat:</b> "Luo uusi haara tälle korjaukselle ja tee muutos siellä."</li>
+      <li><b>Konfliktit:</b> "Auta selvittämään tämä yhdistämiskonflikti."</li>
+    </ul>
+    <div class="note">Tarkista aina diff ennen committia, ja pyydä pushia vain, kun olet valmis. Pidä pysyvät sallinnat (moduuli 7) tarkoituksella suppeina: <code>git push</code> ja <code>git reset --hard</code> eivät kuulu "allow always" -listalle. Älä committaa salaisuuksia (<code>.env</code>, salasanat, avaimet).</div>
+    <div class="shot">[KUVA: m8-commit - Claude Code näyttää diffin ja ehdottaa commit-viestiä]</div>
+  </section>
+
+  <section>
+    <h2>GitHub ja GitLab rinnakkain</h2>
+    <p>Moduulissa 5 yhdistit GitHubin claude.ai:hin: se <b>vain lukee tiedostoja</b> eikä näe issueita tai pull requesteja. Claude Codessa asia on toisin: koska Claude voi ajaa komentoja, se voi käyttää palvelun komentorivityökalua ja työskennellä issueiden kanssa.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>GitHub</th><th>GitLab</th></tr></thead>
+      <tbody>
+        <tr><td>Komentorivityökalu</td><td><code>gh</code> (<a href="https://cli.github.com/">cli.github.com</a>); Windowsiin: <code>winget install --id GitHub.cli --source winget</code></td><td><code>glab</code> (<a href="https://docs.gitlab.com/cli/">docs.gitlab.com/cli</a>); asennusohje GitLabin sivulla</td></tr>
+        <tr><td>Kirjautuminen</td><td><code>gh auth login</code></td><td><code>glab auth login</code></td></tr>
+        <tr><td>Issuet</td><td><code>gh issue list</code>, <code>gh issue create</code>, <code>gh issue view 12</code>, <code>gh issue comment 12</code></td><td><code>glab issue list</code>, <code>glab issue create</code>, <code>glab issue view 12</code>, <code>glab issue note 12</code></td></tr>
+        <tr><td>Muutospyyntö</td><td>Pull request: <code>gh pr create</code>, <code>gh pr view</code></td><td>Merge request: <code>glab mr create</code>, <code>glab mr view</code></td></tr>
+        <tr><td>Työn seuranta</td><td>Projects (taulukko tai Kanban): <code>gh project item-list</code>; vaatii <code>project</code>-oikeuden: <code>gh auth refresh -s project</code></td><td>Issue board (Kanban, jossa sarakkeet ovat labeleita): selaimessa tai komento <code>glab issue board view</code></td></tr>
+        <tr><td>Käsite</td><td>Pull request, Actions</td><td>Merge request, CI/CD-putki (pipeline)</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sama työtapa toimii molemmissa: kirjaudu työkaluun kerran, ja pyydä sitten Claudea tavallisella kielellä. Claude valitsee oikean komennon.</p>
+    <div class="shot">[KUVA: m8-gh-glab - gh issue list ja glab issue list rinnakkain]</div>
+  </section>
+
+  <section>
+    <h2>Esimerkkikehotteita</h2>
+    <p>Kirjaudu ensin (<code>gh auth login</code> tai <code>glab auth login</code>) ja käynnistä <code>claude</code> repon kansiossa.</p>
+    <div class="codebox"><pre><code>Listaa avoimet issuet ja ryhmittele ne aiheen mukaan. Kerro, mitkä näyttävät kiireellisimmiltä.</code></pre></div>
+    <div class="codebox"><pre><code>Luo issue: "Varmuuskopioskripti ei kirjaa virheitä lokiin". Lisää kuvaukseen toistamisohje ja ehdotettu korjaus.</code></pre></div>
+    <div class="codebox"><pre><code>Lue issue 12, tee korjaus omalle haaralle, aja testit ja tee commit. Älä pushaa vielä.</code></pre></div>
+    <div class="codebox"><pre><code>Tee muutoksista pull request (GitHub) tai merge request (GitLab), jonka kuvauksessa kerrotaan mitä muutettiin ja miksi.</code></pre></div>
+    <p>Huomaa, että issueiden sisältö on muiden kirjoittamaa tekstiä. Claude lukee sen osana työtä, ja teksti voi sisältää ohjeita, jotka yrittävät ohjata sitä. Tarkista, mitä Claude aikoo ajaa, ennen kuin hyväksyt.</p>
+    <div class="note">Julkaiseminen on vaihe, jota ei voi peruuttaa: <code>git push</code>, issuen luonti ja pull request näkyvät muille. Pidä nämä lupakysymyksen takana.</div>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Kopioi repo ja kysy sen historiasta</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja Git for Windows. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Kloonaa kurssin repo <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a>, käynnistä <code>claude</code> kansiossa ja kysy: "Näytä viimeiset 5 committia ja kerro, mitä kukin muutti."</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude ajaa komennon <code>git log</code> (esimerkiksi <code>git log -5 --stat</code>) ja kertoo kunkin commitin muutokset: mitkä tiedostot lisättiin tai muutettiin. Tämä on lukua, joten Claude Code ei yleensä kysy lupaa. Tarkista tulos itse ajamalla <code>git log --oneline -5</code>.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Skriptin muutos omalle haaralle</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja Git for Windows. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Tee uusi kansio, aja <code>git init</code> ja lisää PowerShell-skripti, joka lukee CSV-tiedoston käyttäjistä (nimi, osasto, sähköposti) ja poistaa tyhjät rivit ja kaksoiskappaleet. Tee ensimmäinen commit. Pyydä sitten Claudea: "Luo haara siistiminen, lisää skriptiin sähköpostiosoitteen tarkistus regexillä ja tee commit." Katso lopuksi <code>git log --oneline</code> ja <code>git diff main</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude luo haaran (<code>git switch -c siistiminen</code>), lisää tarkistuksen esimerkiksi muodossa <code>$email -match '^[^@\s]+@[^@\s]+\.[^@\s]+$'</code> ja tekee commitin kuvaavalla viestillä. Diff näyttää vain lisätyt rivit. Jos päähaaran nimi on <code>master</code>, käytä komentoa <code>git diff master</code>. Testaa regex itse esimerkkiosoitteilla: se on yksinkertainen eikä hyväksy kaikkea, mitä sähköpostiosoitteissa sallitaan.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Issue Clauden kanssa (GitHub tai GitLab)</h3>
+      <div class="req">Edellyttää: Pro-tilaus sekä GitHub- tai GitLab-tili ja testirepo, johon saat luoda issueita. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna <code>gh</code> tai <code>glab</code> ja kirjaudu. Pyydä Claudea luomaan testirepoon issue: "Luo issue: 'Runbook: palvelun uudelleenkäynnistys'. Kuvaukseen tarkistuslista: tarkista tila, pysäytä, käynnistä, varmista." Pyydä sitten listaamaan avoimet issuet ja sulkemaan luomasi issue.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude käyttää komentoa <code>gh issue create</code> (GitLabissa <code>glab issue create</code>), listaa issuet komennolla <code>gh issue list</code> ja sulkee issuen komennolla <code>gh issue close</code> (<code>glab issue close</code>). Jokainen komento pyytää luvan, ellet ole sallinut sitä: lue komento ennen hyväksymistä. Tarkista tulos selaimessa. Käytä testirepoa, älä oikeaa työrepoa.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: Projects, boardit ja turvallinen työtapa</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>GitHub Projects:</b> komennot <code>gh project</code> (esimerkiksi <code>item-list</code>, <code>item-add</code>) vaativat <code>project</code>-oikeuden: <code>gh auth refresh -s project</code>. Pyydä Claudea: "Listaa projektin avoimet tehtävät ja ehdota, mikä otetaan seuraavaksi."</li>
+        <li><b>GitLab-boardit</b> perustuvat labeleihin: kun issuen label vaihtuu, se siirtyy sarakkeesta toiseen. Pyydä: "Lisää issueen 12 label 'In progress'."</li>
+        <li><b>Rajaa oikeudet:</b> käytä kirjautumisessa tunnusta, jolla on vain tarvittavat oikeudet, ja testaa ensin testirepossa.</li>
+        <li><b>Gitin virheiden korjaus:</b> väärä commit voidaan yleensä korjata, mutta pushattua historiaa ei kannata kirjoittaa uusiksi. Kysy Claudelta vaihtoehdot ennen kuin ajat komentoja, joiden nimessä on <code>--force</code> tai <code>reset --hard</code>.</li>
+        <li>Lue lisää: <a href="https://cli.github.com/manual/gh_issue">gh issue</a> ja <a href="https://docs.gitlab.com/cli/issue/">glab issue</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

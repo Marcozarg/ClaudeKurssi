@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7 Peruskäyttö - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="7">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-6.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 7 &middot; Istunto 3</span>
+  <h1>Peruskäyttö</h1>
+  <div class="meta"><span class="chip">Ydin ~55 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Peruskomennot</h2>
+    <p>Claude Coden istunnossa kirjoitat tavallisella kielellä. Kenoviivalla alkavat komennot ohjaavat itse työkalua. Kirjoita <code>/</code>, niin näet listan.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Komento</th><th>Mitä se tekee</th></tr></thead>
+      <tbody>
+        <tr><td><code>/help</code></td><td>Näyttää ohjeen ja komennot</td></tr>
+        <tr><td><code>/usage</code></td><td>Näyttää istunnon kulutuksen ja tilauksesi käyttörajat</td></tr>
+        <tr><td><code>/context</code></td><td>Näyttää, kuinka paljon kontekstia on käytetty</td></tr>
+        <tr><td><code>/compact</code></td><td>Tiivistää keskustelun ja vapauttaa kontekstia</td></tr>
+        <tr><td><code>/clear</code></td><td>Aloittaa uuden keskustelun tyhjällä kontekstilla</td></tr>
+        <tr><td><code>/rewind</code></td><td>Palauttaa koodin ja/tai keskustelun aiempaan kohtaan</td></tr>
+        <tr><td><code>/init</code></td><td>Luo projektille CLAUDE.md-tiedoston</td></tr>
+        <tr><td><code>/memory</code></td><td>Muokkaa CLAUDE.md-tiedostoja ja muistia</td></tr>
+        <tr><td><code>/resume</code></td><td>Jatkaa aiempaa keskustelua</td></tr>
+        <tr><td><code>/permissions</code></td><td>Näyttää ja muokkaa lupasääntöjä</td></tr>
+        <tr><td><code>/model</code></td><td>Vaihtaa mallin</td></tr>
+        <tr><td><code>/exit</code></td><td>Lopettaa istunnon</td></tr>
+      </tbody>
+    </table></div>
+    <p>Muita hyödyllisiä: <code>@tiedosto</code> lisää tiedoston keskusteluun, ja rivin alussa oleva <code>!</code> ajaa komennon suoraan (esimerkiksi <code>!git status</code>) ja lisää tulosteen keskusteluun.</p>
+    <div class="shot">[KUVA: m7-komennot - kenoviivalla avautuva komentolista]</div>
+  </section>
+
+  <section>
+    <h2>Konteksti, /compact ja /clear</h2>
+    <p>Claude muistaa vain sen, mikä on keskustelun kontekstissa: viestit, lukemasi tiedostot ja komentojen tulosteet. Konteksti on rajallinen, ja pitkässä keskustelussa se täyttyy, jolloin vastaukset huononevat ja kulutus kasvaa.</p>
+    <ul>
+      <li><code>/context</code> näyttää, mitä konteksti sisältää.</li>
+      <li><code>/compact</code> tiivistää keskustelun ja jatkaa samaa työtä. Voit ohjata tiivistystä: <code>/compact keskity skriptin virheisiin</code>.</li>
+      <li><code>/clear</code> aloittaa tyhjästä. Käytä sitä, kun siirryt aivan toiseen tehtävään. Edellisen keskustelun löytää komennolla <code>/resume</code>.</li>
+    </ul>
+    <div class="note">Nyrkkisääntö: yksi tehtävä, yksi keskustelu. Kun tehtävä vaihtuu, käytä <code>/clear</code>. Kun sama tehtävä jatkuu mutta keskustelu on pitkä, käytä <code>/compact</code>.</div>
+  </section>
+
+  <section>
+    <h2>Käyttö ja rajat: /usage</h2>
+    <p>Komento <code>/usage</code> näyttää istunnon kustannuksen ja sen, kuinka paljon tilauksesi käyttörajasta on kulunut. Raja on sama kuin claude.ai:ssa: lue periaate <a href="moduuli-0.html#kayttorajat">moduulin 0 käyttörajat-osiosta</a>.</p>
+    <ul>
+      <li>Pitkä konteksti, monta tiedostoa ja raskas malli kuluttavat enemmän.</li>
+      <li>Tarkista <code>/usage</code> ennen suurta työtä ja kun raja alkaa lähestyä.</li>
+      <li>Pienemmän mallin vaihto (<code>/model</code>) kevyisiin tehtäviin säästää rajaa.</li>
+    </ul>
+    <div class="shot">[KUVA: m7-usage - /usage-näkymä]</div>
+  </section>
+
+  <section>
+    <h2>Suunnittelutila ja /rewind</h2>
+    <h3>Suunnittelutila (plan mode)</h3>
+    <p>Suunnittelutilassa Claude lukee ja ehdottaa suunnitelman, mutta ei muuta mitään. Vaihda tilaa näppäimellä <b>Shift+Tab</b> (kierto: Manual, Accept edits, Plan) tai käynnistä <code>claude --permission-mode plan</code>. Joillakin Windows-asetuksilla vaihtonäppäin on <b>Alt+M</b>.</p>
+    <p>Käytä suunnittelutilaa, kun muutos on laaja tai riskialtis: katso ensin suunnitelma, korjaa sitä ja salli toteutus vasta sitten.</p>
+    <h3>/rewind</h3>
+    <p>Claude Code tallentaa tilanteen ennen jokaista lähettämääsi viestiä. Komento <code>/rewind</code> (tai <b>Esc</b> kahdesti tyhjässä kehotekentässä) avaa listan, josta voit palauttaa koodin, keskustelun tai molemmat valittuun kohtaan.</p>
+    <div class="note"><b>Tärkeä rajoitus:</b> palautus seuraa vain Clauden omien tiedostotyökalujen tekemiä muutoksia. Jos tiedostoa on muutettu vain shell-komennolla (Bash tai PowerShell, esimerkiksi <code>Remove-Item</code> tai <code>Move-Item</code>), muutosta ei seurata eikä /rewind kumoa sitä. Tallenna työ gitiin (moduuli 8): /rewind ei korvaa versionhallintaa.</div>
+    <div class="shot">[KUVA: m7-rewind - rewind-valikko ja palautusvaihtoehdot]</div>
+  </section>
+
+  <section>
+    <h2>CLAUDE.md ja muisti</h2>
+    <p>Jokainen istunto alkaa tyhjällä kontekstilla. Kaksi tapaa antaa Claudelle pysyvää tietoa:</p>
+    <ul>
+      <li><b>CLAUDE.md</b> on sinun kirjoittamasi ohjetiedosto projektin kansiossa. Se ladataan joka istunnossa. Komento <code>/init</code> luo siitä ensimmäisen version analysoimalla kansion.</li>
+      <li><b>Automaattinen muisti</b> (auto memory) on muistiinpanoja, joita Claude kirjoittaa itse korjauksistasi ja mieltymyksistäsi. Ne tallentuvat käyttäjäkansion <code>%USERPROFILE%\.claude\projects\</code> alle.</li>
+    </ul>
+    <p>Hyvä CLAUDE.md on lyhyt ja täsmällinen: kerro asiat, joita Claude ei voi päätellä koodista.</p>
+    <div class="codebox"><pre><code># Ohjeet
+
+- Skriptit ovat PowerShell 7 -skriptejä. Käytä Verb-Noun-nimiä.
+- Älä koskaan aja skriptejä tuotantopalvelimia vastaan; kaikki testit tehdään testiympäristössä.
+- Kirjoita ohjeet ja kommentit suomeksi.
+- Testit: Invoke-Pester .\tests</code></pre></div>
+    <h3>Muistin kytkeminen pois</h3>
+    <ul>
+      <li>Komento <code>/memory</code> avaa listan ja kytkimen automaattiselle muistille.</li>
+      <li>Asetus <code>"autoMemoryEnabled": false</code> tiedostossa <code>%USERPROFILE%\.claude\settings.json</code> kytkee sen pois kaikista projekteista, ja projektin omassa asetustiedostossa vain siltä projektilta.</li>
+      <li>Ympäristömuuttuja <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code> kytkee sen pois myös.</li>
+    </ul>
+    <p>Älä kirjoita CLAUDE.md-tiedostoon salasanoja tai muita salaisuuksia: tiedosto kulkee usein repon mukana.</p>
+  </section>
+
+  <section>
+    <h2>Jatkaminen, tiedostot ja kuvat</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tarve</th><th>Näin</th></tr></thead>
+      <tbody>
+        <tr><td>Jatka viimeisintä keskustelua tässä kansiossa</td><td><code>claude --continue</code> (lyhyesti <code>claude -c</code>)</td></tr>
+        <tr><td>Valitse aiempi keskustelu listasta</td><td><code>claude --resume</code> tai istunnon sisällä <code>/resume</code></td></tr>
+        <tr><td>Lisää tiedosto keskusteluun</td><td>Kirjoita <code>@</code> ja tiedoston nimi; Tab täydentää</td></tr>
+        <tr><td>Liitä kuvakaappaus</td><td>Kopioi kuva leikepöydälle ja paina <b>Ctrl+V</b> (jos terminaali sieppaa sen, <b>Alt+V</b>)</td></tr>
+      </tbody>
+    </table></div>
+    <p>Kuvakaappaus virheikkunasta on usein nopein tapa kertoa ongelma. Älä liitä kuvaa, jossa näkyy salasanoja tai henkilötietoja.</p>
+    <div class="shot">[KUVA: m7-kuva - kuvakaappaus liitettynä keskusteluun, [Image #1]]</div>
+  </section>
+
+  <section>
+    <h2>Luvat käytännössä</h2>
+    <p>Claude Code kysyy luvan, ennen kuin se muokkaa tiedostoa tai ajaa komennon. Lukeminen työkansiossa ja tunnetut vain lukevat komennot eivät kysy.</p>
+    <h3>Mitä "allow always" kirjoittaa</h3>
+    <p>Kun valitset <b>Yes, and don't ask again</b>, Claude Code tallentaa komennolle <code>allow</code>-säännön projektin <code>.claude\settings.local.json</code>-tiedostoon (git-repossa repon juureen, Windowsissa työkansion <code>.claude</code>-kansioon). Sääntö on voimassa myöhemmissä istunnoissa. Tiedostokirjoitusten hyväksyntä ei tallennu: se on voimassa vain istunnon loppuun.</p>
+    <div class="codebox"><pre><code>{
+  "permissions": {
+    "allow": [
+      "Bash(npm test *)"
+    ]
+  }
+}</code></pre></div>
+    <p>Tarkista ja poista säännöt komennolla <code>/permissions</code>. Älä hyväksy pysyvästi leveää sääntöä, jota et ymmärrä.</p>
+    <h3>Deny-sääntö suojaa salaisuuksia</h3>
+    <p>Deny-sääntö estää Claudea lukemasta tiedostoa. Lisää se esimerkiksi käyttäjän asetuksiin <code>%USERPROFILE%\.claude\settings.json</code>:</p>
+    <div class="codebox"><pre><code>{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}</code></pre></div>
+    <p>Deny voittaa aina allow-säännön. Se koskee Clauden tiedostotyökaluja ja tunnistettuja tiedostokomentoja (esimerkiksi <code>cat</code>), mutta ei jokaista tapaa lukea tiedosto, esimerkiksi skriptiä, joka avaa tiedoston itse. Tiukkaan eristykseen tarvitaan hiekkalaatikko (sandbox) ja pidä salaisuudet repon ulkopuolella.</p>
+    <div class="note"><b>Älä ohita lupia.</b> Lippu <code>--dangerously-skip-permissions</code> poistaa lupakysymykset: Claude voi silloin ajaa komentoja ja muuttaa tai poistaa tiedostoja kysymättä. Käytä sitä korkeintaan kertakäyttöisessä, eristetyssä ympäristössä (esimerkiksi virtuaalikoneessa), jossa ei ole salaisuuksia eikä tuotantoyhteyksiä. Älä koskaan käytä sitä työasemalla tai palvelimella, jolla on oikeaa dataa. Ylläpito voi kieltää tilan asetuksella <code>permissions.disableBypassPermissionsMode</code>.</div>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Lokin tulkinta ja /compact</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Tee tiedosto <code>loki.txt</code>, jossa on noin 30 riviä palvelun lokia: pääosin INFO-rivejä, mutta mukana muutama ERROR, kuten "Timeout connecting to 203.0.113.15:1433" ja "Login failed for user svc-backup". Pyydä: "Lue loki.txt, ryhmittele virheet syyn mukaan ja ehdota tarkistuskohdat." Aja sen jälkeen <code>/context</code> ja <code>/compact keskity virheisiin</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude ryhmittelee virheet (esimerkiksi verkkoyhteys SQL-palvelimeen ja tunnistautuminen) ja ehdottaa tarkistuskohdiksi palvelun tilan, palomuurisäännön ja tunnuksen salasanan voimassaolon. Komento /context näyttää tiedoston lisänneen kontekstia, ja /compact tiivistää keskustelun niin, että virheet säilyvät. Varmista, että tiivistyksen jälkeen Claude muistaa edelleen molemmat virheet: kysy "Mitkä virheet löytyivät?"</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Suunnittelutila ja /rewind</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Tee kansio, jossa on PowerShell-skripti, joka poistaa yli 30 päivää vanhat tiedostot kansiosta. Vaihda <b>Shift+Tab</b>-näppäimellä suunnittelutilaan ja pyydä: "Lisää skriptiin -WhatIf-tuki ja loki poistetuista tiedostoista. Näytä ensin suunnitelma." Hyväksy suunnitelma, anna Clauden muokata skripti ja kokeile sitten <code>/rewind</code> palauttaaksesi alkuperäisen skriptin.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Suunnitelmassa on tavallisesti: lisätään <code>[CmdletBinding(SupportsShouldProcess)]</code>, kutsutaan poistoa <code>Remove-Item -WhatIf:$WhatIfPreference</code> ja kirjataan poistetut polut lokiin. Muokkauksen jälkeen /rewind &gt; <b>Restore code</b> palauttaa skriptin alkuperäiseksi, koska Clauden tiedostotyökalu teki muutoksen. Jos pyydät Claudea poistamaan testitiedostoja PowerShell-komennolla, /rewind ei palauta niitä: shell-komennon muutoksia ei seurata.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Suojaa salaisuudet</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Tee testikansioon tiedosto <code>.env</code>, jossa on keksitty rivi <code>API_KEY=esimerkki-ei-oikea</code>. Pyydä Claudea lisäämään sääntö, joka estää <code>.env</code>-tiedoston lukemisen, ja kokeile sitten pyytää sitä lukemaan tiedosto. Tarkista sääntö komennolla <code>/permissions</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude lisää asetustiedostoon <code>"deny": ["Read(./.env)"]</code> (ja mahdollisesti <code>Read(./.env.*)</code>). Kun pyydät lukemaan tiedoston, Claude Code estää luvun ja Claude kertoo, ettei pääse tiedostoon. Sääntö näkyy /permissions-listassa. Muista rajaus: sääntö ei estä kaikkia epäsuoria tapoja lukea tiedosto, joten oikeita salaisuuksia ei silti pidä säilyttää projektikansiossa.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: istunnot ja työtavat</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Nimeä keskustelu</b> komennolla <code>/clear nimi</code> tai ota se myöhemmin esiin komennolla <code>claude --resume "nimi"</code>.</li>
+        <li><b>Oma CLAUDE.md</b> kotikansioon (<code>%USERPROFILE%\.claude\CLAUDE.md</code>) sisältää ohjeet, jotka koskevat kaikkia projekteja. Henkilökohtaiset projektikohtaiset asiat voi laittaa tiedostoon <code>CLAUDE.local.md</code>, jota ei viedä gitiin.</li>
+        <li><b>Esc</b> keskeyttää Clauden kesken vastauksen; työ säilyy. Näin voit ohjata, kun Claude menee väärään suuntaan.</li>
+        <li><b>Lue lisää:</b> <a href="https://code.claude.com/docs/en/memory">muisti</a>, <a href="https://code.claude.com/docs/en/permissions">luvat</a> ja <a href="https://code.claude.com/docs/en/checkpointing">checkpointit</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
