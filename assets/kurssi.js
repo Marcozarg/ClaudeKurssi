@@ -5,8 +5,8 @@
     { n: 1, istunto: 1, nimi: "Ensimmäinen keskustelu", valmis: true },
     { n: 2, istunto: 1, nimi: "Hyvä kehote", valmis: true },
     { n: 3, istunto: 1, nimi: "Tiedostot, Projektit ja Artifactit", valmis: true },
-    { n: 4, istunto: 2, nimi: "Claude eri laitteilla", valmis: false },
-    { n: 5, istunto: 2, nimi: "Liitännät ja työnkulut", valmis: false },
+    { n: 4, istunto: 2, nimi: "Claude eri laitteilla", valmis: true },
+    { n: 5, istunto: 2, nimi: "Liitännät ja työnkulut", valmis: true },
     { n: 6, istunto: 2, nimi: "Claude Code: asennus", valmis: false },
     { n: 7, istunto: 3, nimi: "Peruskäyttö", valmis: false },
     { n: 8, istunto: 3, nimi: "Git ja GitHub / GitLab", valmis: false },
@@ -35,6 +35,10 @@
         if (m.n === current) el.setAttribute("aria-current", "page");
         side.appendChild(el);
       }
+      const cur = side.querySelector('[aria-current="page"]');
+      if (cur && side.scrollWidth > side.clientWidth) {
+        side.scrollLeft = cur.offsetLeft - side.offsetLeft - (side.clientWidth - cur.offsetWidth) / 2;
+      }
     }
     const link = (id, target, text) => {
       const a = document.getElementById(id);
@@ -52,8 +56,9 @@
     else link("next", "../index.html", "Etusivu →");
   }
 
-  function copyButtons() {
-    for (const box of document.querySelectorAll(".codebox")) {
+  function copyButtons(root) {
+    for (const box of root.querySelectorAll(".codebox")) {
+      for (const old of box.querySelectorAll(":scope > .copy")) old.remove();
       const code = box.querySelector("code");
       const b = document.createElement("button");
       b.type = "button";
@@ -103,7 +108,7 @@
       '<button class="btn" id="prevS" type="button" aria-label="Edellinen dia">←</button>' +
       '<span id="count" aria-live="polite"></span>' +
       '<button class="btn" id="nextS" type="button" aria-label="Seuraava dia">→</button>' +
-      '<button class="btn" id="exitS" type="button">Esc</button></div>';
+      '<button class="btn" id="exitS" type="button" aria-label="Sulje diatila">Esc</button></div>';
     dlg.querySelector(".grow").textContent = m ? `Moduuli ${m.n} · ${m.nimi}` : document.title;
     document.body.appendChild(dlg);
     const body = dlg.querySelector("#slideBody");
@@ -118,6 +123,7 @@
     const show = () => {
       body.replaceChildren(list[idx].cloneNode(true));
       for (const el of body.querySelectorAll("[id]")) el.removeAttribute("id");
+      copyButtons(body);
       count.textContent = `${idx + 1} / ${list.length}`;
       prevS.disabled = idx === 0;
       nextS.disabled = idx === list.length - 1;
@@ -182,5 +188,5 @@
     navigation(current);
     diatila(current);
   }
-  copyButtons();
+  copyButtons(document);
 })();

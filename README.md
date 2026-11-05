@@ -17,8 +17,8 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 
 ### Istunto 2: Laitteet ja Claude Code
 
-- 4 Claude eri laitteilla (tulossa)
-- 5 Liitännät ja työnkulut (tulossa)
+- [4 Claude eri laitteilla](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-4.html)
+- [5 Liitännät ja työnkulut](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-5.html)
 - 6 Claude Code: asennus (tulossa)
 
 ### Istunto 3: Claude Code käytössä

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 Claude eri laitteilla - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="4">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-3.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 4 &middot; Istunto 2</span>
+  <h1>Claude eri laitteilla</h1>
+  <div class="meta"><span class="chip">Ydin ~25 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Free / Pro</span></div>
+
+  <section>
+    <h2>Mikä sovellus mihinkin</h2>
+    <p>Kaikissa sovelluksissa on sama tili, samat keskustelut ja sama käyttöraja. Valitse se, joka on lähimpänä työtäsi. Tilaukset tarkistettu 11/2026.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Sovellus</th><th>Mihin</th><th>Tilaus</th></tr></thead>
+      <tbody>
+        <tr><td>Selain, claude.ai</td><td>Kaikkialla, ei asennusta</td><td>Free</td></tr>
+        <tr><td>Windows-työpöytäsovellus</td><td>Oma ikkuna, kuvakaappaukset, Cowork ja Claude Code samassa sovelluksessa</td><td>Free (Cowork ja Code: Pro)</td></tr>
+        <tr><td>Mobiilisovellus</td><td>Kysymykset liikkeellä, kuvat ja äänisyöte</td><td>Free</td></tr>
+        <tr><td>Claude in Chrome</td><td>Claude toimii selaimessa puolestasi: lukee sivuja, täyttää lomakkeita</td><td>Pro</td></tr>
+        <tr><td>Claude for Microsoft 365</td><td>Claude Excelissä, Wordissa, PowerPointissa ja Outlookissa</td><td>Pro</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Windows-työpöytäsovellus</h2>
+    <span class="chip plan">Free</span>
+    <ol>
+      <li>Avaa <a href="https://claude.com/download">claude.com/download</a> ja valitse Windows. Sovellus on myös Microsoft Storessa.</li>
+      <li>Lataa asennusohjelma. Useimmat koneet ovat x64-koneita; ARM-koneille (esimerkiksi Snapdragon) on oma ARM64-versio.</li>
+      <li>Avaa ladattu tiedosto, jolloin asennus etenee itsestään.</li>
+      <li>Käynnistä Claude Käynnistä-valikosta ja kirjaudu samalla tilillä kuin selaimessa.</li>
+    </ol>
+    <p>Vaatimus: Windows 10 tai uudempi. Työkoneella tarkista ensin, saako sovelluksia asentaa itse vai tuleeko asennus ohjelmistojakelun kautta.</p>
+    <div class="shot">[KUVA: m4-desktop-lataus - claude.com/download, Windows valittuna]</div>
+    <div class="shot">[KUVA: m4-desktop-sovellus - työpöytäsovellus auki, sivupalkissa Chat, Cowork ja Code]</div>
+  </section>
+
+  <section>
+    <h2>Työpöytäsovellus käytössä</h2>
+    <ul>
+      <li><b>Oma ikkuna:</b> Claude on tehtäväpalkissa omana sovelluksenaan, eikä hukkaannu selaimen välilehtien joukkoon.</li>
+      <li><b>Kuvakaappaus ja tiedostot:</b> raahaa tiedosto tai liitä kuvakaappaus (Win+Shift+S, sitten Ctrl+V) suoraan viestiin. Rajaa kuva ennen liittämistä.</li>
+      <li><b>Cowork</b> (Pro): Claude tekee monivaiheisia tehtäviä koneesi tiedostoilla ilman komentoriviä. Siitä lisää moduulissa 5.</li>
+      <li><b>Code</b> (Pro): Claude Code sovelluksen sisällä, ilman erillistä asennusta. Siitä lisää moduulissa 6.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Mobiilisovellus</h2>
+    <span class="chip plan">Free</span>
+    <p>Claude on saatavilla iPhonelle App Storesta ja Androidille Google Playsta (linkit myös sivulla <a href="https://claude.com/download">claude.com/download</a>). Kirjaudu samalla tilillä, niin keskustelut näkyvät kaikissa laitteissa.</p>
+    <ul>
+      <li>Kuvaa virheilmoitus näytöltä ja kysy, mitä se tarkoittaa. Varmista, ettei kuvassa näy nimiä tai muuta luottamuksellista.</li>
+      <li>Puhu kysymys, kun kädet ovat varattuina.</li>
+      <li>Jatka koneella aloitettua keskustelua puhelimessa.</li>
+    </ul>
+    <div class="shot">[KUVA: m4-mobiili - mobiilisovellus, kuva liitettynä viestiin]</div>
+  </section>
+
+  <section>
+    <h2>Claude in Chrome</h2>
+    <span class="chip plan">Pro</span>
+    <p>Claude in Chrome on selainlaajennus, jolla Claude voi lukea avoimia sivuja ja tehdä niillä toimia puolestasi: klikata, täyttää lomakkeita ja siirtyä sivulta toiselle. Se toimii vain Chromessa, ei muissa Chromium-selaimissa eikä mobiilissa.</p>
+    <ol>
+      <li>Avaa Chromessa Chrome Web Storesta laajennus <b>Claude</b> ja valitse <b>Add to Chrome</b>.</li>
+      <li>Kirjaudu Claude-tililläsi.</li>
+      <li>Kiinnitä laajennus työkalupalkkiin palapelikuvakkeesta.</li>
+      <li>Anna vain ne oikeudet, joita tarvitset. Claude kysyy luvan sivustokohtaisesti.</li>
+    </ol>
+    <div class="note">Laajennus näkee selaimessa kirjautuneena olevat palvelusi. Älä anna sen toimia hallintakonsoleissa tai sivuilla, joilla on asiakastietoja, ellei organisaatiosi ohje sitä salli.</div>
+    <div class="shot">[KUVA: m4-chrome - Claude in Chrome -sivupaneeli auki]</div>
+  </section>
+
+  <section>
+    <h2>Claude for Microsoft 365</h2>
+    <span class="chip plan">Pro</span>
+    <p>Claude toimii Office-sovellusten sisällä lisäosana: Excel, Word ja PowerPoint ovat yleisesti saatavilla kaikilla maksullisilla tilauksilla, Outlook beta-versiona. Lisäosat asennetaan Officen lisäosakaupasta, linkit sivulla <a href="https://claude.com/download">claude.com/download</a>.</p>
+    <ul>
+      <li><b>Excel:</b> selitä kaava, siivoa data, tee pivot-taulukko tai kaavio.</li>
+      <li><b>Word:</b> muokkaa ohjetta, tiivistä pitkä dokumentti.</li>
+      <li><b>PowerPoint:</b> luonnostele dioja tekstistä.</li>
+    </ul>
+    <p>Organisaatioissa Office-lisäosien asennus on usein estetty tai keskitetty. Kysy IT:ltä ennen asentamista.</p>
+    <div class="shot">[KUVA: m4-excel - Claude-lisäosa Excelissä]</div>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Asenna työpöytäsovellus ja kysy kuvakaappauksella</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää) ja lupa asentaa sovellus. Ei lupaa tai tiliä? Käytä selainta tai seuraa kouluttajan näytöltä.</div>
+      <p>Asenna sovellus ja kirjaudu. Avaa PowerShell, aja komento <code>Get-Service -Name EiOlemassa</code> ja ota virheestä kuvakaappaus (Win+Shift+S). Liitä kuva viestiin ja pyydä selitys sekä komento, joka listaa kaikki pysäytetyt palvelut.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <p>Claude lukee kuvasta virheen "Cannot find any service with service name 'EiOlemassa'" ja kertoo, ettei sen nimistä palvelua ole. Pysäytetyt palvelut:</p>
+          <pre><code>Get-Service | Where-Object Status -eq 'Stopped' | Sort-Object DisplayName</code></pre>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Kuvaa virheilmoitus puhelimella</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää) ja mobiilisovellus. Ei sovellusta? Tee parin kanssa tai käytä työpöytäsovellusta.</div>
+      <p>Kuvaa puhelimella näytöllä oleva virheilmoitus (esimerkiksi harjoituksen 1 virhe tai tulostimen virhekoodi). Rajaa kuva niin, ettei siinä näy muuta. Pyydä Claudelta kolme todennäköisintä syytä tärkeysjärjestyksessä.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude lukee tekstin kuvasta ja vastaa numeroidulla listalla. Jos kuva on epätarkka, se sanoo sen tai lukee väärin: tarkista, että se luki virhekoodin oikein, ennen kuin luotat vastaukseen.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Claude in Chrome tiivistää ohjesivun</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja Chrome. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Avaa Chromessa jonkin julkisen ohjelmiston julkaisutiedotteet (release notes). Pyydä Claude in Chromea tiivistämään sivulta ylläpidon kannalta tärkeät muutokset: rikkovat muutokset, tietoturvakorjaukset ja vanhentuneet ominaisuudet.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude lukee avoimen sivun ja palauttaa kolme otsikoitua listaa. Hyvä tiivistelmä viittaa sivun kohtiin, joten voit tarkistaa ne. Jos sivu on pitkä, Claude voi vierittää ja lukea lisää, ja se kertoo, mitä teki.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: mobiili ja Office tarkemmin</h2>
+    <div class="optbox">
+      <ul>
+        <li>Mobiilisovelluksessa et voi muuttaa artifactien jakoasetuksia. Tee se koneella.</li>
+        <li>Pro-käyttäjä: kokeile Excel-lisäosaa moduulin 3 ensimmäisen harjoituksen CSV:llä. Pyydä selitys jokaisesta kaavasta, jonka Claude lisää.</li>
+        <li>Asetukset ja käyttö: <b>Settings &gt; Usage</b> näyttää saman rajan sovelluksesta riippumatta.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5 Liitännät ja työnkulut - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="5">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-4.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 5 &middot; Istunto 2</span>
+  <h1>Liitännät ja työnkulut</h1>
+  <div class="meta"><span class="chip">Ydin ~25 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Free / Pro</span></div>
+
+  <section>
+    <h2>Mikä liitäntä on?</h2>
+    <p>Liitäntä (connector) antaa Claudelle pääsyn toiseen palveluun: koodivarastoon, sähköpostiin, kalenteriin tai dokumentteihin. Claude voi silloin hakea tietoa suoraan sieltä, eikä sinun tarvitse kopioida sitä keskusteluun.</p>
+    <ul>
+      <li>Liitännät löytyvät kohdasta <b>Customize &gt; Connectors</b>.</li>
+      <li>Liitäntä kytketään käyttöön keskustelukohtaisesti viestikentän <b>+</b>-valikosta.</li>
+      <li>Jokaiselle liitännän toiminnolle voi valita: <b>Always allow</b>, <b>Needs approval</b> tai <b>Blocked</b>. Aloita asetuksella Needs approval.</li>
+    </ul>
+    <div class="note">Liitäntä antaa Claudelle pääsyn kaikkeen, mihin sinun tunnuksellasi on pääsy. Noudata organisaatiosi ohjetta siitä, mitä palveluja saa liittää.</div>
+  </section>
+
+  <section>
+    <h2>GitHub-liitäntä</h2>
+    <span class="chip plan">Free</span>
+    <p>GitHub-liitäntä toimii kaikilla tilauksilla. Claude lukee julkisia repoja ja niitä yksityisiä repoja, joihin annat pääsyn. Se näkee <b>tiedostojen nimet ja sisällön</b> sekä haarat, mutta <b>ei commit-historiaa, pull requesteja eikä issueita</b>.</p>
+    <h3>Yhdistäminen</h3>
+    <ol>
+      <li>Avaa <b>Customize &gt; Connectors</b> ja valitse <b>GitHub Integration</b>.</li>
+      <li>Valitse <b>Connect</b> ja kirjaudu GitHubiin, jos se kysyy.</li>
+      <li>Yksityisille repoille GitHub pyytää asentamaan Claude GitHub App -sovelluksen. Valitse <b>Only select repositories</b> ja anna pääsy vain tarvittaviin repoihin.</li>
+    </ol>
+    <h3>Käyttö keskustelussa</h3>
+    <ol>
+      <li>Valitse viestikentän <b>+</b> &gt; <b>Add from GitHub</b>.</li>
+      <li>Valitse repo listalta tai liitä sen osoite, ja valitse <b>Add repository</b>.</li>
+      <li>Kysy: "Mitä tämä repo tekee ja mistä tiedostosta aloittaisin?"</li>
+    </ol>
+    <p>Projektiin repo lisätään projektin tiedostojen <b>+</b>-painikkeesta &gt; GitHub, ja siitä voi valita vain tarvittavat kansiot. <b>Sync now</b> päivittää sisällön, kun repo muuttuu.</p>
+    <div class="shot">[KUVA: m5-github-connect - Customize &gt; Connectors, GitHub Integration]</div>
+    <div class="shot">[KUVA: m5-github-repo - Add from GitHub, repo valittuna keskusteluun]</div>
+    <p><b>Issuet ja pull requestit:</b> GitHubin oma <a href="https://github.com/github/github-mcp-server">MCP-palvelin</a> voidaan lisätä mukautettuna liitäntänä (custom connector, katso alla), jolloin Claude näkee myös issuet ja pull requestit. Muutosten tekemiseen koodiin käytetään Claude Codea (moduuli 8).</p>
+  </section>
+
+  <section>
+    <h2>GitLab</h2>
+    <span class="chip plan">Free</span>
+    <p>GitLabille ei ole tätä kirjoitettaessa (11/2026) virallista liitäntää Clauden liitäntähakemistossa. Tarkista ensin hakemistosta (<b>Customize &gt; Connectors &gt; Discover</b>), onko sellainen tullut.</p>
+    <p>Jos ei ole, voit kokeilla GitLabin oman <a href="https://docs.gitlab.com/user/model_context_protocol/mcp_server/">MCP-palvelimen</a> lisäämistä mukautettuna liitäntänä: <b>Customize &gt; Connectors &gt; Add custom connector</b> ja osoitteeksi <code>https://&lt;gitlab-osoite&gt;/api/v4/mcp</code>. GitLabin ohje kuvaa tämän palvelimen käytön Claude Codella ja Claude Desktopilla, ei claude.ai:ssa, joten tämä on kokeilu: se toimii vain, jos GitLab-palvelimellanne MCP-palvelin on käytössä ja palvelin näkyy internetiin. Kysy GitLabin ylläpidolta. Ilmaisella tilillä voi lisätä yhden mukautetun liitännän.</p>
+    <p>Varmin tapa käyttää GitLabia Clauden kanssa on Claude Code, jonka näet moduulissa 8: siinä GitLab ja GitHub toimivat rinnakkain.</p>
+  </section>
+
+  <section>
+    <h2>Muut liitännät lyhyesti</h2>
+    <p>Hakemistossa on yli tuhat liitäntää. Liitännät ovat käytössä kaikilla tilauksilla, mutta palvelu itse voi vaatia oman tilauksensa. Esimerkkejä:</p>
+    <ul>
+      <li><b>Microsoft 365:</b> haku Outlookista, OneDrivesta, SharePointista ja Teamsista</li>
+      <li><b>Google Drive, Gmail, Google Calendar</b></li>
+      <li><b>Atlassian</b> (Jira, Confluence), <b>Notion</b>, <b>Slack</b>, <b>Asana</b>, <b>Linear</b></li>
+    </ul>
+    <p>Liitäntä lisätään: <b>Customize &gt; Connectors &gt; Discover</b>, valitse palvelu, <b>Connect</b> ja kirjaudu palveluun. Hakemistossa on merkintä Verified tai Community. Verified ei tarkoita tietoturvatarkastusta.</p>
+    <div class="shot">[KUVA: m5-connectors-discover - liitäntähakemisto]</div>
+  </section>
+
+  <section>
+    <h2>Tutkimustila, Cowork ja skillit</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Toiminto</th><th>Mitä se tekee</th><th>Tilaus</th></tr></thead>
+      <tbody>
+        <tr><td>Tutkimustila (Research)</td><td>Claude tutkii kysymyksen perusteellisesti verkosta ja kirjoittaa raportin lähteineen. Vaatii verkkohaun päälle; käynnistetään viestikentän <b>+</b>-valikosta.</td><td>Pro</td></tr>
+        <tr><td>Cowork</td><td>Claude Coden tapa tehdä töitä, mutta tavalliseen tietotyöhön: monivaiheiset tehtävät koneen tiedostoilla työpöytäsovelluksessa, ilman komentoriviä.</td><td>Pro</td></tr>
+        <tr><td>Skillit</td><td>Kansio ohjeita ja skriptejä, jonka Claude ottaa käyttöön tietyssä tehtävässä, esimerkiksi tietyn dokumenttipohjan tekemiseen. Hallinta kohdassa <b>Customize &gt; Skills</b>; vaatii koodin ajon päälle.</td><td>Free</td></tr>
+      </tbody>
+    </table></div>
+    <p>Organisaatioille on <b>Team</b>-tilaus (alkaen 20 $/käyttäjä/kk vuosilaskutuksella, vähintään 2 käyttäjää), jossa on keskitetty hallinta ja yhteiset liitännät.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Kysy julkisesta reposta</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää) ja GitHub-tili. Ei GitHub-tiliä? Tee parin kanssa tai seuraa kouluttajan demoa.</div>
+      <p>Yhdistä GitHub ja lisää keskusteluun tämän kurssin repo <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a>. Kysy: "Miten Diatila on toteutettu ja mitä näppäimiä se tukee?"</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude löytää tiedoston <code>assets/kurssi.js</code> ja kertoo, että jokainen väliotsikollinen osio on oma diansa, S avaa ja sulkee tilan, nuolet, PageUp/PageDown ja välilyönti vaihtavat diaa ja Esc sulkee. Se mainitsee myös, ettei S toimi tekstikentässä. Tarkista vastaus avaamalla tiedosto itse: viittaako Claude oikeisiin kohtiin?</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Tutkimustila: muutokset ennen päivitystä</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Käynnistä tutkimustila ja kysy: "Mitkä ovat merkittävimmät ylläpitoon vaikuttavat muutokset, kun siirrytään Windows Server 2022:sta 2025:een? Listaa poistuneet ominaisuudet ja muutokset, jotka pitää testata, lähteineen."</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude tekee useita hakuja ja palauttaa raportin, jossa on lähdeviitteet Microsoftin dokumentaatioon. Hyvä raportti erottaa poistuneet ja vanhentuneet ominaisuudet ja kertoo, mitä pitää testata. Avaa vähintään kaksi lähdettä ja tarkista, että ne sanovat saman kuin raportti.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Liitännän oikeudet</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää) ja harjoituksen 1 GitHub-liitäntä. Ei liitäntää? Katso kouluttajan näytöltä.</div>
+      <p>Avaa <b>Customize &gt; Connectors</b> ja GitHub-liitännän asetukset. Selvitä, mihin repoihin Claudella on pääsy ja miten pääsyn voi poistaa. Käy sama katsomassa GitHubin puolelta (Settings &gt; Applications).</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Clauden puolella liitännän voi katkaista (Disconnect). GitHubin puolella Settings &gt; Applications näyttää asennetun Claude-sovelluksen ja ne repot, joihin sillä on pääsy. Siellä pääsyä voi rajata tai sovelluksen voi poistaa kokonaan. Kun lopetat liitännän käytön, poista pääsy molemmista paikoista.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: mukautettu liitäntä ja turvallisuus</h2>
+    <div class="optbox">
+      <ul>
+        <li>Mukautettu liitäntä (custom connector) yhdistää Clauden mihin tahansa MCP-palvelimeen. Lisää vain palvelimia, joiden ylläpitäjään luotat: Claude saa niiden kautta tietoa ja voi tehdä toimia.</li>
+        <li>Liitännän kautta tuleva teksti voi sisältää ohjeita, jotka yrittävät ohjata Claudea (prompt injection). Pidä kirjoittavat toiminnot asetuksessa Needs approval.</li>
+        <li>Lue, miten liitännät toimivat: <a href="https://claude.com/connectors">claude.com/connectors</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
