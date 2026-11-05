@@ -11,9 +11,9 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 ### Istunto 1: Perusteet
 
 - [0 Mikä Claude on?](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-0.html)
-- 1 Ensimmäinen keskustelu (tulossa)
-- 2 Hyvä kehote (tulossa)
-- 3 Tiedostot, Projektit ja Artifactit (tulossa)
+- [1 Ensimmäinen keskustelu](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-1.html)
+- [2 Hyvä kehote](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-2.html)
+- [3 Tiedostot, Projektit ja Artifactit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-3.html)
 
 ### Istunto 2: Laitteet ja Claude Code
 

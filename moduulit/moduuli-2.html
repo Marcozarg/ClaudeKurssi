@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2 Hyvä kehote - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="2">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-1.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 2 &middot; Istunto 1</span>
+  <h1>Hyvä kehote</h1>
+  <div class="meta"><span class="chip">Ydin ~35 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Kehote on tehtävänanto</h2>
+    <p>Kehote (prompt) on viesti, jolla annat Claudelle tehtävän. Ajattele, että annat tehtävän uudelle, osaavalle kollegalle, joka ei tiedä ympäristöstänne mitään. Mitä hän tarvitsisi, jotta onnistuu ensimmäisellä kerralla?</p>
+    <ul>
+      <li><b>Tavoite:</b> mitä haluat saada aikaan ja miksi</li>
+      <li><b>Konteksti:</b> ympäristö, versiot, rajoitteet, mitä olet jo kokeillut</li>
+      <li><b>Lähtötieto:</b> virheilmoitus, lokiote, skripti tai esimerkkidata</li>
+      <li><b>Muoto:</b> millaisen vastauksen haluat: skripti, taulukko, lyhyt ohje, kolme vaihtoehtoa</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Konteksti tekee eron</h2>
+    <h3>Heikko</h3>
+    <div class="codebox"><pre><code>Tee skripti joka poistaa vanhat käyttäjät.</code></pre></div>
+    <h3>Parempi</h3>
+    <div class="codebox"><pre><code>Ympäristö: Windows Server 2022, ActiveDirectory-moduuli, PowerShell 5.1.
+Tavoite: löytää käyttäjät, jotka eivät ole kirjautuneet 120 päivään, ja POISTAA NE KÄYTÖSTÄ (ei poistaa).
+Rajoitteet: ohita OU "Palvelutilit" ja tilit, joiden nimi alkaa "svc-".
+Muoto: skripti, jossa on -WhatIf-tuki, ja joka kirjoittaa CSV-raportin ennen muutoksia.
+Kerro lopuksi, mitä pitää tarkistaa ennen kuin ajan sen tuotannossa.</code></pre></div>
+    <p>Jälkimmäinen kertoo version, rajaa riskit ja määrää muodon. Vastaus on lähes aina käyttökelpoisempi, ja se on helpompi tarkistaa.</p>
+  </section>
+
+  <section>
+    <h2>Näytä esimerkki</h2>
+    <p>Kun haluat tietyn muodon, näytä se. Yksi tai kaksi esimerkkiä kertoo enemmän kuin pitkä selitys.</p>
+    <div class="codebox"><pre><code>Muuta nämä lokirivit taulukoksi, sarakkeet Aika, Taso, Palvelu, Viesti.
+Esimerkki halutusta rivistä:
+| 08:14:22 | ERROR | spooler | Print job failed |
+
+Rivit:
+2026-11-03T08:14:22 [ERROR] spooler: Print job failed
+2026-11-03T08:15:01 [WARN] w32time: Time sync delayed
+2026-11-03T08:15:40 [INFO] spooler: Service restarted</code></pre></div>
+    <p>Sama toimii regexeissä: anna muutama rivi, joiden pitää osua, ja muutama, joiden ei pidä.</p>
+  </section>
+
+  <section>
+    <h2>Iteroi</h2>
+    <p>Ensimmäinen vastaus on harvoin valmis. Jatka samassa keskustelussa ja ohjaa:</p>
+    <ul>
+      <li>"Lyhennä puoleen ja poista selitykset."</li>
+      <li>"Skripti kaatuu tähän virheeseen: ..." ja liitä virhe sellaisenaan.</li>
+      <li>"Käytä PowerShell 5.1:n ominaisuuksia, ei 7:n."</li>
+      <li>"Hyvä, mutta älä käytä Write-Hostia, palauta objekteja."</li>
+    </ul>
+    <p>Jos keskustelu menee harhaan, palaa ja <b>muokkaa aiempaa viestiäsi</b> sen sijaan, että korjaat perään. Silloin väärä suunta ei jää kontekstiin.</p>
+  </section>
+
+  <section>
+    <h2>Pyydä Claudea kysymään</h2>
+    <p>Kun tehtävä on iso tai epäselvä, Claude arvaa puuttuvat tiedot. Estä arvaaminen pyytämällä sitä kysymään ensin:</p>
+    <div class="codebox"><pre><code>Haluan ohjeen uuden työntekijän tunnusten luontiin helpdeskille.
+Älä kirjoita ohjetta vielä. Kysy minulta ensin ne asiat, jotka sinun pitää tietää,
+yksi kerrallaan, ja kerro jokaisen kysymyksen kohdalla suositeltu vastaus.</code></pre></div>
+    <p>Kun olet vastannut, pyydä vasta sitten ohje. Sama tapa toimii kaikessa suunnittelussa, ja se on Claude Coden työtavan perusta (moduuli 9).</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Paranna heikko kehote</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Kirjoita kehote paperille ja kokeile parin koneella.</div>
+      <p>Lähetä ensin kehote "Tee regex joka löytää virheet lokista". Kirjoita sitten parempi versio, jossa on konteksti, esimerkkirivit ja haluttu muoto, ja vertaa vastauksia.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <p>Parempi kehote voisi olla:</p>
+          <pre><code>Kirjoita .NET/PowerShell-regex, joka poimii riveiltä ajan, tason ja viestin,
+kun taso on ERROR tai FATAL.
+Osuvat: "2026-11-03T08:14:22 [ERROR] spooler: Print job failed"
+Ei osu: "2026-11-03T08:15:40 [INFO] spooler: Service restarted"
+Anna regex, lyhyt selitys ja Select-String-esimerkki.</code></pre>
+          <p>Vastaus voisi olla <code>^(\S+) \[(ERROR|FATAL)\] (.+)$</code> ja esimerkki <code>Select-String -Path .\app.log -Pattern $rx</code>. Testaa regex aina omilla riveilläsi.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Tikettivastaus esimerkin avulla</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Tee parin kanssa.</div>
+      <p>Anna Claudelle yksi aiempi, hyväksi todettu tikettivastaus esimerkiksi tyylistä (ilman henkilötietoja). Pyydä sitten samalla tyylillä vastaus tikettiin: "Outlook kysyy salasanaa jatkuvasti salasanan vaihdon jälkeen."</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Hyvä vastaus noudattaa esimerkin sävyä ja pituutta, kertoo todennäköisen syyn (vanhat tunnistetiedot välimuistissa) ja antaa 2-4 numeroitua vaihetta: sulje Outlook, poista vanhat tunnistetiedot Windowsin tunnistetietojen hallinnasta, käynnistä Outlook ja kirjaudu uudella salasanalla. Lopussa on ohje ottaa yhteyttä, jos ongelma jatkuu.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Anna Clauden kysyä ensin</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Toimi parin kanssa niin, että toinen vastaa Clauden kysymyksiin.</div>
+      <p>Pyydä Claudea tekemään runbook palvelimen kuukausittaiseen päivitykseen, mutta käske sen kysyä ensin tarvitsemansa tiedot yksi kerrallaan. Vastaa kysymyksiin ja pyydä lopuksi runbook.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude kysyy esimerkiksi: mikä käyttöjärjestelmä, onko klusteri vai yksittäinen palvelin, huoltoikkuna, miten varmuuskopio tarkistetaan, kuka hyväksyy uudelleenkäynnistyksen ja miten palautetaan, jos päivitys epäonnistuu. Valmis runbook on numeroitu lista, jossa on tarkistus ennen, aikana ja jälkeen sekä palautussuunnitelma.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: aloittelijan yleisimmät virheet</h2>
+    <div class="optbox">
+      <ol>
+        <li><b>Liian lyhyt kehote:</b> "korjaa tää" ilman virhettä, versiota tai tavoitetta.</li>
+        <li><b>Ajetaan tarkistamatta:</b> skripti suoraan tuotantoon ilman testiä tai <code>-WhatIf</code>-ajoa.</li>
+        <li><b>Liitetään liikaa:</b> koko loki tai tunnuksia, kun ote ja paikkamerkit riittäisivät.</li>
+        <li><b>Yksi loputon keskustelu:</b> kaikki aiheet samaan ketjuun, raja loppuu ja vastaukset sekoavat.</li>
+        <li><b>Korjataan perään:</b> viisi korjausviestiä sen sijaan, että muokataan alkuperäistä.</li>
+        <li><b>Uskotaan varmaa sävyä:</b> itsevarma vastaus ei ole todiste. Tarkista.</li>
+        <li><b>Ei kerrota muotoa:</b> pitkä essee, kun tarvitsit kolmen rivin komennon.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

@@ -2,9 +2,9 @@
 (() => {
   const MODUULIT = [
     { n: 0, istunto: 1, nimi: "Mikä Claude on?", valmis: true },
-    { n: 1, istunto: 1, nimi: "Ensimmäinen keskustelu", valmis: false },
-    { n: 2, istunto: 1, nimi: "Hyvä kehote", valmis: false },
-    { n: 3, istunto: 1, nimi: "Tiedostot, Projektit ja Artifactit", valmis: false },
+    { n: 1, istunto: 1, nimi: "Ensimmäinen keskustelu", valmis: true },
+    { n: 2, istunto: 1, nimi: "Hyvä kehote", valmis: true },
+    { n: 3, istunto: 1, nimi: "Tiedostot, Projektit ja Artifactit", valmis: true },
     { n: 4, istunto: 2, nimi: "Claude eri laitteilla", valmis: false },
     { n: 5, istunto: 2, nimi: "Liitännät ja työnkulut", valmis: false },
     { n: 6, istunto: 2, nimi: "Claude Code: asennus", valmis: false },

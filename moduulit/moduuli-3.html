@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 Tiedostot, Projektit ja Artifactit - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="3">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-2.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 3 &middot; Istunto 1</span>
+  <h1>Tiedostot, Projektit ja Artifactit</h1>
+  <div class="meta"><span class="chip">Ydin ~25 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Tiedostot keskustelussa</h2>
+    <p>Tiedoston voi liittää viestiin raahaamalla sen keskusteluun tai viestikentän <b>+</b>-painikkeesta. Claude lukee tekstitiedostot, PDF:t, Office-tiedostot ja kuvat.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Mitä</th><th>Raja (tarkistettu 11/2026)</th></tr></thead>
+      <tbody>
+        <tr><td>Tiedoston koko keskustelussa</td><td>500 Mt / tiedosto</td></tr>
+        <tr><td>Tiedostoja keskustelussa</td><td>20 / keskustelu</td></tr>
+        <tr><td>PDF</td><td>enintään 1000 sivua</td></tr>
+        <tr><td>Tiedostotyypit</td><td>esimerkiksi PDF, DOCX, CSV, TXT, HTML, JSON, XLSX; kuvat JPEG, PNG, GIF, WebP</td></tr>
+      </tbody>
+    </table></div>
+    <p>Iso tiedosto kuluttaa paljon käyttörajaa, ja jokainen seuraava viesti käsittelee sen uudelleen. Liitä vain tarvittava osa. Moduulin 0 säännöt pätevät: ei tunnuksia, henkilötietoja eikä raakalokeja.</p>
+    <div class="shot">[KUVA: m3-liite - CSV-tiedosto liitettynä viestiin]</div>
+  </section>
+
+  <section>
+    <h2>Projektit toistuvaan työhön</h2>
+    <p>Projekti on kansio keskusteluille. Siihen liitetään ohjeet ja tiedostot, jotka ovat mukana jokaisessa projektin keskustelussa. Sinun ei tarvitse kertoa samoja asioita joka kerta.</p>
+    <ul>
+      <li><b>Ohjeet (instructions):</b> esimerkiksi "Vastaa suomeksi. Ympäristö on Windows Server 2022 ja PowerShell 5.1. Skripteissä aina -WhatIf-tuki."</li>
+      <li><b>Tiedostot (project knowledge):</b> esimerkiksi oma runbook-pohja, tikettivastausten tyyliesimerkit, nimeämiskäytäntö. Raja 30 Mt / tiedosto.</li>
+      <li><b>Keskustelut:</b> jokainen projektin keskustelu näkee ohjeet ja tiedostot.</li>
+    </ul>
+    <p>Projektit ovat käytössä myös ilmaisella tilillä, enintään viisi projektia. Projektin tiedostot säästävät myös rajaa, koska toistuvasti käytetty sisältö lasketaan kevyemmin.</p>
+    <div class="shot">[KUVA: m3-projekti - projektin ohjeet ja tiedostot]</div>
+  </section>
+
+  <section>
+    <h2>Artifactit</h2>
+    <p>Artifact on Clauden tekemä erillinen tuotos, joka avautuu keskustelun viereen: dokumentti, taulukko, kaavio, HTML-sivu tai pieni työkalu. Sitä voi muokata pyytämällä muutoksia, ja siitä jää versiot talteen.</p>
+    <ul>
+      <li>Käytössä kaikilla tilauksilla, myös Freellä.</li>
+      <li>Edellyttää, että <b>Settings &gt; Capabilities</b> -kohdassa on päällä koodin ajo ja tiedostojen luonti (Code execution and file creation).</li>
+      <li>Artifact on aluksi yksityinen. Jakaminen linkillä onnistuu Share-valikosta. Linkin saanut näkee sen ilman tiliä, joten älä jaa mitään sisäistä.</li>
+    </ul>
+    <p>Hyviä käyttökohteita: tarkistuslista runbookista, taulukko CSV:stä, yksinkertainen laskuri tai muistio.</p>
+    <div class="shot">[KUVA: m3-artifact - artifact avattuna keskustelun vieressä]</div>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Siivoa CSV</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Tee parin kanssa.</div>
+      <p>Tallenna alla oleva keksitty data tiedostoksi <code>laitteet.csv</code> ja liitä se. Pyydä Claudea yhtenäistämään sarakkeet: päivämäärät muotoon VVVV-KK-PP, käyttöjärjestelmät yhteen kirjoitusasuun, tyhjät sijainnit arvoksi "tuntematon". Pyydä lisäksi PowerShell-komento, joka tekee saman.</p>
+      <div class="codebox"><pre><code>Nimi;OS;Hankittu;Sijainti
+TT-0012;win 11;3.2.2024;Kerros 2
+TT-0013;Windows11;2024-02-05;
+TT-0014;Windows 10;5/2/2023;kerros 3
+TT-0015;W10;12.12.2022;Kerros 2</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <pre><code>Nimi;OS;Hankittu;Sijainti
+TT-0012;Windows 11;2024-02-03;Kerros 2
+TT-0013;Windows 11;2024-02-05;tuntematon
+TT-0014;Windows 10;2023-02-05?;Kerros 3
+TT-0015;Windows 10;2022-12-12;Kerros 2</code></pre>
+          <p>Hyvä vastaus huomauttaa, että <code>5/2/2023</code> on monitulkintainen (5. helmikuuta vai 2. toukokuuta) ja kysyy, kumpaa tarkoitetaan, sen sijaan että arvaa. PowerShell-ratkaisu käyttää <code>Import-Csv -Delimiter ';'</code>, korjaa arvot ja kirjoittaa uuden tiedoston <code>Export-Csv</code>-komennolla.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Projekti runbookeille</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää, enintään viisi projektia). Ei tiliä? Seuraa kouluttajan demoa.</div>
+      <p>Luo projekti "Runbookit". Kirjoita ohjeisiin ympäristösi perustiedot (ilman nimiä ja osoitteita) ja haluamasi runbook-rakenne: tarkoitus, edellytykset, vaiheet, tarkistus, palautus. Pyydä projektissa runbook DNS-palvelun uudelleenkäynnistykseen.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude noudattaa projektin rakennetta kysymättä: runbookissa on samat otsikot kuin ohjeissa, ja komennot ovat oikealle käyttöjärjestelmälle (esimerkiksi <code>Restart-Service DNS</code> ja tarkistus <code>Resolve-DnsName</code>-komennolla). Kun avaat projektiin uuden keskustelun ja pyydät toisen runbookin, rakenne pysyy samana.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Tarkistuslista artifactina</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää) ja Code execution -asetus päällä. Ei tiliä? Seuraa kouluttajan demoa.</div>
+      <p>Pyydä Claudea tekemään edellisestä runbookista interaktiivinen tarkistuslista artifactina: jokaisella vaiheella rasti, ja lopussa yhteenveto tehdyistä vaiheista.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Keskustelun viereen avautuu artifact, jossa vaiheet ovat valintaruutuina. Voit pyytää muutoksia, esimerkiksi "lisää jokaiseen vaiheeseen aikaleima, kun se rastitaan", ja Claude tekee uuden version. Jos artifactia ei synny, tarkista Settings &gt; Capabilities.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: tiedostot ja tietoturva</h2>
+    <div class="optbox">
+      <ul>
+        <li>Poista Office-tiedostoista piilotetut tiedot (tekijä, kommentit, muutoshistoria) ennen liittämistä.</li>
+        <li>Kuvakaappauksessa voi näkyä nimiä, osoitteita tai avoimia välilehtiä. Rajaa kuva.</li>
+        <li>Projektin tiedostot ovat mukana jokaisessa sen keskustelussa. Pidä projektissa vain se, mitä tarvitset.</li>
+        <li>Jaetun artifactin linkki toimii kenellä tahansa. Lopeta jakaminen, kun et enää tarvitse sitä.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

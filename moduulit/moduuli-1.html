@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1 Ensimmäinen keskustelu - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="1">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-0.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 1 &middot; Istunto 1</span>
+  <h1>Ensimmäinen keskustelu</h1>
+  <div class="meta"><span class="chip">Ydin ~30 min</span><span class="chip opt">Lisä ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Kirjautuminen</h2>
+    <ol>
+      <li>Avaa selaimessa <a href="https://claude.ai">claude.ai</a>.</li>
+      <li>Kirjaudu Google-tilillä tai sähköpostiosoitteella. Sähköpostilla kirjautuessa saat kirjautumislinkin tai koodin postiisi.</li>
+      <li>Ensimmäisellä kerralla Claude kysyy nimeäsi ja muutaman asetuksen. Ilmainen tili (Free) riittää koko istuntoon 1.</li>
+      <li>Avaa heti <b>Settings &gt; Privacy</b> ja tarkista koulutusasetus (moduuli 0).</li>
+    </ol>
+    <div class="note">Käytä työasioissa sitä tiliä ja niitä sääntöjä, jotka organisaatiosi on hyväksynyt. Jos organisaatiolla on oma Claude-tili, kirjaudu sillä.</div>
+    <div class="shot">[KUVA: m1-kirjautuminen - claude.ai:n kirjautumissivu]</div>
+  </section>
+
+  <section>
+    <h2>Ensimmäinen keskustelu</h2>
+    <p>Kirjoita viesti alareunan kenttään ja paina Enter. Rivinvaihto viestin sisällä tulee Shift+Enterillä.</p>
+    <p>Hyvä ensimmäinen kokeilu on jotain, minkä vastauksen tiedät itse. Silloin näet, miten Claude vastaa ja missä se on varma tai epävarma. Esimerkiksi:</p>
+    <div class="codebox"><pre><code>Selitä lyhyesti, mitä tämä PowerShell-komento tekee, ja kerro, onko siinä riskejä:
+Get-ChildItem -Path . -Recurse -Filter *.log | Where-Object LastWriteTime -lt (Get-Date).AddDays(-30) | Remove-Item</code></pre></div>
+    <p>Voit jatkaa samassa keskustelussa: "Muuta se niin, että se vain listaa tiedostot eikä poista mitään." Claude muistaa saman keskustelun aiemmat viestit.</p>
+    <p>Vastauksen alla on painikkeet kopiointiin, uudelleen generointiin ja palautteeseen. Vasemman reunan historiasta löydät vanhat keskustelut.</p>
+    <div class="shot">[KUVA: m1-keskustelu - ensimmäinen kysymys ja vastaus, painikkeet näkyvissä]</div>
+  </section>
+
+  <section>
+    <h2>Mallin valinta</h2>
+    <p>Claudessa on useita malleja. Malli valitaan viestikentän vieressä olevasta valikosta. Nimet ja versiot muuttuvat, mutta perusajatus pysyy:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Malli</th><th>Milloin</th><th>Tilaus</th></tr></thead>
+      <tbody>
+        <tr><td>Haiku</td><td>Nopeat ja yksinkertaiset kysymykset, lyhyet tekstit</td><td>Free</td></tr>
+        <tr><td>Sonnet</td><td>Useimmat työt: skriptit, lokit, ohjeet. Hyvä oletus.</td><td>Free</td></tr>
+        <tr><td>Opus</td><td>Vaikeat ongelmat, pitkä päättely, iso koodi</td><td>Pro tai ylempi</td></tr>
+        <tr><td>Fable</td><td>Vaativimmat tehtävät</td><td>Max ja Ultra; Prossa lisämaksusta</td></tr>
+      </tbody>
+    </table></div>
+    <p>Raskaampi malli kuluttaa käyttörajaa nopeammin. Aloita Sonnetilla ja vaihda vain, jos vastaus ei riitä.</p>
+  </section>
+
+  <section>
+    <h2>Laajennettu ajattelu</h2>
+    <p>Laajennetussa ajattelussa (Thinking) Claude käyttää enemmän aikaa ongelman pilkkomiseen ennen vastaamista. Vastauksen yläpuolelle tulee avattava <b>Thinking</b>-osio, josta näet tiivistelmän sen päättelystä.</p>
+    <ul>
+      <li>Asetus löytyy mallivalikosta kohdasta <b>Effort</b>. Uusimmissa malleissa ajattelu on aina päällä, ja sen määrää säädetään effort-tasolla.</li>
+      <li>Käytä enemmän ajattelua, kun ongelma on monivaiheinen: vianetsintä usean lokin perusteella, skriptin logiikka, vertailu.</li>
+      <li>Kevyt taso riittää lyhyisiin kysymyksiin. Enemmän ajattelua on hitaampaa ja kuluttaa enemmän rajaa.</li>
+    </ul>
+    <div class="shot">[KUVA: m1-malli-effort - mallivalikko auki, Effort-asetus näkyvissä]</div>
+  </section>
+
+  <section>
+    <h2>Pitkä keskustelu kuluttaa rajaa</h2>
+    <p>Claude ei muista keskustelua samalla tavalla kuin ihminen. Jokaisella uudella viestillä se käsittelee koko siihenastisen keskustelun uudelleen, liitteet mukaan lukien. Siksi:</p>
+    <ul>
+      <li>Kymmenes viesti pitkässä keskustelussa maksaa käyttörajasta paljon enemmän kuin ensimmäinen.</li>
+      <li>Kun keskustelu kasvaa hyvin pitkäksi, Claude tiivistää vanhoja viestejä automaattisesti. Se kuluttaa rajaa lisää, ja yksityiskohtia voi kadota.</li>
+      <li>Vanha, aiheeseen kuulumaton sisältö voi myös sekoittaa vastauksia.</li>
+    </ul>
+    <h3>Aloita uusi keskustelu, kun</h3>
+    <ul>
+      <li>aihe vaihtuu</li>
+      <li>keskustelu on venynyt pitkäksi ja Claude alkaa toistaa itseään tai unohtaa alun ohjeita</li>
+      <li>olet saanut ratkaisun ja haluat jatkaa seuraavaan asiaan</li>
+    </ul>
+    <p>Vinkki: pyydä ennen uutta keskustelua "Tiivistä tämän keskustelun tulos ja avoimet asiat muutamaan kohtaan" ja liitä tiivistelmä uuden keskustelun alkuun.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Selitä virheilmoitus</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Tee parin kanssa tai seuraa kouluttajan näytöltä.</div>
+      <p>Kysy Claudelta, mitä tämä virhe tarkoittaa ja miten sen voi korjata. Pyydä vastaus vaiheittain, turvallisin vaihtoehto ensin.</p>
+      <div class="codebox"><pre><code>The trust relationship between this workstation and the primary domain failed.</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <p>Claude selittää, että työaseman konetilin salasana ei enää täsmää toimialueen kanssa (esimerkiksi palautettu vanha snapshot tai kone ollut pitkään pois verkosta). Turvallisin korjaus on yleensä kirjautua paikallisella ylläpitäjätunnuksella ja ajaa:</p>
+          <pre><code>Test-ComputerSecureChannel -Repair -Credential (Get-Credential)</code></pre>
+          <p>Vaihtoehtona on irrottaa kone toimialueesta ja liittää uudelleen. Tarkista itse <code>Get-Help Test-ComputerSecureChannel</code>-komennolla, että parametrit ovat oikein.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Sama kysymys kahdella mallilla</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Vertaa parin kanssa hänen näytöltään.</div>
+      <p>Pyydä Haikulta ja Sonnetilta erillisissä keskusteluissa sama asia: "Kirjoita PowerShell-funktio, joka tarkistaa, vastaako lista palvelimia pingiin ja porttiin 443, ja tulostaa taulukon." Vertaa vastauksia: kumpi on parempi, ja oliko ero sen arvoinen?</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Kummankin pitäisi käyttää <code>Test-Connection</code>- ja <code>Test-NetConnection -Port 443</code> -cmdlettejä tai vastaavaa. Sonnet lisää todennäköisemmin parametrien tarkistuksen, aikakatkaisun ja siistimmän tulostuksen. Yksinkertaiseen tehtävään Haiku riittää usein, ja se säästää rajaa.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Tiivistä ja aloita alusta</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Tee parin kanssa.</div>
+      <p>Jatka harjoituksen 1 keskustelua parilla jatkokysymyksellä. Pyydä sitten tiivistelmä tuloksesta ja avoimista asioista. Aloita uusi keskustelu tiivistelmällä ja kysy: "Kirjoita tästä lyhyt ohje helpdeskille."</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Tiivistelmässä on ongelman syy, korjauskomento ja varoitus esimerkiksi paikallisen ylläpitäjätunnuksen tarpeesta. Uudessa keskustelussa Claude kirjoittaa ohjeen pelkän tiivistelmän perusteella. Huomaat, ettei koko vanhaa keskustelua tarvittu.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: hyödyllisiä toimintoja</h2>
+    <ul>
+      <li><b>Haku keskusteluista:</b> vasemman reunan hausta löydät vanhat keskustelut.</li>
+      <li><b>Incognito-keskustelu:</b> ei jää historiaan eikä sitä käytetä koulutukseen.</li>
+      <li><b>Viestin muokkaus:</b> voit muokata aiempaa viestiäsi ja saada uuden vastauksen. Se on usein parempi kuin uusi korjausviesti.</li>
+      <li><b>Käyttö:</b> katso <b>Settings &gt; Usage</b> harjoitusten jälkeen, paljonko rajasta kului.</li>
+    </ul>
+  </section>
+</main>
+</div>
+</body>
+</html>
