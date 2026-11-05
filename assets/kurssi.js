@@ -11,7 +11,7 @@
     { n: 7, istunto: 3, nimi: "Peruskäyttö", valmis: true },
     { n: 8, istunto: 3, nimi: "Git ja GitHub / GitLab", valmis: true },
     { n: 9, istunto: 4, nimi: "Työtapa", valmis: true },
-    { n: 10, istunto: 4, nimi: "Omat skillit ja agentit", valmis: false },
+    { n: 10, istunto: 4, nimi: "Omat skillit ja agentit", valmis: true },
     { n: 11, istunto: 4, nimi: "Demot ja jatko", valmis: false },
   ];
   const href = (m) => `moduuli-${m.n}.html`;

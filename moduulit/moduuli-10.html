@@ -1,0 +1,2111 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 Omat skillit ja agentit - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="10">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-9.html">&larr; Edellinen</a>
+    <a class="btn" id="next" href="moduuli-11.html">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 10 &middot; Istunto 4</span>
+  <h1>Omat skillit ja agentit</h1>
+  <div class="meta"><span class="chip">Ydin ~30 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Mitä tarvitset ja mitä et</h2>
+    <p>Tässä moduulissa kerrotaan neljästä tavasta laajentaa Claude Codea: <b>hookit</b>, <b>MCP-palvelimet</b>, <b>subagentit</b> sekä omat <b>skillit ja komennot</b>. Sanotaan se suoraan: aloittelija ei tarvitse yhtäkään niistä. Moduulien 1-8 perusasiat riittävät pitkään, ja jokainen lisä on myös lisää ylläpidettävää ja lisää paikkoja, joissa jokin voi mennä pieleen.</p>
+    <p>Kokeile ensin ilman, ja lisää vasta kun huomaat tekeväsi samaa käsin kolmannen kerran. Sivun lopussa on valmiita Kopioitavia: asenna vain ne, joille tunnistat tarpeen.</p>
+    <div class="note">Moduulin 9 Kopioitava <code>coding-style</code> on tämän sivun työkalujen perusta: <code>align-style</code> lukee sen. Katso asennus moduulista 9.</div>
+    <p>Jokaisen Kopioitavan taulukossa edellytykset on kirjoitettu englanniksi samoin kuin sen manifest.json-tiedostossa. Mistä ne saa: <b>Claude Code</b> moduulista 6, <b>PowerShell 7</b> komennolla <code>winget install Microsoft.PowerShell</code>, <b>Python 3 with pytest</b> projektin omasta virtuaaliympäristöstä, <b>Matt Pocock's skills plugin</b> moduulista 9, <b>OpenAI Codex CLI</b> komennolla <code>npm install -g @openai/codex</code> ja <b>plan-review</b>- ja <b>review-intake</b>-komennot tältä sivulta.</p>
+    <div class="note">Testattu: Claude Code 2.1.318, PowerShell 7.6.9, Python 3.14.7, Windows 11, marraskuu 2026 (11/2026). Muilla versioilla toiminta voi poiketa.</div>
+  </section>
+
+  <section>
+    <h2>Hookit</h2>
+    <p><b>Hook</b> on komento, jonka Claude Code ajaa itse tietyssä kohdassa: esimerkiksi kun istunto alkaa (<code>SessionStart</code>), ennen työkalun käyttöä tai kun lähetät kehotteen. Hook ei ole pyyntö Claudelle vaan ohjelman suoritus, joka toimii aina samalla tavalla. Se sopii asioihin, joiden pitää tapahtua joka kerta: tarkistus, lokimerkintä, tilanteen tulostus.</p>
+    <p>Hookit asetetaan tiedostoon <code>%USERPROFILE%\.claude\settings.json</code> (kaikki projektit) tai projektin tiedostoon <code>.claude\settings.json</code>. Eri tasojen hookit yhdistyvät. <code>SessionStart</code>-hookin tulostama teksti lisätään Clauden kontekstiin, ja siksi sen pitää olla nopea.</p>
+    <p>Hook ajaa koodia koneellasi omilla oikeuksillasi. Lue jokainen hook ennen lisäämistä, kuten mikä tahansa komento.</p>
+    <p>Tämän sivun hookit ovat kahdessa Kopioitavassa: <code>optimize-testsuite</code> ja <code>routing</code>. Ne liitetään settings.json-tiedostoon käsin, koska tiedosto on henkilökohtainen eikä sitä kannata ylikirjoittaa.</p>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/hooks">code.claude.com/docs/en/hooks</a></p>
+  </section>
+
+  <section>
+    <h2>MCP-palvelimet</h2>
+    <p><b>MCP</b> (Model Context Protocol) on avoin standardi, jolla Claude kytketään ulkoisiin järjestelmiin: tehtävienseurantaan, tietokantaan, valvontaan tai rajapintaan. Kun palvelin on kytketty, Claude voi lukea ja toimia kohdejärjestelmässä suoraan sen sijaan, että liität tietoa keskusteluun.</p>
+    <p>Palvelin lisätään komennolla <code>claude mcp add</code>. Listan näet komennolla <code>claude mcp list</code> ja tilan istunnossa komennolla <code>/mcp</code>. Näkyvyys riippuu laajuudesta: paikallinen (vain sinä, tämä projekti), projekti (<code>.mcp.json</code>, jaetaan versionhallinnassa) tai käyttäjä (kaikki projektisi).</p>
+    <div class="note">Kytke vain palvelimia, joihin luotat. Palvelin, joka hakee ulkoista sisältöä, voi altistaa Clauden kehotteen injektiolle (tekstille, joka yrittää ohjata sitä). Tarkista, mitä oikeuksia annat.</div>
+    <p>Usein pärjää ilman MCP:tä: Claude voi ajaa komentorivityökaluja (kuten <code>gh</code>, moduuli 8), ja moduulissa 5 näit claude.ai:n valmiit liitännät. MCP-palvelin kannattaa lisätä vasta, kun tarvitset järjestelmää, jolle ei ole komentorivityökalua.</p>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/mcp">code.claude.com/docs/en/mcp</a></p>
+  </section>
+
+  <section>
+    <h2>Subagentit</h2>
+    <p><b>Subagentti</b> on erikoistunut apulainen, jolle Claude antaa tehtävän. Sillä on oma ikkunansa, oma ohjeensa, omat työkalunsa ja usein eri malli. Hyöty: pitkä tulostus (hakutulokset, lokit) jää sivuun pääkeskustelusta, ja Claudelle palaa vain yhteenveto.</p>
+    <p>Subagentti on Markdown-tiedosto, jonka alussa on YAML-otsake: <code>name</code>, <code>description</code> (kertoo, milloin Claude käyttää sitä), <code>tools</code> ja <code>model</code>. Tiedosto tallennetaan kansioon <code>%USERPROFILE%\.claude\agents\</code> (kaikki projektit) tai projektin kansioon <code>.claude\agents\</code>. Claude Codessa on myös valmiit subagentit, kuten <b>Explore</b> (nopea haku) ja <b>Plan</b> (suunnittelutilaan).</p>
+    <p>Aloittelijan ei tarvitse kirjoittaa omia. Kopioitava <code>routing</code> sisältää kolme valmista esimerkkiä, joista näet rakenteen.</p>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/sub-agents">code.claude.com/docs/en/sub-agents</a></p>
+  </section>
+
+  <section>
+    <h2>Skillit, komennot ja lisäosat</h2>
+    <p><b>Skill</b> on kansio, jonka sisällä on tiedosto <code>SKILL.md</code>. Claude lataa sen, kun se sopii tilanteeseen, tai kutsut sen itse kirjoittamalla <code>/skillin-nimi</code>. Henkilökohtainen skill on kansiossa <code>%USERPROFILE%\.claude\skills\&lt;nimi&gt;\</code>, projektin oma kansiossa <code>.claude\skills\</code>. Kansioon voi laittaa myös tukitiedostoja, kuten skriptejä.</p>
+    <p><b>Oma slash-komento</b> on yksittäinen Markdown-tiedosto kansiossa <code>%USERPROFILE%\.claude\commands\</code>: tiedosto <code>done-check.md</code> luo komennon <code>/done-check</code>. Dokumentaation mukaan komennot on yhdistetty skilleihin: vanhat komentotiedostot toimivat edelleen, ja jos samalla nimellä on sekä skill että komento, skill voittaa. Uusille suositellaan skillejä. Tämän sivun komennot ovat yksittäisiä tiedostoja yksinkertaisuuden vuoksi.</p>
+    <p><b>Lisäosa</b> (plugin) paketoi skillejä ja muita osia jaettavaksi. Lisäosan skillit nimetään muodossa <code>/lisäosan-nimi:skillin-nimi</code>, jotta ne eivät törmää omiisi. Hallinta tehdään komennolla <code>/plugin</code>.</p>
+    <p>Lähteet: <a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a> ja <a href="https://code.claude.com/docs/en/slash-commands">code.claude.com/docs/en/slash-commands</a></p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Mitä</th><th>Missä</th><th>Mihin sopii</th></tr></thead>
+      <tbody>
+        <tr><td>Komento</td><td><code>commands\nimi.md</code></td><td>Yksi toistuva kehote</td></tr>
+        <tr><td>Skill</td><td><code>skills\nimi\SKILL.md</code></td><td>Työtapa, johon voi kuulua skriptejä; Claude voi ladata sen itse</td></tr>
+        <tr><td>Subagentti</td><td><code>agents\nimi.md</code></td><td>Apulainen omalla mallilla ja työkaluilla</td></tr>
+        <tr><td>Hook</td><td><code>settings.json</code></td><td>Komento, joka ajetaan aina tietyssä kohdassa</td></tr>
+        <tr><td>MCP-palvelin</td><td><code>claude mcp add</code></td><td>Yhteys ulkoiseen järjestelmään</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Mallireititys</h2>
+    <p>Eri mallit maksavat eri verran. Haku, testien ajo ja selkeän tiketin toteutus eivät yleensä vaadi kalleinta mallia, kun taas suunnittelu, vaikea virheenetsintä ja lopputarkistus vaativat. <b>Mallireititys</b> tarkoittaa, että pääistunto pysyy suunnittelijana ja antaa sopivan työn halvemmalle agentille.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Agentti</th><th>Malli</th><th>Tehtävä</th></tr></thead>
+      <tbody>
+        <tr><td><code>scout</code></td><td>Haiku, matala työmäärä</td><td>Haku monesta tiedostosta; palauttaa polut ja rivinumerot</td></tr>
+        <tr><td><code>runner</code></td><td>Haiku, matala työmäärä</td><td>Testien ja buildien ajo; palauttaa virheet sellaisenaan</td></tr>
+        <tr><td><code>implementer</code></td><td>Sonnet, keskitaso</td><td>Yhden hyvin määritellyn tiketin toteutus testeineen</td></tr>
+      </tbody>
+    </table></div>
+    <p>Komento <code>/routing</code> ohjaa kokonaisuutta:</p>
+    <ul>
+      <li><code>/routing on</code>: ottaa reitityksen käyttöön; tulostus sisältää säännön, jota Claude noudattaa istunnon loppuun.</li>
+      <li><code>/routing off</code>: lopettaa delegoinnin tässä istunnossa.</li>
+      <li><code>/routing status</code>: kertoo tilan yhdellä rivillä.</li>
+      <li><code>/routing report</code>: näyttää kustannustaulukot ja kertoo, mikä erottuu.</li>
+    </ul>
+    <p>SessionStart-hook tulostaa säännön uuden istunnon alussa vain, kun reititys on päällä. Kun se on pois, hook on hiljainen eikä lisää mitään kontekstiin. Reititys kannattaa vain silloin, kun agentin malli on halvempi kuin istunnon malli: Sonnet-istunnossa <code>implementer</code> ei kannata, mutta Haiku-haku kannattaa yhä. Jos agentin tulos ei läpäise tarkistusta, työ tehdään uudelleen ylemmällä tasolla ja ongelma kirjataan.</p>
+    <div class="shot">[KUVA: m10-routing-report - /routing report -komennon taulukot]</div>
+  </section>
+
+  <section>
+    <h2>Valitse ja asenna Kopioitavat</h2>
+    <p>Kaikkea ei tarvitse asentaa. Suositus aloittajalle: <code>done-check</code> ja mahdollisesti <code>plan-review</code>. Muut, kun tarve on tuttu. Jokaisen asennus noudattaa samaa kaavaa: tiedostot kansioon <code>%USERPROFILE%\.claude\</code>, vanhoista varmuuskopio ja tarvittaessa hook käsin.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Kopioitava</th><th>Laji</th><th>Hook</th></tr></thead>
+      <tbody>
+        <tr><td><a href="#kopioi-align-style"><code>align-style</code></a></td><td>Komento</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-done-check"><code>done-check</code></a></td><td>Komento</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-plan-review"><code>plan-review</code></a></td><td>Komento</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-review-intake"><code>review-intake</code></a></td><td>Komento</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-release"><code>release</code></a></td><td>Komento</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-codex-plan-review"><code>codex-plan-review</code></a></td><td>Skill ja skripti</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-retrospective"><code>retrospective</code></a></td><td>Skill ja skripti</td><td>Ei</td></tr>
+        <tr><td><a href="#kopioi-optimize-testsuite"><code>optimize-testsuite</code></a></td><td>Skill ja skriptit</td><td>SessionStart</td></tr>
+        <tr><td><a href="#kopioi-routing"><code>routing</code></a></td><td>Komento, agentit, skripti</td><td>SessionStart</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">Nämä ajavat skriptejä ja komentoja koneellasi. Lue tiedostot (tai pyydä Claudea kertomaan, mitä ne tekevät) ennen asennusta. Kopioitavat ovat yleistettyjä kopioita kouluttajan omista työkaluista, ei tuotteita.</div>
+  </section>
+
+<section id="kopioi-align-style" data-tool="align-style">
+  <h2>Kopioitava: align-style</h2>
+  <p>Slash-komento, joka vertaa projektia henkilökohtaiseen koodaustyyliisi (<code>coding-style.md</code>, moduuli 9): se etsii CLAUDE.md-, AGENTS.md- ja git-tiedostoista ristiriitoja, kaksoiskappaleita ja vanhentuneita tietoja ja kysyy jokaisesta päätöksestä ennen muutoksia.</p>
+  <p><b>Milloin:</b> Käytä, kun otat uuden tai vanhan projektin omaan työtapaasi. Asenna ensin moduulin 9 <code>coding-style</code>, koska komento lukee sen.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>align-style.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\align-style.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Kirjoita projektin kansiossa <code>/align-style</code> ja katso, että Claude lukee tyylitiedoston ja alkaa vertailun. Jos tyylitiedostoa ei ole, komennon kuuluu pysähtyä ja pyytää asentamaan se.</li>
+  </ol>
+<div class="codebox" data-file="align-style/align-style.md"><pre><code>---
+name: align-style
+description: Align the current project with your coding style (~/.claude/coding-style.md) - find conflicts, duplicates of global rules, stale facts and missing pieces in its CLAUDE.md, AGENTS.md, git files and .claude folder, ask about each decision, plan and implement. Use when the user types /align-style or asks to bring a project in line with the coding style.
+---
+
+Align this project with the coding style in `~/.claude/coding-style.md`.
+
+1. Read `~/.claude/coding-style.md` (all of it). If it does not exist, stop and tell the user to install it first.
+2. Compare this project against it: CLAUDE.md, AGENTS.md, .gitignore, .gitattributes, and the project's `.claude` folder
+   (settings.json, commands, skills, agents). List every conflict, duplicate of a global rule, stale fact (check versions,
+   paths and files on disk) and missing piece, with file:line.
+3. Check the repo's visibility (`gh repo view`) before proposing to track CLAUDE.md or AGENTS.md, and scan both for IPs,
+   hostnames, personal paths and secrets first.
+4. Ask the user about every decision (several independent questions in one round, recommended answer first), then write the
+   plan. Wait for approval.
+5. Implement, run /done-check, and commit per the project's rules (see the Git section of the coding style).
+</code></pre></div>
+<p><a class="btn" href="../kopioi/align-style/align-style.md" download>Lataa align-style.md</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>align-style.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-done-check" data-tool="done-check">
+  <h2>Kopioitava: done-check</h2>
+  <p>Slash-komento, joka tarkistaa muutoksen ennen kuin sanot sen valmiiksi: se käy pyynnön kohdat läpi, ajaa testit, jäljittää käyttäjän näkemät polut ja kertoo erikseen, mitä ei tarkistettu.</p>
+  <p><b>Milloin:</b> Käytä aina, kun Claude on tehnyt koodimuutoksen ja haluat varmistaa, ettei mitään jäänyt väliin. Hyödyllinen jo ensimmäisestä päivästä alkaen.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>done-check.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\done-check.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Tee pieni muutos tiedostoon ja kirjoita <code>/done-check</code>. Claude listaa pyynnön kohdat ja kertoo, mitä ajoi ja mitä ei.</li>
+  </ol>
+<details><summary>Näytä tiedosto done-check.md</summary>
+<div class="codebox" data-file="done-check/done-check.md"><pre><code>---
+name: done-check
+description: Pre-delivery verification before reporting a code change as finished - map every request point to a change, parse and test what changed, trace user-visible paths, grep for leftovers, apply the project's own checklist, and report what was and was NOT verified with a test plan. Run automatically before saying a code change is done, and when the user types /done-check.
+---
+
+Run before reporting a code change as finished, and before commit and push.
+
+## Steps
+1. **Request coverage:** list every point of the user's request (all of them, not just the last). Each maps to a change
+   or an explicit "not done - why". For a ticket, re-read the ticket and its parent spec and make a checklist of every
+   acceptance criterion and every UI behaviour it implies (open and close, empty, error and disabled states). Mark each
+   item with the specific test that covers it or the manual check that was run; flag every item with neither as
+   UNVERIFIED in the report.
+2. **Build:** parse or compile every changed code file with the project's real toolchain (for example the PowerShell
+   parser for .ps1 files, the compiler or linter for other languages).
+3. **Tests:** run the tests that cover the changed code. Every new behaviour and confirmed bug has a test that fails
+   without the change. A failing test is reported with its output, never hidden or re-run to see if it passes.
+4. **Diff review:** for a change over about 50 lines, or one that touches storage, security or data formats, read the whole
+   diff once more (or run a read-only review agent if the project has one) and fix confirmed problems before the final
+   version bump.
+5. **Trace:** for every user-visible change, follow the code path in the mode the user will actually test (first start on an
+   empty environment, every language the UI has, the modes the project's CLAUDE.md names). A feature that is not
+   reachable there is not done. For a screen change, look at a screenshot at desktop and phone width; a page that
+   scrolls sideways is a bug.
+6. **Leftovers:** Grep for old names, duplicate messages, debug output, texts or keys that no longer exist.
+7. **Project items:** if the project has a checklist file (for example `.claude/checklists.md`), apply its "Before done"
+   section, and its UI section when screen code or screen texts changed.
+8. **Report** (short):
+   - Done: what changed (one line per request point); for a ticket, the checklist from step 1 with its test or
+     check per item and the UNVERIFIED ones.
+   - I ran: which parse, tests, traces and test-plan steps ran, with results. Run every step you can reach first.
+   - For you / NOT verified: only what needs the user (hardware, their login or a secret, a judgement by eye, a
+     decision) or the real environment. A runnable check is never listed here. Never write "verified" or "works" for
+     anything that was not actually run.
+   - Test plan: numbered steps with exact copy-paste commands (full paths), expected result per step, cleanup, then the
+     concrete next step.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/done-check/done-check.md" download>Lataa done-check.md</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>done-check.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-plan-review" data-tool="plan-review">
+  <h2>Kopioitava: plan-review</h2>
+  <p>Slash-komento, joka tarkistaa suunnitelman omalla tarkistuslistalla (luottamusraja, elinkaari, tuhoavat toimet, yksinkertaisuus, laajuus) ennen kuin se näytetään hyväksyttäväksi, ja muuttaa aukot kysymyksiksi.</p>
+  <p><b>Milloin:</b> Käytä suunnittelutilassa isomman muutoksen jälkeen, kun suunnitelma on luonnosteltu mutta ei vielä hyväksytty.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>plan-review.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\plan-review.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Kirjoita suunnittelutilassa <code>/plan-review</code>. Claude lisää suunnitelmatiedostoon Self-review-osion ja esittää aukot kysymyksinä.</li>
+  </ol>
+<details><summary>Näytä tiedosto plan-review.md</summary>
+<div class="codebox" data-file="plan-review/plan-review.md"><pre><code>---
+name: plan-review
+description: Self-review a plan before it is shown for approval - answer a fixed checklist (trust boundary, lifecycle, compatibility, automation, environment facts, failure handling, destructive actions, simplicity, scope, verification) plus the project's own plan items, write a Self-review section into the plan file and turn every gap into a question. Use when the user types /plan-review, or after the plan is drafted and before it is shown for approval.
+---
+
+Review the current plan before it is shown for approval.
+
+## Procedure
+1. Read the plan file. Answer every item below for THIS plan - check the code or the environment facts where an answer
+   depends on them (CLAUDE.md, the repo, the machine), do not answer from memory.
+2. If the project has a checklist file (for example `.claude/checklists.md`), answer its "Plan review" items too, and its
+   UI items for plans that change screens or texts.
+3. Write a `## Self-review` section at the end of the plan file: one line per item, `OK - &lt;why&gt;` or `GAP - &lt;what&gt;`.
+   Items that do not apply: `n/a`.
+4. Every GAP becomes a question to the user (independent ones in one round, recommended answer first) or a plan fix when
+   the answer is obvious from the code. Update the plan with the answers before showing it for approval.
+
+## Checklist
+- **Trust boundary:** who can write each input the plan reads (files, directories, databases, packages, other tools)? Untrusted input
+  validated? Secrets and keys stay where they belong? Every security claim no broader than what the code enforces?
+- **Lifecycle:** first install on a fresh environment, upgrade from old versions, interrupted or partial runs, rerun
+  (idempotent?), rollback, cancel at every confirmation. Cached or derived results invalidated when their source changes,
+  and cleared only when verified, not when merely attempted.
+- **Compatibility:** old and new versions side by side, mixed deployments, publish or deploy order.
+- **Automate:** list every manual step the plan leaves to the user - can the script do it? Derive values from
+  the environment (existing installation, machine name, config) instead of asking.
+- **Environment facts:** hosts, rights, server editions, who creates what - taken from CLAUDE.md or the user, never assumed.
+- **Failure handling:** unavailable dependencies (network share, database, mail, remote host) - retry, show it on screen,
+  stop; no silent hang, no slow start.
+- **Destructive actions:** anything that deletes, overwrites or removes a confirmation gate -&gt; ask the user explicitly.
+- **Simplicity:** fewer folders, steps, settings and screens for the user; no settings for things that should always
+  happen.
+- **Scope:** only what was asked; other files and scripts are reference-only; answers to the user's direct questions are
+  stated in chat, not only in the plan.
+- **Verification:** the plan names how each change is tested and what only the real environment can show.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/plan-review/plan-review.md" download>Lataa plan-review.md</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>plan-review.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-review-intake" data-tool="review-intake">
+  <h2>Kopioitava: review-intake</h2>
+  <p>Slash-komento ulkopuolisen arvion käsittelyyn: liitä saamasi koodi- tai suunnitelmakatselmus keskusteluun, ja Claude tarkistaa jokaisen löydöksen koodia vasten, korjaa vahvistetut virheet, kysyy loput ja palauttaa taulukon.</p>
+  <p><b>Milloin:</b> Käytä, kun kollega tai toinen työkalu antaa arvion ja haluat erottaa oikeat löydökset vääristä.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>review-intake.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\review-intake.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Liitä keskusteluun kaksi keksittyä löydöstä ja kirjoita <code>/review-intake</code>. Claude luokittelee ne ja tarkistaa kumpikin koodia vasten.</li>
+  </ol>
+<details><summary>Näytä tiedosto review-intake.md</summary>
+<div class="codebox" data-file="review-intake/review-intake.md"><pre><code>---
+name: review-intake
+description: Process an external review the user pastes back (code review or plan review) - verify every finding against the code, fix confirmed bugs, ask about the rest, report a verdict table. Use when the user pastes review findings such as "Check these", "Fix these", "Found N issues", "[P1] ...", "I would revise the plan", or asks whether review points are relevant.
+---
+
+The user has pasted review findings. Handle them with this procedure.
+
+## 1. Classify
+- **Code review** (findings about delivered code) or **plan review** (findings about a plan not yet implemented).
+- If the user asks for a plan ("Plan for fixes", "Make plan for these", "Are these relevant?"), enter plan mode and use the
+  verdicts as the plan input instead of editing code.
+
+## 2. Verify every finding
+Number the findings as the reviewer did. For each one open the cited code (Grep for the symbol, Read a narrow range) and
+check the reasoning against the current code, including callers and the paths the reviewer describes. Verdict:
+- **Confirmed bug** - the failure scenario really happens.
+- **Not a bug** - the reasoning does not hold (say why, with file:line).
+- **Already fixed** - the current code no longer has it.
+- **Behaviour change** - the "fix" would change what the user sees or how the program works.
+- **Unclear** - cannot be decided from the code (needs the real environment); say what would decide it.
+
+## 3a. Code review
+- Fix every Confirmed bug directly, without asking about scope.
+- Ask about each Not a bug / Behaviour change / Unclear item, one question per item (several in one round), recommended
+  option first. Never silently skip one.
+- Add a regression test for each confirmed bug when the project has tests.
+- Run /done-check (tests, project rules), then raise the version once for the batch as the last edit if the project
+  versions its releases: /release Steps 1-4 only (version source and CHANGELOG.md), never its Step 5.
+- Do not commit or push until the user says so; say in the report that the changes wait, because the user tests review
+  fixes first.
+
+## 3b. Plan review
+- Verify each point in the code (step 2), then ask about every resulting plan change separately (one question per
+  change, independent ones in one round, recommendation first) before rewriting the plan. Rewrite the plan only after the answers.
+
+## 4. Report
+Start with the table, answer in chat (never only inside a plan file):
+
+| # | Finding (short) | Verdict | Action | Test |
+|---|---|---|---|---|
+
+Then one line per open question or remaining risk.
+
+## 5. Later rounds
+When the same reviewer sends a new round, keep the previous table. A finding that comes back is **reopened**: say why the
+first fix missed it (wrong path, partial fix, missing test) before fixing it again.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/review-intake/review-intake.md" download>Lataa review-intake.md</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>review-intake.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-release" data-tool="release">
+  <h2>Kopioitava: release</h2>
+  <p>Slash-komento versiojulkaisuun: nostaa versionumeron, päivittää CHANGELOG.md:n, tekee commitin ja pushaa. Argumentit ovat muotoa <code>patch|minor|major "muutos"</code>.</p>
+  <p><b>Milloin:</b> Käytä vain projektissa, joka pitää versiota tiedostossa ja muutoslokia CHANGELOG.md:ssä. Komento pushaa, joten kokeile ensin testirepossa.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>release.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\release.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Kokeile testirepossa: <code>/release patch "Korjaa kirjoitusvirhe"</code>. Lue Clauden ehdottamat komennot ennen luvan antamista.</li>
+  </ol>
+<details><summary>Näytä tiedosto release.md</summary>
+<div class="codebox" data-file="release/release.md"><pre><code>---
+description: Bump version, update CHANGELOG.md, commit and push a release
+argument-hint: &lt;patch|minor|major&gt; "&lt;change&gt;" ["&lt;change&gt;" ...]
+allowed-tools: Read, Edit, Glob, Grep, Bash(git *)
+---
+
+Generic release command for any project that tracks its version in a file and keeps a `CHANGELOG.md`. Commit and push
+rules come from the Git section of `~/.claude/coding-style.md` and from the project's own CLAUDE.md.
+
+Parse `$ARGUMENTS`: **bump** (`patch` | `minor` | `major`) and one or more
+**changes** (each quoted string is one change). If either is missing, stop
+and ask.
+
+Run this as the last edit, after code review and /done-check fixes.
+
+---
+
+## Versioning rules
+
+| Bump | When to use |
+|---|---|
+| `patch` | Bug fix, comment, typo, cosmetic, UX tweak that does not change behaviour |
+| `minor` | Feature, behaviour change |
+| `major` | Breaking change: API, protocol or file format |
+
+If the bump type seems inconsistent with the description, say so before proceeding.
+
+---
+
+## Step 1 - Find the current version
+
+Look for the version string in order of priority:
+1. `package.json` -&gt; `"version": "x.y.z"`
+2. `pyproject.toml` -&gt; `version = "x.y.z"`
+3. A `VERSION` file containing only the semver string
+4. A `__version__ = "x.y.z"` line in a `.py` file
+5. A `&lt;Version&gt;x.y.z&lt;/Version&gt;` element in a `.csproj`
+
+If the project uses date versions or documents its own release procedure in CLAUDE.md, stop: that procedure applies.
+If none is found, stop and ask the user where the version is defined.
+
+Report: **Releasing `&lt;project&gt;` `&lt;old&gt;` -&gt; `&lt;new&gt;`**
+
+---
+
+## Step 2 - Compute new version
+
+Apply the bump:
+- patch: increment Z (e.g. 1.2.3 -&gt; 1.2.4)
+- minor: increment Y, reset Z to 0 (e.g. 1.2.3 -&gt; 1.3.0)
+- major: increment X, reset Y and Z to 0 (e.g. 1.2.3 -&gt; 2.0.0)
+
+If the project uses a `V` prefix (e.g. `V2.3.1`), preserve it.
+
+---
+
+## Step 3 - Update the version source
+
+Before editing, grep the repo for the old version string and update every other hard-coded copy of it too (docs, tests
+that pin the version). Edit the file found in Step 1 to replace the old version string with the new one. That file is the
+single source of truth - do not hardcode the version anywhere new.
+
+---
+
+## Step 4 - Update CHANGELOG.md
+
+Find the project's `CHANGELOG.md` (it may sit next to the version source). Prepend a new entry immediately after the
+first heading (or at the top if no heading exists), one line per change:
+
+```
+### Vx.y.z - YYYY-MM-DD
+- &lt;change&gt;
+- &lt;change&gt;
+```
+
+Use today's date. Do not modify existing entries.
+
+---
+
+## Step 5 - Commit and push
+
+Stage only the files changed above (version source + CHANGELOG.md) plus the files of the change being released.
+Never stage secrets.
+
+```
+git add &lt;version-file&gt; CHANGELOG.md
+git commit -m "&lt;Component&gt; Vx.y.z: &lt;summary of the changes&gt;"
+```
+
+Push only when the user's rules (`~/.claude/coding-style.md` or the project's CLAUDE.md) say to push, and then only to
+the project's own remote. Otherwise leave the commit local and say so. Commit and push are separate commands.
+
+Leave out `&lt;Component&gt;` in a single-component project.
+
+Report: old version -&gt; new version, files changed, commit hash.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/release/release.md" download>Lataa release.md</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>release.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-codex-plan-review" data-tool="codex-plan-review">
+  <h2>Kopioitava: codex-plan-review</h2>
+  <p>Skill, joka lähettää suunnitelman toisen mallin (OpenAI Codex CLI) arvioitavaksi, tarkistaa löydökset koodia vasten ja kysyy sinulta suunnitteluvalinnoista. Toinen, riippumaton lukija löytää usein sen, minkä itse jäi huomaamatta.</p>
+  <p><b>Milloin:</b> Käytä vain, jos sinulla on Codex CLI asennettuna ja kirjautuneena. Muuten ohita tämä Kopioitava.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>SKILL.md</code> &rarr; <code>%USERPROFILE%\.claude\skills\codex-plan-review\SKILL.md</code><br><code>codex-review.ps1</code> &rarr; <code>%USERPROFILE%\.claude\skills\codex-plan-review\codex-review.ps1</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code, PowerShell 7, OpenAI Codex CLI, plan-review and review-intake commands</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code, PowerShell 7, OpenAI Codex CLI, plan-review and review-intake commands.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>skills\<wbr>codex-plan-review"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Skripti ilmoittaa selvästi, jos <code>codex</code> puuttuu, ja kehottaa asentamaan sen. Se on oikea tulos ilman Codexia. Codexin kanssa: kirjoita <code>/codex-plan-review</code> valmiin suunnitelman jälkeen.</li>
+  </ol>
+<details><summary>Näytä tiedosto SKILL.md</summary>
+<div class="codebox" data-file="codex-plan-review/SKILL.md"><pre><code>---
+name: codex-plan-review
+description: Send an implementation plan to Codex (gpt-6-astra, medium effort, read-only) for an independent review before it is implemented for the first time, then verify the findings against the code, fix confirmed plan errors and ask the user about the design choices. Use when a plan is ready to implement for the first time (before the plan is shown for approval), or when the user asks for a Codex review of a plan.
+---
+
+# codex-plan-review
+
+After any plan is ready for the first time, send it to a Codex review and apply the results to the plan; ask the user where
+needed. Skip Codex when its usage is spent. Later rounds only when the user asks.
+
+Prerequisite: the OpenAI Codex CLI (`codex`) on PATH and signed in (`npm install -g @openai/codex`, then `codex login`).
+
+## Steps
+
+1. **Plan ready** (questions answered, /plan-review done, plan file written). Tell the user in one line that the plan is going to Codex.
+2. **Run the review in the background** from the project folder (it takes minutes; the plan file and the repo are read, nothing is changed):
+   ```
+   pwsh -NoProfile -File "$HOME/.claude/skills/codex-plan-review/codex-review.ps1" -PlanPath &lt;plan file&gt; -OutFile &lt;temp folder&gt;/codex-review-&lt;plan name&gt;.md
+   ```
+   - The working folder is the git root of the current folder; pass `-Root &lt;folder&gt;` to change it.
+   - Run it in the background with a long timeout (60 min). Exit 0 = result written, 1 = `codex` missing from PATH, 2 = Codex failed or
+     the result is empty (log next to the output file). Exit 2 whose final Codex error in the log explicitly says the account usage or quota is
+     exhausted: say so in one line and continue without Codex, no retry (text quoted from the plan or a review does not count).
+     Exit 1, a temporary rate limit, a context-length limit, an auth or network error, a missing log, an empty result or anything
+     ambiguous: tell the user with the log line and ask whether to continue without the Codex review.
+3. **Show Codex's response to the user first**: when the run returns plan findings or changes, put the whole
+   response from the output file on screen in the reply, unedited (a quoted block), before any verdict.
+4. **Process the result like /review-intake**: verify every finding against the code and the rules; confirmed plan errors are fixed in
+   the plan file directly; wrong findings get a one-line reason.
+5. **Design choices** Codex raised (and findings that change behaviour) go to the user as questions, recommendation
+   first; independent ones in one round. Update the plan with each answer.
+6. **Re-run /plan-review** on the updated plan, then show it for approval. In the approval message, include a short verdict table
+   (finding, verdict, what changed in the plan).
+7. Delete the output file when the plan is approved (the plan file holds the outcome).
+
+## Notes
+
+- Defaults: model `gpt-6-astra`, effort `medium`. Override `-Model` / `-Effort` only when the user asks.
+- Codex reads the working folder's `AGENTS.md` (which may point to `CLAUDE.md`), so it applies the project's rules.
+- The review costs Codex usage: never for small fixes or one-line changes.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/codex-plan-review/SKILL.md" download>Lataa SKILL.md</a></p>
+<details><summary>Näytä tiedosto codex-review.ps1</summary>
+<div class="codebox" data-file="codex-plan-review/codex-review.ps1"><pre><code>## Sends an implementation plan to Codex (OpenAI Codex CLI) for an independent review before it is implemented.
+## Codex reads the repository read-only (read-only sandbox) and writes its findings to -OutFile.
+## Exit 0 = result written, 1 = codex not found on PATH, 2 = Codex failed or the result is empty (log: -OutFile + ".log").
+## Working folder: -Root, otherwise the git root of the current folder, otherwise the current folder.
+param(
+    [Parameter(Mandatory = $true)][string]$PlanPath,
+    [Parameter(Mandatory = $true)][string]$OutFile,
+    [string]$Model = 'gpt-6-astra',
+    [string]$Effort = 'medium',
+    [string]$Root = ''
+)
+$ErrorActionPreference = 'Stop'
+$Cmd = Get-Command codex -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+if(-not $Cmd)
+{
+    [Console]::Error.WriteLine('Codex CLI (codex) was not found on PATH. Install OpenAI Codex CLI (npm install -g @openai/codex), sign in once with: codex login')
+    exit 1
+}
+if(-not $Root)
+{
+    $Root = (Get-Location).Path
+    try { $Top = &amp; git -C $Root rev-parse --show-toplevel 2&gt;$null; if($LASTEXITCODE -eq 0 -and $Top) { $Root = [System.IO.Path]::GetFullPath([string]$Top) } } catch { }
+}
+Write-Host "Working folder $Root"
+$Plan = [System.IO.File]::ReadAllText((Resolve-Path -LiteralPath $PlanPath).Path)
+$Prompt = @"
+You are an independent reviewer. Review the implementation plan below for this repository BEFORE it is implemented.
+
+Read first, when present: AGENTS.md and CLAUDE.md (project rules), .claude/checklists.md (section "## Plan review"), and the design docs that
+CLAUDE.md or the plan points to for the areas the plan touches. Then check the plan against the actual code in this repository (quote file:line).
+
+Look for: wrong assumptions about the existing code, security and trust-boundary gaps (keys, credentials, elevation, untrusted input),
+lifecycle gaps (first install on an empty system, upgrade, interrupted run, rerun, rollback), compatibility and deploy-order problems,
+violations of the project's hard rules, missing tests, and anything the plan claims that the code does not support.
+
+Output (Markdown, in English):
+1. Findings ranked [P1] (wrong behaviour, security or data risk), [P2] (gap or unclear contract), [P3] (nit). For each: the claim, file:line
+   evidence, a concrete failure scenario and a concrete fix.
+2. Decisions the plan owner must make (design choices, not bugs), each with options and your recommendation.
+3. What you did NOT check.
+Do not edit any file, do not run anything against production systems, do not publish, commit or push.
+
+&lt;plan&gt;
+$Plan
+&lt;/plan&gt;
+"@
+$Log = "$OutFile.log"
+$Dir = Split-Path -Parent $OutFile
+if($Dir -and -not (Test-Path -LiteralPath $Dir)) { [void](New-Item -ItemType Directory -Path $Dir -Force) }
+if(Test-Path -LiteralPath $OutFile) { Remove-Item -LiteralPath $OutFile -Force }
+$Sw = [System.Diagnostics.Stopwatch]::StartNew()
+# Codex writes progress to stderr, which would abort the script under Stop, so the native call runs under Continue.
+$ErrorActionPreference = 'Continue'
+$Prompt | &amp; $Cmd.Source exec -m $Model -c "model_reasoning_effort=`"$Effort`"" -s read-only -C $Root --skip-git-repo-check -o $OutFile - 2&gt;&amp;1 | ForEach-Object { if($_ -is [System.Management.Automation.ErrorRecord]) { $_.Exception.Message } else { "$_" } } | Out-File -LiteralPath $Log -Encoding utf8
+$Code = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
+$Sw.Stop()
+if($Code -ne 0 -or -not (Test-Path -LiteralPath $OutFile) -or (Get-Item -LiteralPath $OutFile).Length -eq 0)
+{
+    [Console]::Error.WriteLine("Codex failed (exit $Code, $([math]::Round($Sw.Elapsed.TotalMinutes, 1)) min) - log: $Log")
+    exit 2
+}
+Write-Host "Codex review ($Model, $Effort, $([math]::Round($Sw.Elapsed.TotalMinutes, 1)) min): $OutFile" -ForegroundColor Green
+Write-Host '===== Codex response ====='
+Write-Host ([System.IO.File]::ReadAllText($OutFile))
+exit 0
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/codex-plan-review/codex-review.ps1" download>Lataa codex-review.ps1</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>codex-plan-review\<wbr>SKILL.md</code>, <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>codex-plan-review\<wbr>codex-review.ps1</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-retrospective" data-tool="retrospective">
+  <h2>Kopioitava: retrospective</h2>
+  <p>Skill, joka käy läpi projektin Claude Code -historian (keskustelulokit, suunnitelmat, muisti) ja etsii toistuvaa käsityötä, korjauksia ja vanhentuneita tietoja. Tuloksena on lyhyt raportti ja ehdotus uusista skilleistä ja siivouksesta.</p>
+  <p><b>Milloin:</b> Käytä muutaman viikon tiiviin työn jälkeen kysymällä, mikä voisi olla nopeampaa. Ei tarpeen ensimmäisinä viikkoina, koska historiaa ei vielä ole.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>SKILL.md</code> &rarr; <code>%USERPROFILE%\.claude\skills\retrospective\SKILL.md</code><br><code>mine-transcripts.ps1</code> &rarr; <code>%USERPROFILE%\.claude\skills\retrospective\mine-transcripts.ps1</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code, PowerShell 7, plan-review command</td></tr>
+    <tr><th>Hook</th><td>Ei hookia.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code, PowerShell 7, plan-review command.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>skills\<wbr>retrospective"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Kokeile: Kirjoita <code>/retrospective</code> projektin kansiossa. Skripti lukee lokit vain paikallisesti ja tekee raportin; mitään ei poisteta ennen kuin hyväksyt suunnitelman.</li>
+  </ol>
+<details><summary>Näytä tiedosto SKILL.md</summary>
+<div class="codebox" data-file="retrospective/SKILL.md"><pre><code>---
+name: retrospective
+description: Mine a project's Claude Code history (transcripts, plans, memory, review findings) for repeated manual work, corrections, brittle tests and stale records, and turn them into skills, hooks, rules and a cleanup list. Use when the user asks what could be made faster, more accurate or what is stale, or every few weeks of heavy work on a project.
+---
+
+# retrospective
+
+What this produces: a short report with counts and evidence, then a plan (questions to the user, independent ones in one round) for the skills,
+hooks, agents, test changes and deletions that follow. Nothing is deleted or created without the plan being approved.
+
+## 1. Mine the history (script)
+
+```
+pwsh -NoProfile -File "$HOME/.claude/skills/retrospective/mine-transcripts.ps1" -Project &lt;project folder name&gt; [-Days 30] [-OutFile &lt;temp folder&gt;/retro.md]
+```
+
+`-Project` = the folder name under `~/.claude/projects/` (Claude Code names it after the project's path, with the separators
+replaced by dashes). `-ProjectsDir` points the script at another projects folder. The script reads every
+`*.jsonl` transcript newer than `-Days` and the memory folder, and writes a markdown report with:
+
+- **Repeated commands by shape** (Bash/PowerShell calls with paths and numbers normalised): the top of this list is the skill or
+  hook candidate; anything run by hand more than ~20 times is a script.
+- **User corrections**: user messages containing "still", "again", "doesn't work", "don't want", "i dont", "broken", "wrong",
+  "not what" - with the message text, so the pattern behind them can be named.
+- **Review findings** pasted or produced by a reviewer (`[P1]`/`[P2]` lines) grouped by the category words in them (fail-open,
+  compatibility, trust boundary, lifecycle, contract, race, UI, test).
+- **Test runs**: every "N tests, N passed, N failed" summary and every pytest summary ("N passed, N failed in N s") with
+  its duration; the most frequent failing test names (pytest's `FAILED tests/...::name` lines too).
+- **Skill and tool usage**: which skills were invoked how often; plan edits and compaction counts.
+- **Stale records**: memory files whose description says "pending"/"in progress" although a later memory records the outcome;
+  memory lines pointing to plan files that no longer exist or hold a different plan (plan file names are reused per conversation);
+  counts in memories that disagree with the repo (tests, versions).
+
+## 2. Read with the questions
+
+For each of the user's questions, answer from the counts, not from impressions:
+
+- *Skills/agents*: what was done by hand repeatedly (top shapes), what needed the same reading every time (helper contracts, file
+  ranges), what review classes kept coming back (an agent with that checklist).
+- *Faster/more accurate methods*: what caused rework (encoding, whole-file reads and compactions, stale literal counts in tests,
+  misread helpers), and the rule or hook that removes the class, not the instance.
+- *Testing*: wall time and where it goes (sequential? database?), the tests that fail for reasons unrelated to the change, what is
+  selected by memory instead of by impact.
+- *Stale data*: memories superseded by docs, finished plans, snapshots and archives, settings text with old names, doc headers.
+
+## 3. Plan it
+
+Ask the user (independent questions in one round, recommendation first) about scope, where skills live, which
+deletions are allowed, and the test-runner design. Before any deletion: a hash-verified zip of everything to be deleted plus an
+inventory file, kept 30 days. Secrets (keys, ini files) never go into the zip. Then /plan-review, and implement.
+
+## Notes
+
+- Transcripts are large (tens of thousands of lines); the script streams them line by line and never loads one into the context.
+  Do not Read a transcript directly.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/retrospective/SKILL.md" download>Lataa SKILL.md</a></p>
+<details><summary>Näytä tiedosto mine-transcripts.ps1</summary>
+<div class="codebox" data-file="retrospective/mine-transcripts.ps1"><pre><code>## Counts repeated work, corrections, review findings, test runs and stale records in a project's Claude Code history.
+## Usage: mine-transcripts.ps1 -Project &lt;folder under ~/.claude/projects&gt; [-Days 30] [-OutFile &lt;report.md&gt;] [-ProjectsDir &lt;projects folder&gt;]
+## Streams the *.jsonl transcripts line by line (never loads one whole); writes a markdown report. PowerShell 7.
+param(
+    [Parameter(Mandatory = $true)][string]$Project,
+    [int]$Days = 30,
+    [string]$OutFile = '',
+    [string]$ProjectsDir = (Join-Path $HOME '.claude/projects')
+)
+$ErrorActionPreference = 'Stop'
+$Root = Join-Path $ProjectsDir $Project
+if(-not (Test-Path -LiteralPath $Root)) { [Console]::Error.WriteLine("no such project folder: $Root"); exit 1 }
+if(-not $OutFile) { $OutFile = Join-Path ([IO.Path]::GetTempPath()) "retro-$Project.md" }
+$Since = (Get-Date).AddDays(-$Days)
+$Files = @(Get-ChildItem -LiteralPath $Root -Filter '*.jsonl' | Where-Object { $_.LastWriteTime -ge $Since } | Sort-Object LastWriteTime)
+$Shapes = @{}; $Corrections = [System.Collections.Generic.List[string]]::new(); $Findings = @{}; $Runs = [System.Collections.Generic.List[string]]::new()
+$FailNames = @{}; $Skills = @{}; $Tools = @{}; $Compactions = 0; $UserMsgs = 0; $Unreadable = 0
+$CorrectionRx = '(?i)\b(still|again|does ?n.t work|don.t want|i dont|broken|wrong|not what|why do we)\b'
+$CategoryRx = @{ 'fail-open' = '(?i)fail.?open|silent|looks clean|counted as'; compatibility = '(?i)older (kit|version|importer)|format|compat|schema'; 'trust boundary' = '(?i)secret|key|password|control char|sanitis|identity|SID|ACL'; lifecycle = '(?i)upgrade|interrupt|rollback|rerun|first install|lifecycle'; contract = '(?i)contract|assum|helper|parameter|return'; race = '(?i)race|order|atomic|concurren|revision'; ui = '(?i)legend|screen|key|width|UI'; test = '(?i)\btest' }
+function Add-Count([hashtable]$H, [string]$K) { if($H.ContainsKey($K)) { $H[$K]++ } else { $H[$K] = 1 } }
+function Get-Shape([string]$Cmd)
+{
+    $S = $Cmd -replace '[A-Za-z]:\\[^\s"'']+', '&lt;path&gt;' -replace '/[^\s"'']+', '&lt;path&gt;' -replace '\d{4}\.\d{2}\.\d{2}\.\d{4}', '&lt;ver&gt;' -replace '\d+', 'N'
+    if($S.Length -gt 90) { $S = $S.Substring(0, 90) }
+    return $S.Trim()
+}
+foreach($F in $Files)
+{
+    $Reader = [IO.StreamReader]::new($F.FullName, [Text.Encoding]::UTF8)
+    try
+    {
+        while(-not $Reader.EndOfStream)
+        {
+            $Line = $Reader.ReadLine()
+            if(-not $Line.StartsWith('{')) { continue }
+            try { $J = $Line | ConvertFrom-Json } catch { $Unreadable++; continue }
+            if($J.timestamp -and ([datetime]$J.timestamp) -lt $Since) { continue }
+            $Type = [string]$J.type
+            $Content = $J.message.content
+            if($Type -eq 'user' -and $Content -is [string]) { $UserMsgs++; if($Content -match $CorrectionRx -and $Content.Length -lt 400) { $Corrections.Add($Content.Trim()) } ; if($Content -match '/compact') { $Compactions++ } }
+            if($Content -is [array])
+            {
+                foreach($C in $Content)
+                {
+                    if($C.type -eq 'text' -and $Type -eq 'user' -and [string]$C.text -match $CorrectionRx -and ([string]$C.text).Length -lt 400) { $UserMsgs++; $Corrections.Add(([string]$C.text).Trim()) }
+                    if($C.type -eq 'tool_use')
+                    {
+                        Add-Count $Tools ([string]$C.name)
+                        if($C.name -in 'Bash', 'PowerShell') { Add-Count $Shapes (Get-Shape ([string]$C.input.command)) }
+                        if($C.name -eq 'Skill') { Add-Count $Skills ([string]$C.input.skill) }
+                    }
+                    if($C.type -eq 'tool_result' -or $C.type -eq 'text')
+                    {
+                        $T = if($C.type -eq 'text') { [string]$C.text } else { [string]($C.content | ForEach-Object { if($_.text) { $_.text } else { $_ } }) }
+                        foreach($M in [regex]::Matches($T, '(?m)^\s*(\d+) tests, (\d+) passed, (\d+) failed[^\r\n]*')) { $Runs.Add($M.Value.Trim()) }; foreach($M in [regex]::Matches($T, '(?m)^[= ]*((?:\d+ (?:failed|passed|skipped|errors?|deselected|xfailed|xpassed|warnings?)(?:, )?)+ in [\d.]+s)')) { $Runs.Add($M.Groups[1].Value) }; foreach($M in [regex]::Matches($T, '(?m)^FAILED (tests[/\\][^\s:]+::[A-Za-z0-9_]+)')) { Add-Count $FailNames $M.Groups[1].Value }
+                        foreach($M in [regex]::Matches($T, '(?m)^\s{2}([A-Za-z0-9_]+(?: [^:\r\n]*)?): (?:FAIL|TIMEOUT|.*not recognized)')) { Add-Count $FailNames $M.Groups[1].Value }
+                        foreach($M in [regex]::Matches($T, '(?m)^\s*(?:\d+\.\s*)?\*{0,2}\[(P[123])\][^\r\n]{10,160}'))
+                        {
+                            $Cat = 'other'; foreach($K in $CategoryRx.Keys) { if($M.Value -match $CategoryRx[$K]) { $Cat = $K; break } }
+                            Add-Count $Findings $Cat
+                        }
+                    }
+                }
+            }
+        }
+    }
+    finally { $Reader.Dispose() }
+}
+## Stale memory records.
+$MemDir = Join-Path $Root 'memory'
+$Stale = [System.Collections.Generic.List[string]]::new()
+if(Test-Path -LiteralPath $MemDir)
+{
+    foreach($M in Get-ChildItem $MemDir -Filter '*.md' | Where-Object Name -ne 'MEMORY.md')
+    {
+        $T = [IO.File]::ReadAllText($M.FullName)
+        if($T -match '(?i)description:.*\b(pending|in progress|implementing|approved)\b') { $Stale.Add("$($M.Name): description still says pending/in progress") }
+        foreach($P in [regex]::Matches($T, '[A-Za-z]:\\[^\s)`]+\\plans\\[^\s)`]+\.md')) { if(-not (Test-Path $P.Value)) { $Stale.Add("$($M.Name): plan file missing $($P.Value)") } }
+    }
+}
+$R = [System.Collections.Generic.List[string]]::new()
+$R.Add("# Retrospective: $Project (last $Days days, $($Files.Count) transcripts, $UserMsgs user messages, $Compactions compactions, $Unreadable unreadable lines skipped)")
+$R.Add(''); $R.Add('## Repeated command shapes (top 40)'); foreach($K in ($Shapes.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 40)) { $R.Add(('- {0,4}  `{1}`' -f $K.Value, $K.Key)) }
+$R.Add(''); $R.Add('## Tool and skill use'); foreach($K in ($Tools.GetEnumerator() | Sort-Object Value -Descending)) { $R.Add(('- {0,5}  {1}' -f $K.Value, $K.Key)) }; foreach($K in ($Skills.GetEnumerator() | Sort-Object Value -Descending)) { $R.Add(('- skill {0,3}  {1}' -f $K.Value, $K.Key)) }
+$R.Add(''); $R.Add("## User corrections ($($Corrections.Count))"); foreach($C in $Corrections | Select-Object -First 60) { $R.Add('- ' + ($C -replace '\s+', ' ')) }
+$R.Add(''); $R.Add('## Review findings by category'); foreach($K in ($Findings.GetEnumerator() | Sort-Object Value -Descending)) { $R.Add(('- {0,4}  {1}' -f $K.Value, $K.Key)) }
+$R.Add(''); $R.Add("## Test runs ($($Runs.Count) summaries)"); foreach($X in $Runs | Select-Object -Last 30) { $R.Add("- $X") }
+$R.Add(''); $R.Add('## Most frequent failing tests'); foreach($K in ($FailNames.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 15)) { $R.Add(('- {0,4}  {1}' -f $K.Value, $K.Key)) }
+$R.Add(''); $R.Add("## Stale memory records ($($Stale.Count))"); foreach($S in $Stale) { $R.Add("- $S") }
+[IO.File]::WriteAllLines($OutFile, $R, [Text.UTF8Encoding]::new($false))
+Write-Host "report: $OutFile ($($R.Count) lines)"
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/retrospective/mine-transcripts.ps1" download>Lataa mine-transcripts.ps1</a></p>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>retrospective\<wbr>SKILL.md</code>, <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>retrospective\<wbr>mine-transcripts.ps1</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+  </ol>
+</section>
+
+<section id="kopioi-optimize-testsuite" data-tool="optimize-testsuite">
+  <h2>Kopioitava: optimize-testsuite</h2>
+  <p>Skill, joka mittaa pytest-testisarjan ajan, löytää todistetusti turhan viiveen, poistaa sen kerrallaan yhden muutoksen ja raportoi ennen/jälkeen-ajat. Mukana on SessionStart-hook, joka ilmoittaa hiljaa vain silloin, kun sarja on hidastunut.</p>
+  <p><b>Milloin:</b> Käytä, kun Python-projektin testit ovat hitaita. Tarvitset Pythonin ja pytestin. Hook on valinnainen mutta kuuluu tähän pakettiin.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>SKILL.md</code> &rarr; <code>%USERPROFILE%\.claude\skills\optimize-testsuite\SKILL.md</code><br><code>python.md</code> &rarr; <code>%USERPROFILE%\.claude\skills\optimize-testsuite\python.md</code><br><code>testsuite.ps1</code> &rarr; <code>%USERPROFILE%\.claude\skills\optimize-testsuite\testsuite.ps1</code><br><code>tsm_report.py</code> &rarr; <code>%USERPROFILE%\.claude\skills\optimize-testsuite\tsm_report.py</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code, PowerShell 7, Python 3 with pytest, Windows</td></tr>
+    <tr><th>Hook</th><td>Liitä alla oleva SessionStart-hook käsin tiedostoon <code>%USERPROFILE%\.claude\settings.json</code>.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä. Ota kopio myös settings.json-tiedostosta ennen hookin lisäämistä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code, PowerShell 7, Python 3 with pytest, Windows.</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>skills\<wbr>optimize-testsuite"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Liitä hook-katkelma settings.json-tiedostoon alla olevien ohjeiden mukaan.</li>
+    <li>Kokeile: Kirjoita <code>/optimize-testsuite</code> Python-projektin kansiossa. Hook ei tulosta mitään, kun mitattavaa ei ole, joten hiljaisuus on oikea tulos.</li>
+  </ol>
+<details><summary>Näytä tiedosto SKILL.md</summary>
+<div class="codebox" data-file="optimize-testsuite/SKILL.md"><pre><code>---
+name: optimize-testsuite
+description: Measure a project's test suite, cut the overhead the measurements show, prove the suite is still stable and report before/after timings with evidence. Use when the user asks to speed up or optimize tests, or asks to act on a Test-suite advisory.
+---
+
+# optimize-testsuite
+
+What this produces: before/after medians of comparable full runs, each change with the gain it showed before it was applied, a
+stability result and an accepted baseline. The project changes only on approval, one change at a time.
+
+`ts` below is `&amp; $HOME\.claude\skills\optimize-testsuite\testsuite.ps1`, called from PowerShell (a list such as
+`-RunnerArgs @('-q', '-n', '12')`). It writes one report per run to `$HOME\.claude\test-suite-metrics\&lt;hash of root&gt;\`:
+`&lt;id&gt;.summary.json`, `&lt;id&gt;.cases.json` (per test: outcome and setup, call, teardown seconds) and `&lt;id&gt;.log`. Nothing is written
+into the project. A run is stopped at `-TimeoutSec`, else at the larger of the default (600 s) and three
+times the median of the last three runs. `measure` stops at the first run that is not clean.
+
+## 1. Baseline
+
+Take the full-suite command from the project's CLAUDE.md and run it; measuring changes nothing in the project.
+
+- pytest from `&lt;root&gt;\.venv`: `ts measure -Root &lt;root&gt; -RunnerArgs '-q' -Repeat 3` (`-RunnerArgs` = what the project writes after
+  `pytest`; a partial run adds `-Selection focused`). Without that venv, pass `-Python &lt;path to python.exe&gt;`; the
+  interpreter needs pytest.
+
+Done when three runs are `completed` with exit 0 and `ts status -Root &lt;root&gt;` shows a recent median. A failed or timed-out run is
+a finding: go to step 6. A run is never repeated to get a pass.
+
+## 2. Find the cost
+
+From the newest `cases.json`: seconds per phase, per file, and the twenty slowest tests. Decide which shape it is: a few slow
+tests, or overhead times N (median setup per test times the number of tests). For pytest read
+`$HOME\.claude\skills\optimize-testsuite\python.md` first. Done when the three largest costs are named with their seconds.
+
+## 3. Prototype
+
+Measure what each candidate would save with the project untouched (python.md: outside plugin, process split). Done when every
+candidate has a measured gain or is dropped.
+
+## 4. Change
+
+One AskUserQuestion, multi-select: every candidate with its measured gain, the marked test that keeps running the real path, and
+the effect on isolation. Apply and measure the chosen ones one at a time. Speed comes from setup, fixtures, waits and shutdown;
+every test case stays unless the user approves its removal by name. Build it by the project's own rules.
+
+## 5. Stability
+
+`ts measure -Root &lt;root&gt; -RunnerArgs &lt;the same as step 1&gt; -Repeat 5`, then one run in shuffled order (python.md) with
+`-Selection focused`, so it never mixes into the full runs. Done when all five are `completed` with exit 0 and the same number of
+tests as the baseline or more. A hang, timeout or failure goes to step 6, and no gain is reported from a suite that is not stable:
+faster setup changes timing and exposes races that were always there.
+
+## 6. Defect found
+
+Stop optimizing. Show the evidence: the failing output or the stack dump in `&lt;id&gt;.log`. Ask with AskUserQuestion:
+
+- fix it now with a regression test in its own commit (recommended), then start again at step 1 for a new baseline;
+- or record it and end: report the evidence, the before numbers and "stability not reached", without accept-baseline. Done when
+  that report is given.
+
+## 7. Report and baseline
+
+A before/after table (median, range, number of tests, seconds per phase), every test id present before and absent after (expected:
+none), and what was not measured (CI, other machines). In the same AskUserQuestion as the report, ask to accept the new baseline,
+then `ts accept-baseline -Root &lt;root&gt;` (it prints its three source runs); `-AllowFewerTests` only for removals the user approved.
+Done when `ts status -Root &lt;root&gt;` shows the baseline accepted in this run.
+
+## Notes
+
+- A "Test-suite advisory" comes from the daily hook (`ts evaluate`), which only reads reports. It advises when the median of the
+  last three comparable full runs is over 60 s, or 25 percent and 10 s over the baseline, once per project per day; an accepted
+  baseline counts as advised at its median.
+- Runs are comparable when the command, runner version, runtime and number of pytest-xdist workers match and the number of
+  tests, and of skipped plus xfailed tests, differs by at most max(5, 5 percent). A run with no counted tests is not valid.
+  `ts status -Root &lt;root&gt;` says why runs are not compared; a slow advisory says when the regression check is off.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/optimize-testsuite/SKILL.md" download>Lataa SKILL.md</a></p>
+<details><summary>Näytä tiedosto python.md</summary>
+<div class="codebox" data-file="optimize-testsuite/python.md"><pre><code># pytest: finding and proving the cost
+
+Reference for steps 2, 3 and 5 of optimize-testsuite. `&lt;py&gt;` is `&lt;root&gt;\.venv\Scripts\python.exe`, run from `&lt;root&gt;`.
+
+## Where the time goes
+
+`cases.json` rows are `[nodeid, outcome, setup, call, teardown]`. Totals per phase, per file and the slowest tests:
+
+```powershell
+$c = Get-Content &lt;id&gt;.cases.json -Raw | ConvertFrom-Json
+'setup {0:n1}  call {1:n1}  teardown {2:n1}' -f ($c | % { $_[2] } | measure -Sum).Sum, ($c | % { $_[3] } | measure -Sum).Sum, ($c | % { $_[4] } | measure -Sum).Sum
+$c | group { ($_[0] -split '::')[0] } | % { [pscustomobject]@{ file = $_.Name; n = $_.Count; s = [math]::Round(($_.Group | % { $_[2] + $_[3] + $_[4] } | measure -Sum).Sum, 1) } } | sort s -Descending | select -First 10
+$c | sort { $_[2] + $_[3] + $_[4] } -Descending | select -First 20 | % { '{0,6:n2}  {1}' -f ($_[2] + $_[3] + $_[4]), $_[0] }
+```
+
+A flat list with a median setup of a few hundredths of a second means overhead times N: look at what every test's fixture does
+(app start, migrations, key derivation, client start), not at single tests.
+
+## The profiler trap
+
+cProfile charges the time of a generator fixture to the frames that span its `yield`, and sees only the main thread. In
+one project it showed 20 s of teardown where the phase durations showed 1 s. Trust the phase seconds in `cases.json`, then time
+the suspect alone in a ten-line script (create the app, start the client, log in, one request: each on its own).
+
+## Measuring a gain with the project untouched
+
+- **Outside plugin.** Put the shortcut in a module outside the repo and load it:
+  `$env:PYTHONPATH = '&lt;scratchpad&gt;'; &amp; &lt;py&gt; -m pytest -q -p my_shortcut`. The module patches what the change would patch (for
+  example replaces a start function with one that copies a prepared database) and the run shows the saving before any approval.
+  Tests that fail under the prototype show which ones need the real path.
+- **Process split** estimates parallel gain without installing anything: split the test files over N processes
+  (`Start-Process` per group, wait for all) and take the wall time. It also shows whether tests share ports or files.
+- **Order check.** A module with `pytest_collection_modifyitems` that reverses or shuffles `items` (seeded), loaded with `-p`,
+  shows order dependence. Run it before and after a change that touches fixtures.
+
+## Hangs
+
+`ts measure` runs with `faulthandler_timeout=45` and kills the process tree at its own timeout, so `&lt;id&gt;.log` holds the stack of
+every thread at the moment a test sat for 45 s. A thread standing in application code under an event loop frame is spinning, not
+waiting. The venv launcher starts a second `python.exe`; a kill by hand needs `taskkill /PID &lt;pid&gt; /T /F`.
+
+Faster setup exposes races that were always there: a busy loop in a job-draining function (an
+`await gather(...)` over tasks that had all ended never yields) became 2 hangs in 5 runs, first on the fourth; in
+another project xdist exposed three tests reading state a background loop had not written yet. That is why step 5 repeats.
+
+## What has worked
+
+| Pattern | Real path kept by | Gain |
+|---|---|---|
+| Cheap test-only cost (scrypt at production cost twice per test, lowered by a fixture) | a `real_hash` test checks production parameters | 160 s -&gt; 56 s |
+| Prepared state copied per test (a once-per-session migrated database, not 21 ms of migration each) | startup and migration modules marked `fresh_database` | 55 s -&gt; 42 s |
+| Routes built once per run (FastAPI 0.142 rebuilds every route per new app, 0.45 ms each, seen as slow calls; patch `_EffectiveRouteContext.from_api_route` in conftest) | login tests marked `fresh_routes` | 41.5 s -&gt; 27.3 s |
+| Server shutdown polls: `serve_forever(poll_interval=0.01)` in test servers (default waits up to 0.5 s) | n/a | per server stop |
+| pytest-xdist `addopts = "-n auto"` when there is no setup to cut; one file runs with `-n 0` (workers start in about 10 s) | n/a | 138 s -&gt; 27 s on 12 threads |
+
+The route cost was found by timing one page alone (10 ms against 1 ms for the others) and profiling that request.
+
+## What costs more than it gives
+
+- One app object shared across tests: needs a production change and puts shared state between tests.
+- Folding parametrized cases into one test: saves setup, loses the failing case's name.
+- pytest-xdist: the largest gain left once setup is lean, and a dependency plus a CI change. It is its own decision for the user.
+- Windows takes about 2 s to refuse a connection to a closed local port; tests that need a refused connection cost that there.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/optimize-testsuite/python.md" download>Lataa python.md</a></p>
+<details><summary>Näytä tiedosto testsuite.ps1</summary>
+<div class="codebox" data-file="optimize-testsuite/testsuite.ps1"><pre><code>## Measures test-suite runs for the optimize-testsuite skill and keeps the reports outside the projects.
+##   testsuite.ps1 measure -Root &lt;project&gt; [-RunnerArgs '-q'] [-Repeat 3] [-TimeoutSec &lt;auto&gt;] [-Selection focused]
+##   testsuite.ps1 status  -Root &lt;project&gt;          recent median, baseline and what was advised, per kind of run
+##   testsuite.ps1 accept-baseline -Root &lt;project&gt; [-AllowFewerTests]
+##   testsuite.ps1 evaluate                         the daily hook: cwd and event from stdin JSON, one advisory or nothing
+## measure runs pytest from &lt;project&gt;\.venv.
+## Exit 0 when every run completed and passed, 1 otherwise. Reports: &lt;StateDir&gt;\&lt;hash of root&gt;\&lt;id&gt;.summary.json,
+## &lt;id&gt;.cases.json (one row per test) and &lt;id&gt;.log (the run's output).
+[CmdletBinding()]
+param(
+    [Parameter(Position = 0)]
+    [ValidateSet('measure', 'evaluate', 'accept-baseline', 'status')]
+    [string]$Command = 'status',
+    [string]$Root,
+    [string[]]$RunnerArgs = @(),
+    [ValidateSet('full', 'focused')][string]$Selection = 'full',
+    [int]$Repeat = 1,
+    [int]$TimeoutSec = 0,
+    [string]$Python,
+    [switch]$AllowFewerTests,
+    [string]$Cwd,
+    [string]$HookEvent,
+    [datetime]$Now = [datetime]::UtcNow,
+    [string]$StateDir = (Join-Path $HOME '.claude/test-suite-metrics')
+)
+
+$ErrorActionPreference = 'Stop'
+
+$Schema = 1
+$KeepRuns = 100
+$DefaultTimeoutSec = @{ pytest = 600 }
+$SlowSeconds = 60
+$WorsePercent = 1.25
+$WorseSeconds = 10
+$RecentDays = 14
+$CooldownDays = 7
+
+function Write-Json([string]$Path, $Value) {
+    $temp = "$Path.tmp"
+    ConvertTo-Json -InputObject $Value -Depth 6 | Set-Content -LiteralPath $temp -Encoding utf8
+    [System.IO.File]::Move($temp, $Path, $true)
+}
+
+function Read-Json([string]$Path) {
+    try { Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable }
+    catch { throw "Cannot read $Path (modified $((Get-Item -LiteralPath $Path).LastWriteTimeUtc.ToString('o'))): $($_.Exception.Message)" }
+}
+
+function Get-CanonicalRoot([string]$Path) {
+    if (-not $Path) { throw '-Root is required.' }
+    (Resolve-Path -LiteralPath $Path).ProviderPath.TrimEnd('\')
+}
+
+function Get-Roots {
+    $path = Join-Path $StateDir 'roots.json'
+    if (-not (Test-Path -LiteralPath $path)) { return @() }
+    @(Read-Json $path)
+}
+
+function Find-Root([string]$CanonicalRoot) {
+    Get-Roots | Where-Object { $_.root -eq $CanonicalRoot } | Select-Object -First 1
+}
+
+function Register-Root([string]$CanonicalRoot, [string]$Runner) {
+    $known = Find-Root $CanonicalRoot
+    if ($known) { return $known }
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($CanonicalRoot.ToLowerInvariant())
+    $hash = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).Substring(0, 16).ToLowerInvariant()
+    $entry = [ordered]@{ root = $CanonicalRoot; hash = $hash; runner = $Runner; slowRule = $true }
+    New-Item -ItemType Directory -Path $StateDir -Force | Out-Null
+    Write-Json (Join-Path $StateDir 'roots.json') @(@(Get-Roots) + $entry)
+    $entry
+}
+
+function Get-ProjectDir($Entry) {
+    $dir = Join-Path $StateDir $Entry.hash
+    New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    $dir
+}
+
+$Skipped =[System.Collections.Generic.HashSet[string]]::new()
+
+function Get-Summaries([string]$ProjectDir) {
+    @(Get-ChildItem -LiteralPath $ProjectDir -Filter *.summary.json | Sort-Object Name -Descending |
+        Select-Object -First $KeepRuns | ForEach-Object {
+            try {
+                $s = Read-Json $_.FullName
+                if ($s.schema -ne $Schema) { throw "Cannot read $($_.FullName): schema $($s.schema), this script reads schema $Schema." }
+                $s
+            }
+            catch {
+                if (-not $SkipUnreadable) { throw }
+                if ($Skipped.Add($_.Exception.Message)) { Write-Host "skipped: $($_.Exception.Message)" }
+            }
+        })
+}
+
+function Test-Valid($Summary) {
+    $counted = $Summary.passed + $Summary.failed + $Summary.skipped + $Summary.xfailed + $Summary.xpassed
+    $Summary.status -eq 'completed' -and $Summary.exitCode -eq 0 -and $Summary.failed -eq 0 -and $Summary.errors -eq 0 -and
+        $null -ne $Summary.wallSeconds -and $Summary.collected -gt 0 -and $Summary.collected -ge $counted
+}
+
+function Get-Median([double[]]$Values) {
+    $sorted = @($Values | Sort-Object)
+    $sorted[[int][Math]::Floor(($sorted.Count - 1) / 2)]
+}
+
+function Get-Tolerance([int]$A, [int]$B) {
+    [Math]::Max(5, [int][Math]::Ceiling(0.05 * [Math]::Max($A, $B)))
+}
+
+function Remove-OldRuns([string]$ProjectDir) {
+    $statePath = Join-Path $ProjectDir 'state.json'
+    $keep = @()
+    if (Test-Path -LiteralPath $statePath) {
+        # Without a readable state the baseline runs are unknown, so nothing is pruned.
+        try { $state = Read-Json $statePath } catch { return }
+        $keep = @($state.baselines.Values | ForEach-Object { $_.ids })
+    }
+    $old = Get-ChildItem -LiteralPath $ProjectDir -Filter *.summary.json | Sort-Object Name -Descending |
+        Where-Object { ($_.Name -replace '\.summary\.json$') -notin $keep } | Select-Object -Skip $KeepRuns
+    foreach ($file in $old) {
+        $id = $file.Name -replace '\.summary\.json$'
+        Remove-Item -LiteralPath (Join-Path $ProjectDir "$id.summary.json"), (Join-Path $ProjectDir "$id.cases.json"),
+            (Join-Path $ProjectDir "$id.log") -Force -ErrorAction SilentlyContinue
+    }
+}
+
+function Get-Git([string]$CanonicalRoot) {
+    $revision = &amp; git -C $CanonicalRoot rev-parse --short HEAD 2&gt;$null
+    if ($LASTEXITCODE -ne 0) { return @{ revision = $null; dirtyFiles = $null } }
+    @{ revision = "$revision"; dirtyFiles = @(&amp; git -C $CanonicalRoot status --porcelain | Where-Object { $_ }).Count }
+}
+
+function Invoke-Child([string]$Exe, [string[]]$Arguments, [string]$WorkDir, [hashtable]$Environment, [int]$Seconds, [string]$LogPath) {
+    $info = [System.Diagnostics.ProcessStartInfo]::new($Exe)
+    foreach ($a in $Arguments) { $info.ArgumentList.Add($a) }
+    $info.WorkingDirectory = $WorkDir
+    $info.UseShellExecute = $false
+    $info.RedirectStandardOutput = $true
+    $info.RedirectStandardError = $true
+    foreach ($name in $Environment.Keys) {
+        if ($null -eq $Environment[$name]) { [void]$info.Environment.Remove($name) } else { $info.Environment[$name] = $Environment[$name] }
+    }
+    $clock = [System.Diagnostics.Stopwatch]::StartNew()
+    $process = [System.Diagnostics.Process]::Start($info)
+    $stdout = $process.StandardOutput.ReadToEndAsync()
+    $stderr = $process.StandardError.ReadToEndAsync()
+    $timedOut = -not $process.WaitForExit($Seconds * 1000)
+    if ($timedOut) {
+        # The venv launcher starts the real interpreter as a child, so the whole tree goes.
+        &amp; taskkill /PID $process.Id /T /F 2&gt;&amp;1 | Out-Null
+        $process.WaitForExit()
+    }
+    $clock.Stop()
+    Set-Content -LiteralPath $LogPath -Value ($stdout.Result + $stderr.Result) -Encoding utf8
+    @{ timedOut = $timedOut; exitCode = $process.ExitCode; seconds = [Math]::Round($clock.Elapsed.TotalSeconds, 2) }
+}
+
+function New-Summary([string]$Id, [datetime]$StartedUtc, [string]$CanonicalRoot, [string]$Runner, [string[]]$Argv, [string]$RunSelection) {
+    [ordered]@{
+        schema = $Schema; id = $Id; startedUtc = $StartedUtc.ToString('yyyy-MM-ddTHH:mm:ss.fffZ', [cultureinfo]::InvariantCulture)
+        root = $CanonicalRoot; runner = $Runner; runnerVersion = $null; runtime = $null; argv = $Argv; selection = $RunSelection
+        membership = $null; collected = $null; passed = $null; failed = $null; skipped = $null; xfailed = $null; xpassed = $null
+        errors = $null; status = 'not-started'; exitCode = $null; wallSeconds = $null; phases = $null; workers = $null
+        revision = $null; dirtyFiles = $null; log = $null; timeoutSec = $null
+    }
+}
+
+function Get-Timeout([string]$ProjectDir, [string]$Runner, [string]$RunSelection) {
+    if ($TimeoutSec -gt 0) { return $TimeoutSec }
+    # Earlier runs only raise the limit: they may come from another interpreter or a much smaller suite.
+    $walls = @(Get-Summaries $ProjectDir | Where-Object { (Test-Valid $_) -and $_.runner -eq $Runner -and $_.selection -eq $RunSelection } |
+        Select-Object -First 3 | ForEach-Object { [double]$_.wallSeconds })
+    if ($walls.Count -lt 3) { return $DefaultTimeoutSec[$Runner] }
+    [int][Math]::Max($DefaultTimeoutSec[$Runner], 3 * (Get-Median $walls))
+}
+
+function Assert-RunnerArgs {
+    $joined = @($RunnerArgs | Where-Object { $_ -match "^'|^-\S*,-" })
+    if ($joined) {
+        throw "-RunnerArgs got $($joined -join ' ') as one argument: 'pwsh -File' hands a list over as one string. Call the script " +
+            "from PowerShell instead: &amp; testsuite.ps1 measure -Root &lt;root&gt; -RunnerArgs @('-q', '-n', '12')"
+    }
+}
+
+function Measure-Pytest([string]$CanonicalRoot, $Entry) {
+    $exe = if ($Python) { $Python } else { Join-Path $CanonicalRoot '.venv\Scripts\python.exe' }
+    if (-not (Test-Path -LiteralPath $exe)) { throw "No Python interpreter at $exe; pass -Python." }
+    $dir = Get-ProjectDir $Entry
+    $started = [datetime]::UtcNow
+    # Milliseconds keep the ids of one process in run order; the two random digits separate two processes.
+    $id = '{0}{1}' -f $started.ToString('yyyyMMdd-HHmmss-fff'), [guid]::NewGuid().ToString('N').Substring(0, 2)
+    $summary = New-Summary $id $started $CanonicalRoot 'pytest' (@('python', '-m', 'pytest') + $RunnerArgs) $Selection
+    $summary.log = "$id.log"
+    $n = [Array]::IndexOf($RunnerArgs, '-n')
+    if ($n -ge 0 -and $n + 1 -lt $RunnerArgs.Count) { $summary.workers = $RunnerArgs[$n + 1] }
+    $git = Get-Git $CanonicalRoot
+    $summary.revision = $git.revision
+    $summary.dirtyFiles = $git.dirtyFiles
+
+    $out = Join-Path $dir $id
+    $arguments = @('-m', 'pytest') + $RunnerArgs + @('-p', 'tsm_report', '-o', 'faulthandler_timeout=45')
+    $environment = @{ TSM_OUT = $out; PYTHONUNBUFFERED = '1'
+                      PYTHONPATH = (@($PSScriptRoot, $env:PYTHONPATH) | Where-Object { $_ }) -join ';' }
+    $summary.timeoutSec = Get-Timeout $dir 'pytest' $Selection
+    $run = Invoke-Child $exe $arguments $CanonicalRoot $environment $summary.timeoutSec (Join-Path $dir "$id.log")
+
+    $pluginPath = "$out.plugin.json"
+    if ($run.timedOut) {
+        $summary.status = 'timeout'
+    }
+    elseif (Test-Path -LiteralPath $pluginPath) {
+        $plugin = Read-Json $pluginPath
+        $summary.status = 'completed'
+        $summary.wallSeconds = $run.seconds
+        foreach ($name in 'runnerVersion', 'runtime', 'membership', 'collected', 'phases', 'workers') { $summary[$name] = $plugin[$name] }
+        foreach ($name in 'passed', 'failed', 'skipped', 'xfailed', 'xpassed') { $summary[$name] = $plugin.counts[$name] }
+        $summary.errors = $plugin.counts.error
+    }
+    if (-not $run.timedOut) { $summary.exitCode = $run.exitCode }
+    Remove-Item -LiteralPath $pluginPath -Force -ErrorAction SilentlyContinue
+    Write-Json "$out.summary.json" $summary
+    $summary
+}
+
+function Get-Key($Summary) {
+    @($Summary.runner, $Summary.runnerVersion, $Summary.runtime, ($Summary.argv -join ' '), $Summary.workers, $Summary.selection) -join '|'
+}
+
+function ConvertTo-Utc($Value) {
+    if ($Value -is [datetime]) { return $Value.ToUniversalTime() }
+    [datetime]::Parse($Value, [cultureinfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::RoundtripKind).ToUniversalTime()
+}
+
+function Get-Day([datetime]$Utc) {
+    $Utc.ToLocalTime().ToString('yyyy-MM-dd')
+}
+
+function Format-Seconds([double]$Value) {
+    if ($Value -eq [Math]::Round($Value)) { "$([int]$Value) s" } else { "$([Math]::Round($Value, 1)) s" }
+}
+
+function Format-Tests($Runs) {
+    $counts = @($Runs | ForEach-Object { [int]$_.collected } | Sort-Object)
+    if ($counts[0] -eq $counts[-1]) { "$($counts[0]) tests" } else { "$($counts[0])-$($counts[-1]) tests" }
+}
+
+function Test-Comparable($A, $B) {
+    if ((Get-Key $A) -ne (Get-Key $B)) { return $false }
+    if ($A.membership -eq $B.membership) { return $true }
+    $tolerance = Get-Tolerance $A.collected $B.collected
+    [Math]::Abs($A.collected - $B.collected) -le $tolerance -and
+        [Math]::Abs(($A.skipped + $A.xfailed) - ($B.skipped + $B.xfailed)) -le $tolerance
+}
+
+function Test-Trio($Runs) {
+    (Test-Comparable $Runs[0] $Runs[1]) -and (Test-Comparable $Runs[0] $Runs[2]) -and (Test-Comparable $Runs[1] $Runs[2])
+}
+
+function New-Baseline($Runs, [string]$By, [string]$Day) {
+    [ordered]@{
+        ids = @($Runs | ForEach-Object { $_.id })
+        median = Get-Median ($Runs | ForEach-Object { [double]$_.wallSeconds })
+        collected = [int](Get-Median ($Runs | ForEach-Object { [double]$_.collected }))
+        skipped = [int](Get-Median ($Runs | ForEach-Object { [double]($_.skipped + $_.xfailed) }))
+        runsUntil = Get-Day (ConvertTo-Utc $Runs[2].startedUtc); setOn = $Day; by = $By
+    }
+}
+
+function Read-State([string]$ProjectDir, $Entry) {
+    $path = Join-Path $ProjectDir 'state.json'
+    if (-not (Test-Path -LiteralPath $path)) {
+        return @{ schema = $Schema; root = $Entry.root; evaluatedDay = $null; baselines = @{}; advised = @{} }
+    }
+    $state = Read-Json $path
+    if ($state.schema -ne $Schema) { throw "Cannot read ${path}: schema $($state.schema), this script reads schema $Schema." }
+    foreach ($name in 'baselines', 'advised') { if ($null -eq $state[$name]) { $state[$name] = @{} } }
+    $state
+}
+
+function Get-Standing($Entry, $State, [datetime]$NowUtc) {
+    # One record per kind of full run: what the recent runs say against the baseline.
+    $runs = @(Get-Summaries (Join-Path $StateDir $Entry.hash) | Where-Object { $_.selection -ne 'focused' } |
+        Sort-Object { ConvertTo-Utc $_.startedUtc })
+    foreach ($group in $runs | Group-Object { Get-Key $_ }) {
+        $valid = @($group.Group | Where-Object { Test-Valid $_ })
+        $baseline = $State.baselines[$group.Name]
+        for ($i = 0; -not $baseline -and $i + 2 -lt $valid.Count; $i++) {
+            if (Test-Trio $valid[$i..($i + 2)]) { $baseline = New-Baseline $valid[$i..($i + 2)] 'first-trio' (Get-Day $NowUtc) }
+        }
+        $standing = @{ key = $group.Name; selection = $group.Group[0].selection; runner = $group.Group[0].runner; runs = $valid.Count
+                       baseline = $baseline; recent = $null; median = $null; note = $null; reasons = @() }
+        $last = @($valid | Select-Object -Last 3)
+        if ($last.Count -lt 3) {
+            $standing.note = 'three completed runs are needed'
+        }
+        elseif (($NowUtc - (ConvertTo-Utc $last[0].startedUtc)).TotalDays -gt $RecentDays) {
+            $standing.note = "no three runs in the last $RecentDays days"
+        }
+        elseif (-not (Test-Trio $last)) {
+            $standing.note = "the last three runs are not comparable: $(Format-Tests $last)"
+        }
+        else {
+            $standing.recent = $last
+            $standing.median = Get-Median ($last | ForEach-Object { [double]$_.wallSeconds })
+            if ($Entry.slowRule -and $standing.median -gt $SlowSeconds) { $standing.reasons = @('slow') }
+            if ($baseline) {
+                $collected = [int](Get-Median ($last | ForEach-Object { [double]$_.collected }))
+                $skipped = [int](Get-Median ($last | ForEach-Object { [double]($_.skipped + $_.xfailed) }))
+                $tolerance = Get-Tolerance $collected $baseline.collected
+                if ([Math]::Abs($collected - $baseline.collected) -gt $tolerance -or [Math]::Abs($skipped - $baseline.skipped) -gt $tolerance) {
+                    $standing.note = "the baseline of $($baseline.collected) tests is no longer comparable; accept a new one"
+                }
+                elseif ($standing.median -gt $WorsePercent * $baseline.median -and $standing.median - $baseline.median -gt $WorseSeconds) {
+                    $standing.reasons = @('regression') + $standing.reasons
+                }
+            }
+        }
+        $standing
+    }
+}
+
+function Select-Advisory($Entry, $State, $Standings, [string]$Today) {
+    $candidates = foreach ($standing in $Standings) {
+        foreach ($reason in $standing.reasons) {
+            $last = if ($State.advised[$standing.key]) { $State.advised[$standing.key][$reason] }
+            $again = $last -and $standing.median -gt $WorsePercent * $last.median -and $standing.median - $last.median -gt $WorseSeconds -and
+                ([datetime]$Today - [datetime]"$($last.day)").TotalDays -ge $CooldownDays
+            if (-not $last -or $again) { @{ standing = $standing; reason = $reason } }
+        }
+    }
+    $chosen = @($candidates) | Sort-Object { $_.reason -ne 'regression' }, { -$_.standing.median } | Select-Object -First 1
+    if (-not $chosen) { return $null }
+    $standing = $chosen.standing
+    if (-not $State.advised[$standing.key]) { $State.advised[$standing.key] = @{} }
+    $State.advised[$standing.key][$chosen.reason] = @{ day = $Today; median = $standing.median }
+
+    $name = Split-Path -Leaf $Entry.root
+    $runs = "the median of the last three comparable $($standing.selection) runs is $(Format-Seconds $standing.median)"
+    $span = "$(Format-Tests $standing.recent), $(Get-Day (ConvertTo-Utc $standing.recent[0].startedUtc)) to $(Get-Day (ConvertTo-Utc $standing.recent[2].startedUtc))"
+    $finding = if ($chosen.reason -eq 'regression') {
+        $over = $standing.median - $standing.baseline.median
+        "regression: $runs, $(Format-Seconds $over) ($([int](100 * $over / $standing.baseline.median)) %) over the baseline of " +
+            "$(Format-Seconds $standing.baseline.median) from $($standing.baseline.runsUntil) ($span)."
+    }
+    else {
+        $off = if ($standing.note) { " Regression check off: $($standing.note)." } else { '' }
+        "slow suite: $runs ($span), over the $SlowSeconds s mark.$off"
+    }
+    $text = "Test-suite advisory for ${name}: $finding In your next reply add one brief suggestion to run /optimize-testsuite " +
+        'for this project; do not start it unasked.'
+    $text.Substring(0, [Math]::Min($text.Length, 600))
+}
+
+function Find-RootOf([string]$Path) {
+    $path = $Path.Replace('/', '\').TrimEnd('\')
+    Get-Roots | Where-Object { $path -eq $_.root -or $path.StartsWith("$($_.root)\", [System.StringComparison]::OrdinalIgnoreCase) } |
+        Sort-Object { $_.root.Length } -Descending | Select-Object -First 1
+}
+
+function Format-Run($Summary) {
+    $tests = if ($null -ne $Summary.collected) { "$($Summary.collected) tests" } else { 'tests unknown' }
+    $wall = if ($null -ne $Summary.wallSeconds) { "$($Summary.wallSeconds) s" } else { 'no wall time' }
+    $failures = if ($Summary.failed -or $Summary.errors) { "  $($Summary.failed) failed, $($Summary.errors) errors" } else { '' }
+    "$($Summary.id)  $($Summary.status)  $tests  $wall  exit $($Summary.exitCode)$failures"
+}
+
+$SkipUnreadable = $Command -in 'measure', 'status', 'accept-baseline'
+
+switch ($Command) {
+    'measure' {
+        Assert-RunnerArgs
+        $canonical = Get-CanonicalRoot $Root
+        $known = Find-Root $canonical
+        $entry = if ($known) { $known } else { Register-Root $canonical 'pytest' }
+        $bad = 0
+        foreach ($i in 1..$Repeat) {
+            $summary = Measure-Pytest $canonical $entry
+            Format-Run $summary
+            if (-not (Test-Valid $summary)) {
+                $bad++
+                "  not a clean run; output: $(Join-Path (Get-ProjectDir $entry) $summary.log)"
+                if ($i -lt $Repeat) { "  stopped: $($Repeat - $i) repeat(s) not run" }
+                break
+            }
+        }
+        Remove-OldRuns (Get-ProjectDir $entry)
+        if ($bad -gt 0) { exit 1 }
+    }
+    'status' {
+        $canonical = Get-CanonicalRoot $Root
+        $entry = Find-Root $canonical
+        if (-not $entry) { throw "$canonical has no measurements; run measure first." }
+        $dir = Get-ProjectDir $entry
+        $state = Read-State $dir $entry
+        $standings = @(Get-Standing $entry $state $Now.ToUniversalTime())
+        if (-not $standings) { "no full runs measured for $canonical" }
+        foreach ($standing in $standings) {
+            $recent = if ($standing.recent) { "recent median $(Format-Seconds $standing.median) over $(Format-Tests $standing.recent)" } else { $standing.note }
+            $b = $standing.baseline
+            $baseline = if ($b) { "baseline $(Format-Seconds $b.median) over $($b.collected) tests from $($b.runsUntil) ($($b.by))" } else { 'no baseline' }
+            $note = if ($standing.recent -and $standing.note) { "; $($standing.note)" } else { '' }
+            $advised = if ($state.advised[$standing.key]) {
+                '; advised: ' + (($state.advised[$standing.key].GetEnumerator() | ForEach-Object { "$($_.Key) $($_.Value.day) at $(Format-Seconds $_.Value.median)" }) -join ', ')
+            } else { '' }
+            "$($standing.selection) ($($standing.runner)): $($standing.runs) completed run(s); $recent; $baseline$note$advised"
+        }
+        "evaluated: $(if ($state.evaluatedDay) { $state.evaluatedDay } else { 'never' })"
+    }
+    'accept-baseline' {
+        if ($Selection -eq 'focused') { throw 'A baseline is kept for full runs only.' }
+        $canonical = Get-CanonicalRoot $Root
+        $entry = Find-Root $canonical
+        if (-not $entry) { throw "$canonical has no measurements; run measure first." }
+        $dir = Get-ProjectDir $entry
+        $state = Read-State $dir $entry
+        $last = @(Get-Summaries $dir | Where-Object { (Test-Valid $_) -and $_.selection -eq $Selection } |
+            Sort-Object { ConvertTo-Utc $_.startedUtc } | Select-Object -Last 3)
+        if ($last.Count -lt 3 -or -not (Test-Trio $last)) {
+            throw "accept-baseline needs three comparable completed $Selection runs as the newest ones; see status."
+        }
+        $key = Get-Key $last[2]
+        $new = New-Baseline $last 'accepted' (Get-Day $Now.ToUniversalTime())
+        $old = $state.baselines[$key]
+        if ($old -and $new.collected -lt $old.collected -and -not $AllowFewerTests) {
+            throw "The newest runs hold $($new.collected) tests and the baseline $($old.collected). Name the tests that are gone; when they were removed on purpose, repeat with -AllowFewerTests."
+        }
+        $state.baselines[$key] = $new
+        # Kept as advised at the accepted median, so the slow rule speaks again only when the suite gets materially worse.
+        if (-not $state.advised[$key]) { $state.advised[$key] = @{} }
+        $state.advised[$key].Remove('regression')
+        $state.advised[$key]['slow'] = @{ day = $new.setOn; median = $new.median }
+        Write-Json (Join-Path $dir 'state.json') $state
+        "baseline for $Selection runs: $(Format-Seconds $new.median) over $($new.collected) tests (accepted $($new.setOn))"
+        "from runs: $($new.ids -join ', ')"
+    }
+    'evaluate' {
+        # The daily hook. It reads reports and the state; it never starts a run.
+        $nowUtc = $Now.ToUniversalTime()
+        $dir = $null
+        try {
+            if (-not $Cwd) {
+                $raw = if ([Console]::IsInputRedirected) { [Console]::In.ReadToEnd() } else { '' }
+                $hook = @{}
+                if ($raw.Trim()) {
+                    try { $hook = $raw | ConvertFrom-Json -AsHashtable } catch { throw "stdin is not JSON: $($_.Exception.Message)" }
+                }
+                $Cwd = $hook.cwd
+                if (-not $HookEvent) { $HookEvent = $hook.hook_event_name }
+            }
+            if (-not $Cwd) { throw 'no cwd in stdin.' }
+            $entry = Find-RootOf $Cwd
+            if (-not $entry) { exit 0 }
+            $dir = Join-Path $StateDir $entry.hash
+            if (-not (Test-Path -LiteralPath $dir)) { exit 0 }
+            $today = Get-Day $nowUtc
+            $state = Read-State $dir $entry
+            if ($state.evaluatedDay -eq $today) { exit 0 }
+            $standings = @(Get-Standing $entry $state $nowUtc)
+            foreach ($standing in $standings) {
+                if ($standing.baseline -and -not $state.baselines[$standing.key]) { $state.baselines[$standing.key] = $standing.baseline }
+            }
+            $advice = Select-Advisory $entry $state $standings $today
+            $state.evaluatedDay = $today
+            Write-Json (Join-Path $dir 'state.json') $state
+            if ($advice) {
+                $event = if ($HookEvent) { $HookEvent } else { 'UserPromptSubmit' }
+                @{ hookSpecificOutput = @{ hookEventName = $event; additionalContext = $advice } } | ConvertTo-Json -Compress -Depth 4
+            }
+        }
+        catch {
+            $message = $_.Exception.Message
+            $where = if ($dir -and (Test-Path -LiteralPath $dir)) { $dir } else { $StateDir }
+            $notePath = Join-Path $where 'diagnostic.json'
+            $today = Get-Day $nowUtc
+            $noted = $null
+            # An unreadable note only means the problem is reported again.
+            if (Test-Path -LiteralPath $notePath) { try { $noted = Read-Json $notePath } catch { $noted = $null } }
+            if ($noted -and $noted.day -eq $today -and $noted.message -eq $message) { exit 0 }
+            if (Test-Path -LiteralPath $where) { Write-Json $notePath @{ day = $today; message = $message } }
+            [Console]::Error.WriteLine("testsuite hook: $message")
+            exit 1
+        }
+    }
+}
+exit 0
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/optimize-testsuite/testsuite.ps1" download>Lataa testsuite.ps1</a></p>
+<details><summary>Näytä tiedosto tsm_report.py</summary>
+<div class="codebox" data-file="optimize-testsuite/tsm_report.py"><pre><code>"""pytest plugin of the optimize-testsuite skill: records what one run collected, each test's outcome and the seconds
+of each phase. testsuite.ps1 loads it with -p and names the output in TSM_OUT; nothing is written into the project."""
+
+import hashlib
+import json
+import os
+import platform
+
+import pytest
+
+PHASES = ("setup", "call", "teardown")
+
+
+class Report:
+    def __init__(self, out: str):
+        self.out = out
+        self.ids: list[str] = []
+        self.cases: dict[str, dict] = {}
+
+    def pytest_collection_finish(self, session):
+        self.ids = sorted(item.nodeid for item in session.items)
+
+    # Under pytest-xdist the controller collects nothing itself; each worker reports the ids it collected.
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_xdist_node_collection_finished(self, node, ids):
+        self.ids = sorted(ids)
+
+    def pytest_runtest_logreport(self, report):
+        case = self.cases.setdefault(report.nodeid, {"outcome": None, **dict.fromkeys(PHASES)})
+        case[report.when] = round(report.duration, 4)
+        if hasattr(report, "wasxfail"):
+            if report.skipped:
+                case["outcome"] = "xfailed"
+            elif report.passed and report.when == "call":
+                case["outcome"] = "xpassed"
+        elif report.failed:
+            # A failure outside the test body is pytest's "error", and it outranks a passed call.
+            case["outcome"] = "failed" if report.when == "call" else "error"
+        elif report.skipped:
+            case["outcome"] = "skipped"
+        elif report.when == "call" and case["outcome"] is None:
+            case["outcome"] = "passed"
+
+    def pytest_sessionfinish(self, session, exitstatus):
+        if hasattr(session.config, "workerinput"):
+            return
+        counts = dict.fromkeys(("passed", "failed", "skipped", "xfailed", "xpassed", "error"), 0)
+        for case in self.cases.values():
+            if case["outcome"] is not None:
+                counts[case["outcome"]] += 1
+        phases = {p: round(sum(c[p] or 0 for c in self.cases.values()), 3) for p in PHASES}
+        with open(self.out + ".cases.json", "w", encoding="utf-8") as f:
+            json.dump([[nodeid, c["outcome"], *(c[p] for p in PHASES)] for nodeid, c in sorted(self.cases.items())], f)
+        with open(self.out + ".plugin.json", "w", encoding="utf-8") as f:
+            json.dump({"collected": len(self.ids),
+                       "membership": hashlib.sha256("\n".join(self.ids).encode()).hexdigest(),
+                       "counts": counts, "phases": phases, "runnerVersion": pytest.__version__,
+                       "workers": str(workers) if (workers := getattr(session.config.option, "numprocesses", None)) else None,
+                       "runtime": platform.python_version()}, f)
+
+
+def pytest_configure(config):
+    out = os.environ.get("TSM_OUT")
+    if not out:
+        raise pytest.UsageError("tsm_report is loaded by testsuite.ps1, which names the report in TSM_OUT")
+    config.pluginmanager.register(Report(out), "tsm_report_recorder")
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/optimize-testsuite/tsm_report.py" download>Lataa tsm_report.py</a></p>
+  <h3>Hook-katkelma</h3>
+<div class="codebox" data-file="optimize-testsuite/hook.json"><pre><code>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "pwsh -NoProfile -NonInteractive -File \"$HOME/.claude/skills/optimize-testsuite/testsuite.ps1\" evaluate",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre></div>
+<p><a class="btn" href="../kopioi/optimize-testsuite/hook.json" download>Lataa hook.json</a></p>
+  <ol>
+    <li>Ota kopio (jos tiedosto on olemassa); päiväys nimessä estää aiemman kopion ylikirjoittamisen: <code>Copy-Item $HOME\.claude\settings.json "$HOME\.claude\settings.json.$(Get-Date -Format yyyyMMdd-HHmmss).bak"</code></li>
+    <li>Avaa <code>%USERPROFILE%\.claude\settings.json</code> tekstieditorilla. Jos tiedostossa ei ole kohtaa <code>"hooks"</code>, liitä koko katkelma (lisää pilkku edellisen kohdan perään). Jos tiedostoa ei ole, luo se katkelman sisällöllä.</li>
+    <li>Jos tiedostossa on jo <code>"hooks"</code> mutta ei <code>"SessionStart"</code>, lisää <code>"hooks"</code>-kohdan sisään vain <code>"SessionStart": [ ... ]</code>-osa katkelmasta. Jos tiedostossa on jo <code>hooks.SessionStart</code>, lisää sen listaan vain sisempi olio (<code>{ "hooks": [ ... ] }</code>). Älä koskaan lisää toista <code>"hooks"</code>-kohtaa.</li>
+    <li>Tarkista, että JSON on kelvollista: <code>Get-Content $HOME\.claude\settings.json | ConvertFrom-Json</code>. Virheilmoitus tarkoittaa, että pilkku tai sulku on väärin; palauta kopio ja yritä uudelleen.</li>
+    <li>Käynnistä Claude Code uudelleen, jotta hook luetaan.</li>
+  </ol>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>optimize-testsuite\<wbr>SKILL.md</code>, <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>optimize-testsuite\<wbr>python.md</code>, <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>optimize-testsuite\<wbr>testsuite.ps1</code>, <code>$HOME\<wbr>.claude\<wbr>skills\<wbr>optimize-testsuite\<wbr>tsm_report.py</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+    <li>Avaa <code>%USERPROFILE%\.claude\settings.json</code> ja poista tämän työkalun hook-olio kohdasta <code>hooks.SessionStart</code>. Jos <code>SessionStart</code>-lista jää tyhjäksi, poista se; jos <code>hooks</code>-kohta jää sen jälkeen tyhjäksi, poista sekin. Tarkista JSON komennolla <code>Get-Content $HOME\.claude\settings.json | ConvertFrom-Json</code>.</li>
+  </ol>
+</section>
+
+<section id="kopioi-routing" data-tool="routing">
+  <h2>Kopioitava: routing</h2>
+  <p>Mallireititys: komento <code>/routing</code>, reititysohje, hintataulukko, kolme agenttia (<code>scout</code>, <code>runner</code>, <code>implementer</code>) ja SessionStart-hook. Kun reititys on päällä, Claude antaa sopivan työn halvemmille malleille.</p>
+  <p><b>Milloin:</b> Katso kohta Mallireititys yllä. Kokeile vasta, kun tunnet peruskäytön: tämä on ensisijaisesti kustannusten hallintaa.</p>
+  <div class="tablewrap manifest"><table><tbody>
+    <tr><th>Tiedostot</th><td><code>commands/routing.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\routing.md</code><br><code>routing/routing.ps1</code> &rarr; <code>%USERPROFILE%\.claude\routing\routing.ps1</code><br><code>routing/rule.md</code> &rarr; <code>%USERPROFILE%\.claude\routing\rule.md</code><br><code>routing/prices.json</code> &rarr; <code>%USERPROFILE%\.claude\routing\prices.json</code><br><code>agents/scout.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\scout.md</code><br><code>agents/runner.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\runner.md</code><br><code>agents/implementer.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\implementer.md</code></td></tr>
+    <tr><th>Edellytykset</th><td>Claude Code, PowerShell 7, Matt Pocock's skills plugin (for the skill-step table)</td></tr>
+    <tr><th>Hook</th><td>Liitä alla oleva SessionStart-hook käsin tiedostoon <code>%USERPROFILE%\.claude\settings.json</code>.</td></tr>
+    <tr><th>Varmuuskopio</th><td>Jos kohteessa on jo samanniminen tiedosto, nimeä se ensin .bak-päätteiseksi. Jos .bak on jo olemassa, älä jatka ennen kuin olet selvittänyt, mikä tiedosto on mikä. Ota kopio myös settings.json-tiedostosta ennen hookin lisäämistä.</td></tr>
+    <tr><th>Poisto</th><td>Poista tiedostot (ja tyhjiksi jääneet kansiot), palauta .bak-tiedostot ja poista hook settings.json-tiedostosta.</td></tr>
+  </tbody></table></div>
+  <h3>Asennus</h3>
+  <ol>
+    <li>Varmista edellytykset: Claude Code, PowerShell 7, Matt Pocock's skills plugin (for the skill-step table).</li>
+    <li>Jos jokin kohdetiedosto on jo olemassa, nimeä se päätteeseen <code>.bak</code>. Jos <code>.bak</code> on jo olemassa, pysähdy ja selvitä, mikä tiedosto on mikä.</li>
+    <li>Luo puuttuvat kansiot, esimerkiksi PowerShellillä: <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>commands"</code>; <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>routing"</code>; <code>New-Item -ItemType Directory -Force "$HOME\<wbr>.claude\<wbr>agents"</code>.</li>
+    <li>Tallenna alla olevat tiedostot "Lataa"-painikkeella tai kopioi koodi kopiointipainikkeella kohdepolkuun, joka näkyy taulukossa.</li>
+    <li>Liitä hook-katkelma settings.json-tiedostoon alla olevien ohjeiden mukaan.</li>
+    <li>Kokeile: Kirjoita <code>/routing status</code>. Odotettu tulos uuden asennuksen jälkeen: <code>Model routing: off</code>.</li>
+  </ol>
+<div class="codebox" data-file="routing/commands/routing.md"><pre><code>---
+description: Turn model routing on or off, show its state, or show the cost report
+argument-hint: &lt;on|off|status|report [days]&gt;
+---
+
+Run this and show its output:
+
+```
+pwsh -NoProfile -File "$HOME/.claude/routing/routing.ps1" $ARGUMENTS
+```
+
+- `on`: the output contains the routing rule. Follow it for the rest of this session.
+- `off`: for the rest of this session stop delegating to `scout`, `runner` and `implementer`, and start the
+  sub-agents of skills and of plan mode without a model override.
+- `status` (also when no argument is given): report the state in one line.
+- `report [days]` (default 14): show the tables as printed, then at most three sentences on what stands out: an
+  agent with logged problems, an agent whose Saved $ is small or negative next to its Cost $, a skill whose
+  main-session cost dominates, the most expensive model in a main session or an agent, or a difference in $/session between routing on
+  and off. Suggest a change to an agent only when the numbers or the logged problems support it.
+
+If the script fails, show the error. Do not work around it.
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/commands/routing.md" download>Lataa routing.md</a></p>
+<details><summary>Näytä tiedosto routing.ps1</summary>
+<div class="codebox" data-file="routing/routing/routing.ps1"><pre><code>[CmdletBinding()]
+param(
+    [Parameter(Position = 0)]
+    [ValidateSet('on', 'off', 'status', 'context', 'log', 'report')]
+    [string]$Command = 'status',
+    [Parameter(Position = 1)][int]$Days = 14,
+    [string]$Agent,
+    [string]$Model,
+    [string]$Task,
+    [string]$Problem,
+    [switch]$Json,
+    [string]$StateDir = $PSScriptRoot,
+    [string]$ProjectsDir = (Join-Path $HOME ".claude/projects")
+)
+
+$ErrorActionPreference = 'Stop'
+
+$flagPath = Join-Path $StateDir 'enabled'
+$historyPath = Join-Path $StateDir 'history.jsonl'
+$rulePath = Join-Path $PSScriptRoot 'rule.md'
+$pricesPath = Join-Path $PSScriptRoot 'prices.json'
+
+function Add-History([hashtable]$Entry) {
+    $line = ([ordered]@{ ts = (Get-Date).ToString('o') } + $Entry) | ConvertTo-Json -Compress
+    Add-Content -LiteralPath $historyPath -Value $line -Encoding utf8
+}
+
+function Read-History {
+    if (-not (Test-Path -LiteralPath $historyPath)) { return @() }
+    @(Get-Content -LiteralPath $historyPath | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json })
+}
+
+function Get-StateAt([datetime]$At, $Toggles) {
+    $state = 'off'
+    foreach ($t in $Toggles) {
+        if (([datetime]$t.ts).ToLocalTime() -lt $At) { $state = $t.state }
+    }
+    $state
+}
+
+function Get-Cost($Price, $T) {
+    ($T.in * $Price.input + $T.out * $Price.output + $T.read * $Price.cacheRead +
+        $T.w5 * $Price.input * 1.25 + $T.w1 * $Price.input * 2) / 1e6
+}
+
+function Read-Usage([System.IO.FileInfo]$File) {
+    # One API response is written as several lines carrying the same usage; keep the last per message id.
+    $messages = [ordered]@{}
+    $n = 0
+    # ReadWrite share: a running session keeps its transcript open for writing.
+    $reader = [System.IO.StreamReader]::new([System.IO.FileStream]::new($File.FullName, 'Open', 'Read', 'ReadWrite'))
+    try {
+        while ($null -ne ($line = $reader.ReadLine())) {
+            $n++
+            if (-not $line.Contains('"usage"')) { continue }
+            try { $d = $line | ConvertFrom-Json }
+            catch { throw "Cannot parse $($File.FullName) line ${n}: $($_.Exception.Message)" }
+            if ($d.type -ne 'assistant' -or -not $d.message.usage) { continue }
+            if ($d.message.model -eq '&lt;synthetic&gt;') { continue }
+            $id = if ($d.message.id) { $d.message.id } else { $d.uuid }
+            $messages[$id] = $d
+        }
+    }
+    finally { $reader.Dispose() }
+    $messages
+}
+
+function Get-Report {
+    $prices = Get-Content -LiteralPath $pricesPath -Raw | ConvertFrom-Json -AsHashtable
+    $since = (Get-Date).Date.AddDays(-($Days - 1))
+    $history = Read-History
+    $toggles = @($history | Where-Object { $_.event -eq 'toggle' })
+
+    $files = Get-ChildItem -LiteralPath $ProjectsDir -Recurse -Filter *.jsonl -File |
+        Where-Object { $_.LastWriteTime -ge $since } | Sort-Object FullName
+    $taken = @{}
+    $sessions = @{}
+    $records = [System.Collections.Generic.List[object]]::new()
+    foreach ($file in $files) {
+        $bucket = 'main'
+        $session = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+        if ($file.Directory.Name -eq 'subagents') {
+            $session = $file.Directory.Parent.Name
+            $metaPath = $file.FullName -replace '\.jsonl$', '.meta.json'
+            $bucket = '(no meta)'
+            if (Test-Path -LiteralPath $metaPath) {
+                $bucket = (Get-Content -LiteralPath $metaPath -Raw | ConvertFrom-Json).agentType
+            }
+        }
+        foreach ($d in (Read-Usage $file).Values) {
+            $id = if ($d.message.id) { $d.message.id } else { $d.uuid }
+            # A resumed or forked session copies the earlier messages into its new transcript.
+            if ($taken.ContainsKey($id)) { continue }
+            $taken[$id] = $true
+            $u = $d.message.usage
+            $w5 = [long]$u.cache_creation_input_tokens
+            $w1 = 0L
+            if ($u.cache_creation) {
+                $w5 = [long]$u.cache_creation.ephemeral_5m_input_tokens
+                $w1 = [long]$u.cache_creation.ephemeral_1h_input_tokens
+            }
+            $t = @{ in = [long]$u.input_tokens; out = [long]$u.output_tokens; read = [long]$u.cache_read_input_tokens; w5 = $w5; w1 = $w1 }
+            $t.total = $t.in + $t.out + $t.read + $w5 + $w1
+            $model = $d.message.model -replace '-\d{8}$', ''
+            $ts = ([datetime]$d.timestamp).ToLocalTime()
+            if (-not $sessions.ContainsKey($session)) { $sessions[$session] = @{ start = $ts; mainTokens = @{} } }
+            $s = $sessions[$session]
+            if ($ts -lt $s.start) { $s.start = $ts }
+            if ($bucket -eq 'main') { $s.mainTokens[$model] = [long]$s.mainTokens[$model] + $t.total }
+            $skill = if ($d.attributionSkill) { $d.attributionSkill } else { '(no skill)' }
+            $records.Add(@{ bucket = $bucket; session = $session; file = $file.FullName; model = $model; ts = $ts; t = $t; skill = $skill })
+        }
+    }
+
+    foreach ($s in $sessions.Values) {
+        $s.state = Get-StateAt $s.start $toggles
+        $top = $s.mainTokens.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 1
+        $s.mainPrice = if ($top) { $prices[$top.Key] } else { $null }
+    }
+
+    $byAgent = @{}
+    $byDay = @{}
+    $bySkill = @{}
+    $byState = @{}
+    $runs = @{}
+    $unpriced = @{}
+    $noMain = @{}
+    foreach ($r in $records) {
+        if ($r.ts.Date -lt $since) { continue }
+        $t = $r.t
+        $p = $prices[$r.model]
+        $cost = 0.0
+        if ($p) { $cost = Get-Cost $p $t } else { $unpriced[$r.model] = [long]$unpriced[$r.model] + $t.total }
+        $s = $sessions[$r.session]
+        $main = $r.bucket -eq 'main'
+
+        $key = "$($r.bucket)|$($r.model)"
+        if (-not $byAgent.ContainsKey($key)) {
+            $byAgent[$key] = [ordered]@{ agent = $r.bucket; model = $r.model; runs = 0; input = 0L; output = 0L; cacheRead = 0L; cacheWrite = 0L; cost = 0.0; atMain = $null; saved = $null }
+            $runs[$key] = @{}
+        }
+        $a = $byAgent[$key]
+        $a.input += $t.in; $a.output += $t.out; $a.cacheRead += $t.read; $a.cacheWrite += $t.w5 + $t.w1; $a.cost += $cost
+        $runs[$key][$r.file] = $true
+        if (-not $main) {
+            $atMain = $cost
+            if ($s.mainPrice) { $atMain = Get-Cost $s.mainPrice $t } else { $noMain[$r.session] = $true }
+            $a.atMain = [double]$a.atMain + $atMain
+            $a.saved = $a.atMain - $a.cost
+        }
+
+        $dayKey = $r.ts.ToString('yyyy-MM-dd')
+        if (-not $byDay.ContainsKey($dayKey)) {
+            $byDay[$dayKey] = [ordered]@{ date = $dayKey; mainCost = 0.0; agentCost = 0.0; totalCost = 0.0; tokens = 0L }
+        }
+        # The skill invoked last in the user's turn; a skill started inside another takes over.
+        if (-not $bySkill.ContainsKey($r.skill)) {
+            $bySkill[$r.skill] = [ordered]@{ skill = $r.skill; mainCost = 0.0; agentCost = 0.0; totalCost = 0.0; tokens = 0L }
+        }
+        if (-not $byState.ContainsKey($s.state)) {
+            $byState[$s.state] = [ordered]@{ routing = $s.state; sessions = @{}; mainCost = 0.0; agentCost = 0.0; totalCost = 0.0; tokens = 0L }
+        }
+        $byState[$s.state].sessions[$r.session] = $true
+        foreach ($row in $byDay[$dayKey], $bySkill[$r.skill], $byState[$s.state]) {
+            if ($main) { $row.mainCost += $cost } else { $row.agentCost += $cost }
+            $row.totalCost += $cost
+            $row.tokens += $t.total
+        }
+    }
+    foreach ($key in $runs.Keys) { $byAgent[$key].runs = $runs[$key].Count }
+    foreach ($row in $byState.Values) {
+        $row.sessions = $row.sessions.Count
+        $row.perSession = $row.totalCost / $row.sessions
+    }
+
+    $problems = @($history | Where-Object { $_.event -eq 'problem' -and ([datetime]$_.ts).ToLocalTime() -ge $since })
+    foreach ($a in $byAgent.Values) {
+        $a.problems = @($problems | Where-Object { $_.agent -eq $a.agent }).Count
+    }
+
+    [ordered]@{
+        since    = $since.ToString('yyyy-MM-dd')
+        days     = $Days
+        byState  = @($byState.Values | Sort-Object { $_.routing } -Descending)
+        byDay    = @($byDay.Values | Sort-Object { $_.date })
+        bySkill  = @($bySkill.Values | Sort-Object { -$_.totalCost })
+        byAgent  = @($byAgent.Values | Sort-Object { -$_.cost })
+        problems = $problems
+        unpriced = @($unpriced.GetEnumerator() | ForEach-Object { [ordered]@{ model = $_.Key; tokens = $_.Value } })
+        noMain   = @($noMain.Keys | Sort-Object)
+    }
+}
+
+function Fmt($Value, [string]$Format) {
+    ([double]$Value).ToString($Format, [cultureinfo]::InvariantCulture)
+}
+
+# Format-Table drops the last columns when the host is narrow, whatever Out-String -Width says.
+function Show-Table([object[]]$Rows) {
+    if ($Rows.Count -eq 0) { return }
+    $names = @($Rows[0].Keys)
+    $width = @{}
+    foreach ($n in $names) {
+        $width[$n] = (@($n.Length) + @($Rows | ForEach-Object { ([string]$_[$n]).Length }) | Measure-Object -Maximum).Maximum
+    }
+    ($names | ForEach-Object { $_.PadRight($width[$_]) }) -join '  '
+    ($names | ForEach-Object { '-' * $width[$_] }) -join '  '
+    foreach ($row in $Rows) { ($names | ForEach-Object { ([string]$row[$_]).PadRight($width[$_]) }) -join '  ' }
+    ''
+}
+
+switch ($Command) {
+    'on' {
+        if (-not (Test-Path -LiteralPath $flagPath)) {
+            New-Item -ItemType File -Path $flagPath | Out-Null
+            Add-History @{ event = 'toggle'; state = 'on' }
+        }
+        'Model routing: on'
+        ''
+        Get-Content -LiteralPath $rulePath -Raw
+    }
+    'off' {
+        if (Test-Path -LiteralPath $flagPath) {
+            Remove-Item -LiteralPath $flagPath
+            Add-History @{ event = 'toggle'; state = 'off' }
+        }
+        'Model routing: off. For the rest of this session do not delegate to scout, runner or implementer, and start the sub-agents of skills and of plan mode without a model override.'
+    }
+    'status' {
+        if (Test-Path -LiteralPath $flagPath) { 'Model routing: on' } else { 'Model routing: off' }
+    }
+    'context' {
+        if (Test-Path -LiteralPath $flagPath) { Get-Content -LiteralPath $rulePath -Raw }
+    }
+    'log' {
+        if (-not $Agent -or -not $Problem) { throw 'log needs -Agent and -Problem' }
+        Add-History @{ event = 'problem'; agent = $Agent; model = $Model; task = $Task; problem = $Problem; cwd = (Get-Location).Path }
+        "Logged problem for $Agent"
+    }
+    'report' {
+        $r = Get-Report
+        if ($Json) { $r | ConvertTo-Json -Depth 6; break }
+
+        "Model routing report, $($r.since) to today ($($r.days) days). Cost is USD at API list prices; on a subscription read it as a relative weight."
+        ''
+        'Per routing state at session start'
+        Show-Table @($r.byState | ForEach-Object {
+            [ordered]@{
+                Routing = $_.routing; Sessions = $_.sessions
+                'Main $' = Fmt $_.mainCost N2; 'Agents $' = Fmt $_.agentCost N2
+                'Total $' = Fmt $_.totalCost N2; '$/session' = Fmt $_.perSession N2; 'Tokens k' = Fmt ($_.tokens / 1000) N0
+            }
+        })
+        'Per day'
+        Show-Table @($r.byDay | ForEach-Object {
+            [ordered]@{
+                Date = $_.date
+                'Main $' = Fmt $_.mainCost N2; 'Agents $' = Fmt $_.agentCost N2
+                'Total $' = Fmt $_.totalCost N2; 'Tokens k' = Fmt ($_.tokens / 1000) N0
+            }
+        })
+        'Per skill'
+        Show-Table @($r.bySkill | ForEach-Object {
+            [ordered]@{
+                Skill = $_.skill
+                'Main $' = Fmt $_.mainCost N2; 'Agents $' = Fmt $_.agentCost N2
+                'Total $' = Fmt $_.totalCost N2; 'Tokens k' = Fmt ($_.tokens / 1000) N0
+            }
+        })
+        'Per agent and model ("At main $": the same tokens at the prices of the session''s main model)'
+        Show-Table @($r.byAgent | ForEach-Object {
+            [ordered]@{
+                Agent = $_.agent; Model = $_.model; Runs = $_.runs
+                'In k' = Fmt ($_.input / 1000) N0; 'Out k' = Fmt ($_.output / 1000) N0
+                'Cache read k' = Fmt ($_.cacheRead / 1000) N0; 'Cache write k' = Fmt ($_.cacheWrite / 1000) N0
+                'Cost $' = Fmt $_.cost N2
+                'At main $' = $(if ($null -ne $_.atMain) { Fmt $_.atMain N2 } else { '' })
+                'Saved $' = $(if ($null -ne $_.saved) { Fmt $_.saved N2 } else { '' })
+                Problems = $_.problems
+            }
+        })
+        if ($r.problems.Count -gt 0) {
+            'Logged problems'
+            $r.problems | ForEach-Object { "  $(([datetime]$_.ts).ToLocalTime().ToString('yyyy-MM-dd')) $($_.agent) ($($_.model)) $($_.task): $($_.problem)" }
+            ''
+        }
+        foreach ($u in $r.unpriced) {
+            Write-Warning "No price for model '$($u.model)' ($($u.tokens) tokens counted at 0 USD). Add it to $pricesPath."
+        }
+        if ($r.noMain.Count -gt 0) {
+            Write-Warning "No priced main transcript for session(s) $($r.noMain -join ', '); their agents' saving counts 0."
+        }
+    }
+}
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/routing/routing/routing.ps1" download>Lataa routing.ps1</a></p>
+<details><summary>Näytä tiedosto rule.md</summary>
+<div class="codebox" data-file="routing/routing/rule.md"><pre><code># Model routing (on)
+
+You stay the planner; hand suitable work to a cheaper agent when that costs less than doing it inline.
+Delegation pays only while the agent's model is cheaper than the session's: in a session on Sonnet, skip `implementer`
+and the `model: sonnet` overrides; `scout` and `runner` on Haiku still pay.
+
+| Agent | Model / effort | Delegate |
+|---|---|---|
+| `scout` | Haiku / low | A search across many files or an unknown location. It returns paths and line numbers. |
+| `runner` | Haiku / low | Running tests, builds or checks whose output is long. It returns failures verbatim. |
+| `implementer` | Sonnet / medium | One well-specified ticket with its tests. Brief it with the goal, the files, the acceptance check and what is ruled out. |
+
+Reviewers a skill starts as sub-agents (the Standards and Spec reviewers of `mattpocock-skills:code-review`) run with `model: sonnet`.
+You aggregate their reports.
+
+## With mattpocock skills
+
+| Skill step | Route |
+|---|---|
+| `implement`, a ticket with nothing left to ask the user and its seams and files given by the ticket or by existing code (a page from an approved mockup, a new parser label) | `implementer` does the whole test-first loop. Brief it with the ticket text, the files, the seams, the test command, the answers the user already gave and what is ruled out. |
+| `implement`, any other ticket; `diagnosing-bugs` | Main session. Ask the user first; a ticket that becomes mechanical after the answers may then go to `implementer`. |
+| A fact from the code for `grilling`, `to-spec`, `to-tickets`, `triage` or plan mode | `scout`. Where plan mode requires `Explore`, start it with `model: haiku`. |
+| The background agent of `research`; the codebase walk of `improve-codebase-architecture` | `model: sonnet`. |
+| The design-it-twice agents of `codebase-design`; the `Plan` agent | Main model. |
+
+After `implementer` returns, nothing is committed yet. Check its diff and that a new test fails without its change.
+Then run `mattpocock-skills:code-review` on the working tree: give both reviewers the ticket and the whole change against the commit
+the work started from, added files included (`git status --short`, `git diff &lt;start&gt;`, and each new file), since
+`git diff &lt;start&gt;...HEAD` is empty before the commit. Then run your own final check of the change, and commit only when the user has asked.
+
+## Everything else
+
+The table above decides for the skill steps it names. For anything else, stay inline when the work is a few tool
+calls or a lookup whose place you already know.
+Planning, grilling, design, hard debugging, an inline review and the final check always stay in the main session.
+
+Check every delegated result before using it. When it fails the check:
+
+1. Redo it once, one tier up: `scout` or `runner` again with `model: sonnet`; a failed `implementer` ticket or reviewer report you finish yourself.
+2. Say in the reply that it was escalated.
+3. Log it:
+   `pwsh -NoProfile -File "$HOME/.claude/routing/routing.ps1" log -Agent &lt;agent&gt; -Model &lt;model&gt; -Task "&lt;what was asked&gt;" -Problem "&lt;what went wrong&gt;"`
+
+The user turns this off with `/routing off`; from then on none of this applies in the session.
+</code></pre></div>
+</details>
+<p><a class="btn" href="../kopioi/routing/routing/rule.md" download>Lataa rule.md</a></p>
+<div class="codebox" data-file="routing/routing/prices.json"><pre><code>{
+  "claude-fable-5-1": { "input": 10.00, "output": 50.00, "cacheRead": 0.25 },
+  "claude-opus-5-5": { "input": 4.00, "output": 20.00, "cacheRead": 0.20 },
+  "claude-sonnet-5-5": { "input": 2.00, "output": 10.00, "cacheRead": 0.20 },
+  "claude-sonnet-5": { "input": 2.00, "output": 10.00, "cacheRead": 0.20 },
+  "claude-haiku-5-5": { "input": 0.10, "output": 0.50, "cacheRead": 0.01 },
+  "claude-haiku-4-5": { "input": 1.00, "output": 5.00, "cacheRead": 0.10 }
+}
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/routing/prices.json" download>Lataa prices.json</a></p>
+<div class="codebox" data-file="routing/agents/scout.md"><pre><code>---
+name: scout
+description: Read-only search across many files or an unknown location, returning paths and line numbers. Use only while model routing is on (/routing).
+tools: Glob, Grep, Read
+model: haiku
+effort: low
+---
+
+You find things in a codebase for a planner that will act on your answer without re-reading the files.
+
+- Search with Grep and Glob first; Read only the ranges you need to confirm a hit.
+- Answer the question asked. Report each finding as `path:line` with one line saying what is there.
+- Quote short excerpts only when the exact text matters.
+- Say plainly what you searched and did not find; a claim that something is absent or never happens names the Grep
+  pattern and the files it was run on. Never guess a path, name or value.
+- No recommendations, no edits, no summaries of whole files.
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/agents/scout.md" download>Lataa scout.md</a></p>
+<div class="codebox" data-file="routing/agents/runner.md"><pre><code>---
+name: runner
+description: Runs tests, builds, linters or other checks and reports the result with failures verbatim. Use only while model routing is on (/routing).
+tools: Read, Grep, Glob, Bash, PowerShell
+model: haiku
+effort: low
+---
+
+You run the commands you are given and report what happened for a planner that will not see the raw output.
+
+- Run exactly the commands in the brief, from the directory it names. Do not substitute a different command when one fails.
+- Report per command: the command, exit code, and pass/fail counts when the output has them.
+- Copy every failure and error verbatim with its file and line. Do not paraphrase error text.
+- A command that could not run (missing tool, wrong path) is a failure: report it as one, with the error.
+- Change no files and fix nothing. Do not commit or push.
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/agents/runner.md" download>Lataa runner.md</a></p>
+<div class="codebox" data-file="routing/agents/implementer.md"><pre><code>---
+name: implementer
+description: Implements one well-specified ticket with its tests, given the goal, the files and the acceptance check. Use only while model routing is on (/routing).
+model: sonnet
+effort: medium
+---
+
+You implement one ticket for a planner that reviews your work before it is shown to the user.
+
+- Read the code you are about to change, and the definition of any helper you call, before editing.
+- Change only what the ticket asks for. No refactoring or cleanup of surrounding code.
+- Match the surrounding code's naming and idiom. Write no comments unless the reason for the code is non-obvious.
+- Every new behaviour and every fixed bug gets a test that fails without your change. Run the tests and the acceptance check from the brief.
+- Never swallow a failure or count it as success.
+- If the brief is missing a value you need (path, pin, credential, config), stop and report the question. Do not guess.
+- Do not commit or push.
+
+Report: the files changed, the commands you ran with their results, and anything you did not run or could not verify.
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/agents/implementer.md" download>Lataa implementer.md</a></p>
+  <h3>Hook-katkelma</h3>
+<div class="codebox" data-file="routing/hook.json"><pre><code>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "pwsh -NoProfile -File \"$HOME/.claude/routing/routing.ps1\" context"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre></div>
+<p><a class="btn" href="../kopioi/routing/hook.json" download>Lataa hook.json</a></p>
+  <ol>
+    <li>Ota kopio (jos tiedosto on olemassa); päiväys nimessä estää aiemman kopion ylikirjoittamisen: <code>Copy-Item $HOME\.claude\settings.json "$HOME\.claude\settings.json.$(Get-Date -Format yyyyMMdd-HHmmss).bak"</code></li>
+    <li>Avaa <code>%USERPROFILE%\.claude\settings.json</code> tekstieditorilla. Jos tiedostossa ei ole kohtaa <code>"hooks"</code>, liitä koko katkelma (lisää pilkku edellisen kohdan perään). Jos tiedostoa ei ole, luo se katkelman sisällöllä.</li>
+    <li>Jos tiedostossa on jo <code>"hooks"</code> mutta ei <code>"SessionStart"</code>, lisää <code>"hooks"</code>-kohdan sisään vain <code>"SessionStart": [ ... ]</code>-osa katkelmasta. Jos tiedostossa on jo <code>hooks.SessionStart</code>, lisää sen listaan vain sisempi olio (<code>{ "hooks": [ ... ] }</code>). Älä koskaan lisää toista <code>"hooks"</code>-kohtaa.</li>
+    <li>Tarkista, että JSON on kelvollista: <code>Get-Content $HOME\.claude\settings.json | ConvertFrom-Json</code>. Virheilmoitus tarkoittaa, että pilkku tai sulku on väärin; palauta kopio ja yritä uudelleen.</li>
+    <li>Käynnistä Claude Code uudelleen, jotta hook luetaan.</li>
+  </ol>
+  <h3>Poisto</h3>
+  <ol>
+    <li>Poista tiedostot: <code>$HOME\<wbr>.claude\<wbr>commands\<wbr>routing.md</code>, <code>$HOME\<wbr>.claude\<wbr>routing\<wbr>routing.ps1</code>, <code>$HOME\<wbr>.claude\<wbr>routing\<wbr>rule.md</code>, <code>$HOME\<wbr>.claude\<wbr>routing\<wbr>prices.json</code>, <code>$HOME\<wbr>.claude\<wbr>agents\<wbr>scout.md</code>, <code>$HOME\<wbr>.claude\<wbr>agents\<wbr>runner.md</code>, <code>$HOME\<wbr>.claude\<wbr>agents\<wbr>implementer.md</code>. Poista myös tyhjiksi jääneet kansiot.</li>
+    <li>Jos nimesit aiemman tiedoston .bak-päätteiseksi, nimeä se takaisin.</li>
+    <li>Avaa <code>%USERPROFILE%\.claude\settings.json</code> ja poista tämän työkalun hook-olio kohdasta <code>hooks.SessionStart</code>. Jos <code>SessionStart</code>-lista jää tyhjäksi, poista se; jos <code>hooks</code>-kohta jää sen jälkeen tyhjäksi, poista sekin. Tarkista JSON komennolla <code>Get-Content $HOME\.claude\settings.json | ConvertFrom-Json</code>.</li>
+  </ol>
+</section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Asenna done-check ja aja se pienellä muutoksella</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja PowerShell 7. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna Kopioitava <code>done-check</code> yllä olevien ohjeiden mukaan. Tee kokeilukansio, pyydä Claudea lisäämään siihen pieni skripti ja kirjoita sitten <code>/done-check</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Tiedosto on kohteessa <code>%USERPROFILE%\.claude\commands\done-check.md</code>. Komento listaa pyyntösi kohdat ja yhdistää kunkin muutokseen, ajaa mitä voi ja kertoo lopuksi erikseen, mitä ei tarkistettu. Jos komentoa ei löydy, käynnistä <code>claude</code> uudelleen ja tarkista tiedoston polku.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Asenna routing ja katso sen tila</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja PowerShell 7. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Asenna Kopioitava <code>routing</code> (tiedostot ja SessionStart-hook). Käynnistä <code>claude</code> uudelleen ja kirjoita <code>/routing status</code>. Kokeile sitten <code>/routing on</code> ja <code>/routing off</code>.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Tuoreen asennuksen tila on <code>Model routing: off</code>. Komento <code>on</code> tulostaa reititysohjeen; uudessa istunnossa hook tulostaa saman säännön vain, kun tila on päällä. Jos komento antaa virheen, tarkista, että tiedostot ovat kansioissa <code>commands</code>, <code>routing</code> ja <code>agents</code> ja että <code>pwsh</code> löytyy.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Lue ennen asennusta</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Lataa Kopioitava <code>retrospective</code> mutta älä asenna sitä. Pyydä Claudea: "Lue nämä tiedostot ja kerro, mitä ne lukevat, kirjoittavat tai lähettävät. Onko niissä jotain, mitä en odottaisi?"</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Hyvä vastaus kertoo, että skripti lukee Claude Coden paikallisia keskustelulokeja ja kirjoittaa raportin, ja osoittaa mahdolliset kohdat, jotka vaativat luvan. Sama tapa sopii mihin tahansa verkosta ladattuun skriptiin tai hookiin.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: Oman skillin kirjoittaminen</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Aloita toistosta:</b> kun pyydät samaa kolmatta kertaa, pyydä Claudea tekemään siitä skill: "Tee tästä työtavasta skill kansioon .claude\skills\ ja kirjoita description niin, että se käynnistyy oikeassa tilanteessa."</li>
+        <li><b>Description ratkaisee:</b> Claude päättää kuvauksen perusteella, milloin skill ladataan. Kirjoita, mitä se tekee ja milloin sitä käytetään.</li>
+        <li><b>Pidä pienenä:</b> yksi skill, yksi tehtävä. Pitkät ohjeet ja skriptit tukitiedostoihin.</li>
+        <li><b>Rajaa työkalut:</b> subagentille ja skillille voi antaa vain tarvittavat työkalut kentällä <code>tools</code> tai <code>allowed-tools</code>.</li>
+        <li><b>Opi esimerkeistä:</b> avaa yllä olevien Kopioitavien <code>SKILL.md</code>-tiedostot ja agenttien Markdown-tiedostot ja katso, miten otsake ja ohjeet on rakennettu.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
