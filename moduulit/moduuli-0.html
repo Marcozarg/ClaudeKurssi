@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>0 Mikä Claude on? - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="0">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="../index.html">&larr; Etusivu</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 0 &middot; Istunto 1</span>
+  <h1>Mikä Claude on?</h1>
+  <div class="meta"><span class="chip">Ydin ~35 min</span><span class="chip opt">Lisä ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Claude lyhyesti</h2>
+    <p>Claude on Anthropicin tekemä tekoälyavustaja. Kirjoitat sille tavallista tekstiä, ja se vastaa tekstillä, koodilla, taulukoilla tai kokonaisilla dokumenteilla. Claudeen voi liittää myös tiedostoja, kuvia ja lokeja.</p>
+    <p>Claudea käytetään selaimessa osoitteessa <a href="https://claude.ai">claude.ai</a>, työpöytä- ja mobiilisovelluksilla sekä ohjelmointityökalu Claude Codella. Kaikissa on sama tili ja samat käyttörajat.</p>
+    <p>Tällä kurssilla opit ensin käyttämään Claudea keskustelussa (moduulit 0-5). Sen jälkeen näet, miten Claude Code tekee töitä suoraan omalla koneella (moduulit 6-10).</p>
+  </section>
+
+  <section>
+    <h2>Mitä Claude osaa ja mitä ei</h2>
+    <h3>Claude on hyvä</h3>
+    <ul>
+      <li>selittämään virheilmoituksen, lokirivin tai tuntemattoman komennon</li>
+      <li>kirjoittamaan ja korjaamaan PowerShell-skriptejä, regexejä ja SQL-kyselyjä</li>
+      <li>tiivistämään pitkän tekstin ja muotoilemaan tikettivastauksen tai ohjeen</li>
+      <li>muuttamaan dataa muodosta toiseen, esimerkiksi CSV:stä taulukoksi</li>
+      <li>ideoimaan ja käymään läpi vaihtoehtoja</li>
+    </ul>
+    <h3>Claude ei</h3>
+    <ul>
+      <li>näe ympäristöäsi: se ei tiedä palvelimiasi, versioitasi tai asetuksiasi, ellet kerro</li>
+      <li>tiedä aina uusimpia muutoksia: sen tiedot ovat tietyltä hetkeltä, ellei se hae verkosta</li>
+      <li>muista aiempia keskusteluja automaattisesti, ellei muistitoiminto ole päällä</li>
+      <li>ole aina oikeassa, vaikka vastaus kuulostaa varmalta</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Claude voi olla väärässä varmana</h2>
+    <p>Claude tuottaa uskottavan näköistä tekstiä. Joskus se keksii asioita, joita ei ole olemassa: cmdletin parametrin, rekisteriavaimen polun, asetuksen nimen tai version, jossa ominaisuus muka tuli. Tätä kutsutaan <b>hallusinaatioksi</b>. Vastaus on yhtä itsevarma silloin kun se on väärä kuin silloin kun se on oikea.</p>
+    <p>Tee tarkistamisesta tapa ennen kuin ajat mitään tuotannossa:</p>
+    <ul>
+      <li><b>Lue ohje:</b> <code>Get-Help Get-ADUser -Parameter *</code> tai <code>Get-Command -Syntax</code> näyttää, onko parametri olemassa.</li>
+      <li><b>Aja ensin turvallisesti:</b> testiympäristössä, <code>-WhatIf</code>-valitsimella tai pelkkänä lukuoperaationa.</li>
+      <li><b>Katso lähde:</b> pyydä Claudea kertomaan, mihin dokumentaatioon vastaus perustuu, ja avaa se itse.</li>
+      <li><b>Kysy vastaan:</b> "Oletko varma, että tämä parametri on olemassa? Mistä versiosta alkaen?" Claude korjaa usein itse, kun sitä pyytää tarkistamaan.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Mitä ei koskaan liitetä</h2>
+    <p>Kaikki mitä liität Claudeen, lähtee Anthropicin palveluun. Älä liitä:</p>
+    <ul>
+      <li><b>tunnuksia ja salaisuuksia:</b> salasanat, API-avaimet, tokenit, yhteysmerkkijonot, varmenteiden yksityiset avaimet</li>
+      <li><b>asiakkaiden ja käyttäjien tietoja:</b> nimet, henkilötunnukset, sähköpostit, puhelinnumerot, tikettien henkilötiedot</li>
+      <li><b>hakemistojen vientejä:</b> AD- tai Entra-käyttäjälistat, ryhmäjäsenyydet, organisaatiokaaviot</li>
+      <li><b>raakalokeja:</b> lokissa on usein käyttäjänimiä, IP-osoitteita, palvelinten nimiä ja joskus salasanoja</li>
+      <li><b>sisäisiä tietoja:</b> verkkokuvat, palomuurisäännöt, haavoittuvuusraportit, sopimukset</li>
+    </ul>
+    <div class="note"><b>Noudata oman organisaatiosi tekoälyohjeita.</b> Jos organisaatiollasi on ohje tekoälyn käytöstä, se menee aina tämän kurssin edelle. Jos et tiedä, saako jotain liittää, älä liitä ja kysy ensin.</div>
+  </section>
+
+  <section>
+    <h2>Lokin anonymisointi</h2>
+    <p>Lokista saa apua, kun poistat tunnistettavat tiedot ensin. Korvaa ne paikkamerkeillä, jotka säilyttävät rakenteen: sama käyttäjä on aina <code>&lt;KÄYTTÄJÄ1&gt;</code>, sama palvelin aina <code>&lt;PALVELIN1&gt;</code>. Silloin Claude näkee edelleen, mitä tapahtui ja kenelle.</p>
+    <p>Esimerkki anonymisoidusta lokiotteesta:</p>
+    <div class="codebox"><pre><code>2026-11-03 08:14:22 &lt;PALVELIN1&gt; Kerberos pre-authentication failed for &lt;KÄYTTÄJÄ1&gt; from &lt;IP1&gt;
+2026-11-03 08:14:25 &lt;PALVELIN1&gt; Kerberos pre-authentication failed for &lt;KÄYTTÄJÄ1&gt; from &lt;IP1&gt;
+2026-11-03 08:14:31 &lt;PALVELIN1&gt; Account &lt;KÄYTTÄJÄ1&gt; locked out, caller &lt;TYÖASEMA1&gt;</code></pre></div>
+    <p>Tarkista anonymisoinnin jälkeen silmällä: jäikö jonnekin nimi, sähköpostiosoite, palvelimen nimi tai polku, jossa on käyttäjänimi?</p>
+    <div class="optbox"><b>Lisä:</b> pyydä Claudea kirjoittamaan PowerShell-skripti, joka korvaa lokista IP-osoitteet, sähköpostit ja käyttäjänimet paikkamerkeillä. Testaa skripti keksityllä lokilla, älä oikealla, ja käytä sitä vasta kun olet lukenut sen läpi.</div>
+  </section>
+
+  <section>
+    <h2>Koulutusasetus ja tietojen säilytys</h2>
+    <p>Ilmaisessa, Pro-, Max- ja Ultra-tilissä voit itse päättää, käytetäänkö keskustelujasi Clauden kehittämiseen. Asetus on kohdassa <b>Settings &gt; Privacy</b>, kytkin <b>Help improve our AI models</b> (nimi voi vaihdella hieman).</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Asetus</th><th>Mitä tapahtuu</th></tr></thead>
+      <tbody>
+        <tr><td>Päällä</td><td>Uusia keskusteluja voidaan käyttää mallien koulutukseen, ja niitä säilytetään tunnistamattomina enintään 5 vuotta.</td></tr>
+        <tr><td>Pois</td><td>Keskusteluja ei käytetä koulutukseen, ja ne säilytetään 30 päivää.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Tarkista asetus itse heti kirjauduttuasi.</b> Älä oleta sen olevan pois päältä. Huomaa myös:</p>
+    <ul>
+      <li><b>Incognito-keskusteluja</b> ei käytetä koulutukseen, vaikka asetus olisi päällä.</li>
+      <li>Poistettu keskustelu katoaa historiasta heti ja palvelimilta 30 päivässä.</li>
+      <li>Peukku ylös tai alas -palaute tallennetaan erikseen, ja sitä säilytetään pidempään.</li>
+      <li>Organisaation Team- ja Enterprise-tileillä keskusteluja ei käytetä koulutukseen.</li>
+    </ul>
+    <div class="shot">[KUVA: m0-privacy-asetus - Settings &gt; Privacy, koulutuskytkin näkyvissä]</div>
+  </section>
+
+  <section>
+    <h2>Hinnat</h2>
+    <p>Hinnat tarkistettu 11/2026 sivulta <a href="https://claude.com/pricing">claude.com/pricing</a>. Hinnat muuttuvat, joten tarkista ajantasainen tieto sieltä.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tilaus</th><th>Hinta</th><th>Kenelle</th></tr></thead>
+      <tbody>
+        <tr><td>Free</td><td>0 $</td><td>Kokeiluun ja satunnaiseen käyttöön. Tämän kurssin moduulit 0-5 toimivat tällä.</td></tr>
+        <tr><td>Pro</td><td>20 $/kk, vuosilaskutuksella 17 $/kk</td><td>Säännölliseen käyttöön. Sisältää Claude Coden.</td></tr>
+        <tr><td>Max</td><td>100 $/kk</td><td>Runsaaseen käyttöön, noin viisinkertaiset rajat Proon nähden.</td></tr>
+        <tr><td>Ultra</td><td>200 $/kk</td><td>Hyvin runsaaseen käyttöön, noin kymmenkertainen viikkoraja Proon nähden.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Organisaatioille on lisäksi Team- ja Enterprise-tilaukset, joissa on keskitetty hallinta.</p>
+  </section>
+
+  <section>
+    <h2>Käyttörajat</h2>
+    <p>Jokaisessa tilauksessa on käyttöraja. Se ei ole viestien määrä, vaan riippuu siitä, kuinka paljon Claude joutuu käsittelemään: pitkä keskustelu, isot liitteet ja raskaampi malli kuluttavat enemmän.</p>
+    <ul>
+      <li><b>5 tunnin ikkuna:</b> raja nollautuu viiden tunnin jaksoissa. Jos raja tulee vastaan, Claude kertoo, milloin voit jatkaa.</li>
+      <li><b>7 päivän raja:</b> maksullisissa tilauksissa on lisäksi viikkoraja, joka koskee kaikkia malleja yhteensä.</li>
+      <li><b>Yhteinen raja:</b> claude.ai, sovellukset ja Claude Code käyttävät samaa rajaa.</li>
+    </ul>
+    <p>Jäljellä olevan käytön näet kohdasta <b>Settings &gt; Usage</b>. Claude Codessa saman näyttää komento <code>/usage</code> (moduuli 7).</p>
+    <div class="shot">[KUVA: m0-usage - Settings &gt; Usage, nykyinen jakso ja viikkoraja]</div>
+  </section>
+
+  <section>
+    <h2>Claude Code vaatii maksullisen tilin</h2>
+    <p>Claude Code ei sisälly ilmaiseen tiliin. Se vaatii vähintään Pro-tilauksen (tai organisaation Team- tai Enterprise-tilin). Siksi istunnot 2-4 ovat suurimmaksi osaksi kouluttajan demoja: Pro-käyttäjät voivat tehdä samat asiat omalla koneellaan, muut seuraavat demoa tai tekevät harjoituksia parin kanssa.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Löydä virhe Clauden vastauksesta</h3>
+      <div class="req">Edellyttää: ei mitään, tehdään paperilla tai omalla koneella PowerShellissä. Ei pääsyä koneelle? Tee parin kanssa.</div>
+      <p>Joku kysyi Claudelta: "Miten listaan AD-käyttäjät, jotka eivät ole kirjautuneet 90 päivään?" ja sai tämän vastauksen. Vastauksessa on yksi keksitty asia. Mikä, ja miten olisit huomannut sen ennen ajamista?</p>
+      <div class="codebox"><pre><code>Import-Module ActiveDirectory
+Get-ADUser -Filter * -InactiveDays 90 -Properties LastLogonDate |
+    Select-Object Name, SamAccountName, LastLogonDate |
+    Sort-Object LastLogonDate</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <p><code>Get-ADUser</code>-cmdletissä ei ole parametria <code>-InactiveDays</code>. Sen näkee komennolla <code>Get-Help Get-ADUser -Parameter InactiveDays</code>, joka antaa virheen, tai ajamalla komennon, joka kaatuu virheeseen "A parameter cannot be found that matches parameter name 'InactiveDays'".</p>
+          <p>Toimiva tapa on esimerkiksi:</p>
+          <pre><code>Search-ADAccount -AccountInactive -TimeSpan 90.00:00:00 -UsersOnly |
+    Select-Object Name, SamAccountName, LastLogonDate</code></pre>
+          <p>Huomaa, että <code>LastLogonDate</code> päivittyy viiveellä, joten raja ei ole päivän tarkka.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Anonymisoi lokiote</h3>
+      <div class="req">Edellyttää: ei mitään. Ei konetta käsillä? Tee parin kanssa paperilla.</div>
+      <p>Alla on keksitty lokiote. Kirjoita se uudelleen niin, että sen voisi liittää Claudeen. Säilytä rakenne niin, että tapahtumien kulku näkyy.</p>
+      <div class="codebox"><pre><code>Nov 03 09:02:11 web-prod-03 sshd[2211]: Failed password for matti.virtanen from 203.0.113.45 port 51122
+Nov 03 09:02:15 web-prod-03 sshd[2211]: Failed password for matti.virtanen from 203.0.113.45 port 51122
+Nov 03 09:02:19 web-prod-03 sshd[2214]: Accepted password for backup-svc from 198.51.100.7 port 40022
+Nov 03 09:02:19 web-prod-03 sudo: backup-svc : TTY=pts/0 ; PWD=/srv/backup ; COMMAND=/usr/bin/rsync</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <pre><code>Nov 03 09:02:11 &lt;PALVELIN1&gt; sshd[2211]: Failed password for &lt;KÄYTTÄJÄ1&gt; from &lt;IP1&gt; port 51122
+Nov 03 09:02:15 &lt;PALVELIN1&gt; sshd[2211]: Failed password for &lt;KÄYTTÄJÄ1&gt; from &lt;IP1&gt; port 51122
+Nov 03 09:02:19 &lt;PALVELIN1&gt; sshd[2214]: Accepted password for &lt;PALVELUTILI1&gt; from &lt;IP2&gt; port 40022
+Nov 03 09:02:19 &lt;PALVELIN1&gt; sudo: &lt;PALVELUTILI1&gt; : TTY=pts/0 ; PWD=/srv/backup ; COMMAND=/usr/bin/rsync</code></pre>
+          <p>Henkilön nimi, palvelutilin nimi, palvelimen nimi ja IP-osoitteet on korvattu. Sama arvo saa aina saman paikkamerkin, joten Claude näkee edelleen, että sama käyttäjä yritti kahdesti samasta osoitteesta. Portit, ajat ja komento voivat jäädä, koska ne eivät yksin tunnista ketään.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Tarkista oma koulutusasetuksesi</h3>
+      <div class="req">Edellyttää: Claude-tili (ilmainen riittää). Ei tiliä vielä? Tee tämä moduulin 1 jälkeen tai katso kouluttajan näytöltä.</div>
+      <p>Kirjaudu claude.ai:hin, avaa Settings &gt; Privacy ja katso, onko koulutuskytkin päällä vai pois. Päätä, kumman haluat, ja kirjoita ylös yksi asia, jota et koskaan liitä Claudeen työssäsi.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Asetus näkyy kytkimenä Privacy-sivulla. Kumpikin valinta on sallittu, kunhan se on tietoinen ja oman organisaatiosi ohjeen mukainen. Esimerkki kirjattavasta asiasta: "En liitä AD-käyttäjälistoja tai lokeja, joissa on käyttäjänimiä."</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: lue lisää</h2>
+    <ul>
+      <li><a href="https://privacy.claude.com">privacy.claude.com</a>: Anthropicin tietosuojaohjeet kuluttajatileille</li>
+      <li><a href="https://support.claude.com/en/articles/11647753-usage-and-length-limits">Usage and length limits</a>: käyttörajat tarkemmin</li>
+      <li><a href="https://claude.com/pricing">claude.com/pricing</a>: tilausten sisältö ja hinnat</li>
+    </ul>
+  </section>
+</main>
+</div>
+</body>
+</html>
