@@ -1,0 +1,10 @@
+{
+  "tool": "coding-style",
+  "files": [
+    { "file": "coding-style.md", "target": "coding-style.md" },
+    { "file": "CLAUDE.md", "target": "CLAUDE.md" }
+  ],
+  "prerequisites": ["Claude Code"],
+  "hook": null,
+  "run": null
+}
