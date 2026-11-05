@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 Demot ja jatko - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="11">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev">&larr; Edellinen</a>
+    <a class="btn" id="next" href="../index.html">Etusivu &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 11 &middot; Istunto 4</span>
+  <h1>Demot ja jatko</h1>
+  <div class="meta"><span class="chip">Ydin ~20 min</span><span class="chip opt">Lisä ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Mitä Claude Codella voi rakentaa?</h2>
+    <p>Lopuksi kouluttaja näyttää kolme omaa harrastusprojektiaan. Ne on tehty vapaa-ajalla omaan kotiverkkoon, eivät työssä. Jokainen on rakennettu Claude Codella samalla työtavalla, jonka opit moduuleissa 9 ja 10:</p>
+    <ol>
+      <li>Idea puidaan Clauden kanssa kysymys kerrallaan (grilling).</li>
+      <li>Claude kirjoittaa määrittelyn ja pilkkoo sen tiketeiksi.</li>
+      <li>Claude toteuttaa tiketin kerrallaan, testit ensin, ja kouluttaja katselmoi ja testaa jokaisen muutoksen.</li>
+    </ol>
+    <p>Kouluttajan työ oli päättää, mitä tehdään, vastata Clauden kysymyksiin, tarkistaa tulos ja testata se oikeassa ympäristössä.</p>
+    <div class="note">Demoissa ei näytetä palvelinten nimiä, osoitteita eikä salaisuuksia. Sama koskee sinua: kun näytät omaa työtäsi, piilota ne ensin.</div>
+  </section>
+
+  <section>
+    <h2>Sähkönseuranta</h2>
+    <p>Verkkosovellus, joka lukee kotitalouden sähkölaskut ja kulutustiedot sellaisinaan, vertaa vuosia keskenään ja ennustaa tulevaa kustannusta. Sivut ovat suomeksi.</p>
+    <ul>
+      <li><b>Mitä Claude teki:</b> lukijat usean sähköyhtiön laskuille, vertailu- ja ennustelaskennan sekä testit, jotka tarkistavat luvut esimerkkilaskuja vasten.</li>
+      <li><b>Opetus:</b> anna Claudelle esimerkkitiedosto (henkilötiedot poistettuina) ja odotettu tulos. Silloin testi kertoo, onko vastaus oikein, eikä sinun tarvitse arvata.</li>
+      <li>Noin 140 committia kolmessa viikossa.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-sahkonseuranta - vertailusivu, kaksi vuotta rinnakkain]</div>
+  </section>
+
+  <section>
+    <h2>LinuxManager</h2>
+    <p>Verkkosovellus, joka pitää joukon Linux-palvelimia päivitettyinä ja valvottuina SSH:n yli yhdeltä sivulta: päivitykset, yhteiset asetustiedostot, levytila, Docker-kontit ja tietoturvatarkistus.</p>
+    <ul>
+      <li><b>Mitä Claude teki:</b> koko sovelluksen, sen ajastetut työt ja SSH-yhteydet, esikatselun ennen jokaista muutosta palvelimelle sekä estolistan palvelimille, joihin sovellus ei saa koskea.</li>
+      <li><b>Opetus:</b> vaaralliset toiminnot suunnitellaan ensin. Kysy suunnitteluvaiheessa Claudelta, mitä voi mennä pieleen ja miten muutoksen näkee ennen kuin se tehdään.</li>
+      <li>Noin 240 committia kuukaudessa.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-linuxmanager - Dashboard, palvelinten nimet sumennettu]</div>
+  </section>
+
+  <section>
+    <h2>3D Print Manager</h2>
+    <p>Sovellus, joka seuraa 3D-tulostinta sen oman rajapinnan kautta: tulostushistoria, pistorasioiden ohjaus ja kameran kuva samalta sivulta. Se korvasi aiemmin käytetyn valmisohjelman.</p>
+    <ul>
+      <li><b>Mitä Claude teki:</b> tulostimen tilan seurannan, historian tallennuksen, kameran kuvan ja testit, jotka ajetaan ilman oikeaa tulostinta.</li>
+      <li><b>Opetus:</b> Claude ajaa kaikki testit, joihin se pääsee, ja antaa ihmiselle vain ne vaiheet, joihin tarvitaan oikea laite.</li>
+      <li>Noin 70 committia kahdessa viikossa.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-printmanager - tulostusnäkymä ja kameran kuva]</div>
+  </section>
+
+  <section>
+    <h2>Mistä oppia lisää</h2>
+    <ul>
+      <li><a href="https://code.claude.com/docs/en/overview">Claude Coden dokumentaatio</a> ja sen <a href="https://code.claude.com/docs/en/best-practices">parhaat käytännöt</a></li>
+      <li><a href="https://support.claude.com/">Clauden ohjekeskus</a>: tilaukset, käyttörajat ja asetukset</li>
+      <li><a href="https://anthropic.skilljar.com/">Anthropic Academy</a>: Anthropicin ilmaiset verkkokurssit</li>
+      <li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">Kehotesuunnittelun opas</a> (moduuli 2 syvemmälle)</li>
+      <li><a href="https://github.com/mattpocock/skills">Matt Pocockin skillit</a>, joita käytettiin moduulissa 9</li>
+      <li>Tämän kurssin lähdekoodi ja Kopioitavat: <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a></li>
+    </ul>
+    <p>Paras tapa oppia on ottaa yksi oma, pieni ja toistuva työ ja tehdä se ensi viikolla Clauden kanssa.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Oma idea kysymys kerrallaan</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää).</div>
+      <p>Valitse yksi pieni työkalu, joka helpottaisi työtäsi, esimerkiksi skripti, joka listaa vanhenevat varmenteet. Kirjoita Claudelle: "Haluan tehdä työkalun, joka &lt;kuvaus&gt;. Kysy minulta yksi kysymys kerrallaan, kunnes tiedät tarpeeksi, ja kirjoita sitten lyhyt määrittely: tavoite, syötteet, tulosteet, mitä ei tehdä." Vastaa kysymyksiin.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude kysyy esimerkiksi: mistä varmenteet haetaan (Windowsin varmennesäilö, tiedostot, etäpalvelimet), kuinka monen päivän päähän katsotaan, mihin muotoon tulos halutaan (CSV, sähköposti, näyttö) ja ajetaanko työkalu ajastettuna. Lopuksi se kirjoittaa määrittelyn, jossa on myös rajaus, esimerkiksi "ei uusi varmenteita". Jos se ei kysynyt rajauksesta, pyydä se lisäämään.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Oma jatkosuunnitelma</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää).</div>
+      <p>Kirjoita kolme toistuvaa työtehtävää, joissa Claude voisi auttaa. Merkitse jokaiseen, riittääkö claude.ai (moduulit 0-5) vai tarvitaanko Claude Code (moduulit 6-10), ja mikä tieto tehtävässä on sellaista, jota ei saa liittää (moduuli 0).</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><ul>
+          <li>Tikettivastausten luonnokset: claude.ai riittää; asiakkaan nimet ja yhteystiedot poistetaan ensin.</li>
+          <li>Lokien virheiden selittäminen: claude.ai riittää; lokit anonymisoidaan.</li>
+          <li>PowerShell-skriptien ylläpito repossa: Claude Code; tunnukset pysyvät salaisuusvarastossa, ei skriptissä eikä keskustelussa.</li>
+        </ul></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: ennen kuin rakennat oman</h2>
+    <div class="optbox">
+      <ul>
+        <li>Aloita pienestä: yksi skripti tai yksi sivu, ei koko järjestelmää.</li>
+        <li>Pidä työ gitissä alusta asti (moduuli 8), niin jokaisen muutoksen voi perua.</li>
+        <li>Tarkista organisaatiosi ohjeesta, saako työtehtävää tehdä tekoälyn kanssa ja millä tilillä.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
