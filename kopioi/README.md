@@ -3,7 +3,7 @@
 Generalized copies of the course instructor's own Claude Code tools. Each folder is one tool: its files, a
 `manifest.json` (files, install target under `%USERPROFILE%\.claude\`, prerequisites, hook) and, when it has one,
 `hook.json`, the fragment to merge by hand into `%USERPROFILE%\.claude\settings.json`. The Finnish install and
-uninstall steps are on the course pages (Moduuli 9 and Moduuli 10).
+uninstall steps are on the course pages (Moduulit 9, 10 and 13).
 
 | Folder | What it is |
 |---|---|
@@ -13,7 +13,8 @@ uninstall steps are on the course pages (Moduuli 9 and Moduuli 10).
 | `retrospective` | Skill: mines a project's Claude Code history for repeated work and corrections |
 | `optimize-testsuite` | Skill: measures a pytest suite and cuts proven overhead (pytest-only edition) |
 | `routing` | Model routing: `/routing` command, rule, prices, three agents and a SessionStart hook |
+| `mods` | Three mods as a local marketplace (`git-status-line`, `done-toast`, `reach-band`): add the folder with `claude plugin marketplace add`, then install each (Moduuli 13) |
 
-Tested on Windows 11 with Claude Code 2.1.318, PowerShell 7.6.9 and Python 3.14.7 (pytest 9.2.0), November 2026.
+Tested on Windows 11 with Claude Code 2.1.318 (the mods with 2.1.319), PowerShell 7.6.9 and Python 3.14.7 (pytest 9.2.0), November 2026.
 
 Licence: MIT.

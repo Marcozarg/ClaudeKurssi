@@ -1,0 +1,10 @@
+{
+  "name": "claude-kurssi",
+  "owner": { "name": "Claude-kurssi" },
+  "description": "The three mods built in Moduuli 13 of the Claude course.",
+  "plugins": [
+    { "name": "git-status-line", "source": "./git-status-line", "description": "Git branch and uncommitted file count on the status line." },
+    { "name": "done-toast", "source": "./done-toast", "description": "A toast when a long turn or a long test run finishes." },
+    { "name": "reach-band", "source": "./reach-band", "description": "The reach of every tool call on a band; asks before destructive calls." }
+  ]
+}

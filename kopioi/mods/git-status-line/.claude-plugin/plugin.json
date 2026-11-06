@@ -1,0 +1,7 @@
+{
+  "name": "git-status-line",
+  "version": "1.0.0",
+  "description": "Shows the git branch and the count of uncommitted files on the status line.",
+  "author": { "name": "Claude-kurssi" },
+  "license": "MIT"
+}

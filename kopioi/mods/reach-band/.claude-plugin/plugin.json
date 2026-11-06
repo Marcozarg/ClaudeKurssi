@@ -1,0 +1,8 @@
+{
+  "name": "reach-band",
+  "version": "1.0.0",
+  "description": "Rates the reach of every tool call on a band above the prompt and asks before destructive calls.",
+  "author": { "name": "Claude-kurssi" },
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}

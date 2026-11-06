@@ -1,0 +1,7 @@
+{
+  "name": "done-toast",
+  "version": "1.0.0",
+  "description": "Shows a toast when a long turn or a long test run finishes.",
+  "author": { "name": "Claude-kurssi" },
+  "license": "MIT"
+}
