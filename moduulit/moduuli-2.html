@@ -85,6 +85,45 @@ yksi kerrallaan, ja kerro jokaisen kysymyksen kohdalla suositeltu vastaus.</code
     <p>Kun olet vastannut, pyydä vasta sitten ohje. Sama tapa toimii kaikessa suunnittelussa, ja se on Claude Coden työtavan perusta (moduuli 9).</p>
   </section>
 
+  <section id="sama-tarve">
+    <h2>Sama tarve, viisi kehotetta</h2>
+    <p>Sama tarve, halpa kahvi, voidaan pyytää viidellä tavalla. Mitä tarkemmin kerrot, mitä haluat, sitä enemmän Claude voi tehdä, mutta samalla paljastuu, mitä se tarvitsee ympärilleen: hakutyökalun, tiedon sijainnistasi tai paikan, jossa tehtävä ajetaan. Tässä neljä ensimmäistä. Viides on moduulissa 9.</p>
+
+    <h3>1. Epämääräinen toive</h3>
+    <div class="codebox" data-prompt="coffee-1"><pre><code>Haluan halpaa kahvia</code></pre></div>
+    <ul>
+      <li><b>Mitä Claude voi tehdä:</b> arvata, mitä tarkoitat. Se voi antaa yleisiä vinkkejä (kahvipakkausten vertailu, kilohinta, tarjouskausi) tai kysyä takaisin, mitä haet.</li>
+      <li><b>Työkalu ja tilaus:</b> tavallinen keskustelu, Free riittää. Hakua ei tarvita, koska mitään ajantasaista ei haeta.</li>
+      <li><b>Mitä puuttuu:</b> kaikki. Claude ei tiedä, haetko kauppaa, ostovinkkiä vai kahvilaa, eikä missä olet.</li>
+    </ul>
+
+    <h3>2. Konkreettinen haku</h3>
+    <div class="codebox" data-prompt="coffee-2"><pre><code>Etsi halvin kahvitarjous läheltäni</code></pre></div>
+    <ul>
+      <li><b>Mitä Claude voi tehdä:</b> hakea verkosta ja koota löydetyt tarjoukset yhteen. Se kertoo, mistä lähteistä tieto on.</li>
+      <li><b>Työkalu ja tilaus:</b> verkkohaku claude.ai:ssa. Se kytketään päälle chatin <b>+</b>-painikkeesta kohdasta Web search. Ohjeen mukaan Free-käyttäjällä on käyttörajat ja verkkohaku kuluttaa niitä. Team- ja Enterprise-tilillä ylläpitäjän pitää ensin ottaa haku käyttöön. Ohje: <a href="https://support.claude.com/en/articles/10684626-enabling-and-using-web-search">support.claude.com</a>.</li>
+      <li><b>Mitä puuttuu:</b> sijaintisi. Kerro kaupunki tai postinumero, sillä "läheltäni" ei kerro Claudelle mitään. Tarkista hinta ja voimassaolo aina kaupan omalta sivulta, sillä haku löytää vain sen, mikä verkosta löytyy.</li>
+    </ul>
+
+    <h3>3. Toistuva tehtävä</h3>
+    <div class="codebox" data-prompt="coffee-3"><pre><code>Haluan tietää säännöllisesti, mistä saa halvinta kahvia postinumeron perusteella</code></pre></div>
+    <ul>
+      <li><b>Mitä Claude voi tehdä:</b> tehdä haun uudelleen sovitulla aikataululla. Claude Coworkissa tehtävä ajastetaan sivupalkin kohdasta <b>Scheduled</b>. Tehtävä voi ohjeen mukaan tehdä myös verkkotutkimusta.</li>
+      <li><b>Työkalu ja tilaus:</b> Cowork ja ajastetut tehtävät. Ohjeen mukaan "Scheduled tasks are available on all paid plans (Pro, Max, Ultra, Team, and Enterprise)". Free-tilillä niitä ei ole. Jos tehtävä tarvitsee paikallisia tiedostoja tai sovelluksia, se ajetaan vain paikallisesti. Ohje: <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork">support.claude.com</a>.</li>
+      <li><b>Mitä puuttuu:</b> postinumero, aikataulu (kuinka usein) ja se, mihin tulos tulee ja miten vertailu tehdään. Kerro nämä, niin tehtävä on valmis ajastettavaksi.</li>
+    </ul>
+
+    <h3>4. Oma sovellus</h3>
+    <div class="codebox" data-prompt="coffee-4"><pre><code>Tee sovellus, joka hakee lähikauppojen kahvitarjoukset</code></pre></div>
+    <ul>
+      <li><b>Mitä Claude voi tehdä:</b> kirjoittaa sovelluksen koodin ja neuvoa, miten sen ajaa. Kaikki toimii vasta, kun tiedetään, mistä tarjoustiedot saadaan.</li>
+      <li><b>Työkalu ja tilaus:</b> Claude Code (moduulit 6 ja 7), joka tarvitsee vähintään Pro-tilauksen. Kevyempi vaihtoehto on pyytää pieni sovellus claude.ai:ssa (moduuli 3).</li>
+      <li><b>Mitä puuttuu:</b> lähes kaikki päätökset: missä sovellus ajetaan, millä kielellä se tehdään, mistä tarjoukset haetaan, mihin historia tallennetaan, miten sijainti annetaan ja miten tulokset järjestetään. Ilman niitä Claude joutuu arvaamaan.</li>
+    </ul>
+
+    <p>Kehotteessa 5 nämä päätökset on tehty ja Claudelle on sanottu, että sen pitää kysyä loput: <a href="moduuli-9.html#kehote-5">kehote 5 moduulissa 9</a>.</p>
+  </section>
+
   <section>
     <h2>Harjoitukset</h2>
     <div class="ex">
@@ -117,6 +156,22 @@ Anna regex, lyhyt selitys ja Select-String-esimerkki.</code></pre>
       <p>Pyydä Claudea tekemään runbook palvelimen kuukausittaiseen päivitykseen, mutta käske sen kysyä ensin tarvitsemansa tiedot yksi kerrallaan. Vastaa kysymyksiin ja pyydä lopuksi runbook.</p>
       <details><summary>Näytä esimerkkivastaus</summary>
         <div><p>Claude kysyy esimerkiksi: mikä käyttöjärjestelmä, onko klusteri vai yksittäinen palvelin, huoltoikkuna, miten varmuuskopio tarkistetaan, kuka hyväksyy uudelleenkäynnistyksen ja miten palautetaan, jos päivitys epäonnistuu. Valmis runbook on numeroitu lista, jossa on tarkistus ennen, aikana ja jälkeen sekä palautussuunnitelma.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>4. Lisä: nosta epämääräinen IT-pyyntö portaikossa</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää). Ei tiliä? Kirjoita neljä versiota paperille ja vertaa parin kanssa.</div>
+      <p>Ota epämääräinen pyyntö: "Tulostin ei toimi." Kirjoita siitä neljä porrasta kahviesimerkin tapaan: epämääräinen toive, konkreettinen pyyntö, toistuva tehtävä ja valmis tehtävänanto, jossa kerrot päätökset ja pyydät Claudea kysymään loput. Mieti jokaisella portaalla, mitä Claude tarvitsee ja mitä siltä puuttuu.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div>
+          <ol>
+            <li><code>Tulostin ei toimi</code>. Claude voi vain arvata ja kysyä: mikä tulostin, mitä tapahtuu.</li>
+            <li><code>Toimiston Canon-tulostin ei tulosta Windows 11 -koneelta, virheilmoitus on "Tulostin ei ole käytettävissä". Mitä tarkistan ensin?</code> Nyt on malli, käyttöjärjestelmä ja virhe.</li>
+            <li><code>Haluan kerran viikossa yhteenvedon tulostinvioista, jotka tiketeistä (ilman henkilötietoja) toistuvat useimmin.</code> Tarvitaan ajastus, tikettien tiedot ja paikka, jonne yhteenveto menee.</li>
+            <li><code>Tee PowerShell-skripti, joka tarkistaa tulostinjonon tilan ja käynnistää tulostuspalvelun uudelleen, kun jono on jumissa. Älä muuta mitään ennen kuin olen hyväksynyt komennon. Kysele puuttuvat yksityiskohdat, kunnes olemme samaa mieltä. Jos et tiedä jotain, kirjoita että et tiedä.</code></li>
+          </ol>
+          <p>Jokaisella portaalla kehote kertoo enemmän: mitä, missä, miten usein ja mitä Claude saa muuttaa.</p>
+        </div>
       </details>
     </div>
   </section>

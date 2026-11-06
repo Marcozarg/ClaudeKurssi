@@ -80,6 +80,26 @@
     <div class="note">Speksi ja tiketit ovat Clauden kirjoittamia: lue ne ennen toteutusta. Virhe speksissä on halvin korjata ennen kuin koodia on olemassa.</div>
   </section>
 
+  <section id="kehote-5">
+    <h2>Esimerkki: täydellinen aloituskehote</h2>
+    <p>Moduulin 2 kahvikehotteiden viides, täydellinen versio. Se sopii hyvin haastattelun (grilling) aloitukseksi: siinä on päätökset tehtynä ja pyyntö kysyä loput.</p>
+    <div class="codebox" data-prompt="coffee-5"><pre><code>Tee container portainerin alle, jossa on pythonilla rakennettu webliittymä, sqllite-tietokanta historiaa varten ja asetuksissa postinumero-kenttä, jonka perusteella nappia painalla etsit halvimmat kahvitarjoukset sortattuna etäisyyden ja hinnan perusteella. Kysele minulta puuttuvat yksityiskohdat, kunnes olemme samaa mieltä lopputuloksesta. Perusta asiat faktoihin ja jos et tiedä, älä arvaa ja kirjoita että et tiedä jotain.</code></pre></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Kehotteen osa</th><th>Mitä se tekee</th></tr></thead>
+      <tbody>
+        <tr><td>"container portainerin alle"</td><td>Kertoo, missä sovellus ajetaan: Docker-konttina Portainerin hallinnassa. Claude osaa tehdä sen mukaisen Dockerfilen ja käynnistystavan.</td></tr>
+        <tr><td>"pythonilla rakennettu webliittymä"</td><td>Valitsee kielen ja sovelluksen muodon: käyttöliittymä selaimessa.</td></tr>
+        <tr><td>"sqllite-tietokanta historiaa varten"</td><td>Päättää, mihin hakuhistoria tallennetaan. Kirjoitusasu on kehotteessa sellaisenaan, ja Claude ymmärtää sen SQLiteksi.</td></tr>
+        <tr><td>"asetuksissa postinumero-kenttä"</td><td>Määrää, miten sijainti annetaan, ja välttää arvaamisen siitä, missä olet.</td></tr>
+        <tr><td>"nappia painalla etsit halvimmat kahvitarjoukset"</td><td>Kertoo, mikä käynnistää haun: painike, ei ajastus.</td></tr>
+        <tr><td>"sortattuna etäisyyden ja hinnan perusteella"</td><td>Määrittelee tulosten järjestyksen.</td></tr>
+        <tr><td>"Kysele minulta puuttuvat yksityiskohdat, kunnes olemme samaa mieltä"</td><td>Pyytää haastattelua ennen koodia: mistä tarjoukset haetaan, mikä on etäisyyden raja, mitä tallennetaan. Sama tapa kuin grilling-skillissä.</td></tr>
+        <tr><td>"Perusta asiat faktoihin ja jos et tiedä, älä arvaa"</td><td>Vähentää arvaamista: Claude sanoo, että ei tiedä, esimerkiksi jos sopivaa tarjoustietojen lähdettä ei löydy.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Aja <code>/mattpocock-skills:grilling</code> ja anna kehote kuvaukseksi, tai anna kehote sellaisenaan ilman skilliä. Vastaa kysymyksiin ja jatka vasta, kun suunnitelma on sinusta oikea.</p>
+  </section>
+
   <section>
     <h2>Testisarjan optimointi ja tyylin tasaus</h2>
     <p>Kaksi kurssin mukana tulevaa työkalua jatkavat samaa ajattelua. Molempien asennusohje ja koko sisältö ovat moduulissa 10.</p>
