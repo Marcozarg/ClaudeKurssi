@@ -1,21 +1,30 @@
 "use strict";
 (() => {
-  const MODUULIT = [
-    { n: 0, istunto: 1, nimi: "Mikä Claude on?", valmis: true },
-    { n: 1, istunto: 1, nimi: "Ensimmäinen keskustelu", valmis: true },
-    { n: 2, istunto: 1, nimi: "Hyvä kehote", valmis: true },
-    { n: 3, istunto: 1, nimi: "Tiedostot, Projektit ja Artifactit", valmis: true },
-    { n: 4, istunto: 2, nimi: "Claude eri laitteilla", valmis: true },
-    { n: 5, istunto: 2, nimi: "Liitännät ja työnkulut", valmis: true },
-    { n: 6, istunto: 2, nimi: "Claude Code: asennus", valmis: true },
-    { n: 7, istunto: 3, nimi: "Peruskäyttö", valmis: true },
-    { n: 8, istunto: 3, nimi: "Git ja GitHub / GitLab", valmis: true },
-    { n: 9, istunto: 4, nimi: "Työtapa", valmis: true },
-    { n: 10, istunto: 4, nimi: "Omat skillit ja agentit", valmis: true },
-    { n: 11, istunto: 4, nimi: "Demot ja jatko", valmis: true },
-  ];
+  const EN_PAGES = [];
+  const EN = document.documentElement.lang === "en";
+  const T = EN
+    ? {
+        istunto: "Session", moduuli: "Module", etusivu: "Home", diatila: "Slide mode",
+        prevSlide: "Previous slide", nextSlide: "Next slide", exit: "Close slide mode",
+        copy: "Copy", copied: "Copied", selected: "Selected, press Ctrl+C",
+        noEnglish: "No English page yet", langs: "Language",
+      }
+    : {
+        istunto: "Istunto", moduuli: "Moduuli", etusivu: "Etusivu", diatila: "Diatila",
+        prevSlide: "Edellinen dia", nextSlide: "Seuraava dia", exit: "Sulje diatila",
+        copy: "Kopioi", copied: "Kopioitu", selected: "Valittu, paina Ctrl+C",
+        noEnglish: "Englanninkielistä sivua ei vielä ole", langs: "Kieli",
+      };
+  const NIMET = EN
+    ? ["What is Claude?", "The first conversation", "A good prompt", "Files, Projects and Artifacts",
+       "Claude on different devices", "Connectors and workflows", "Claude Code: installation", "Basic use",
+       "Git and GitHub / GitLab", "Way of working", "Your own skills and agents", "Demos and next steps"]
+    : ["Mikä Claude on?", "Ensimmäinen keskustelu", "Hyvä kehote", "Tiedostot, Projektit ja Artifactit",
+       "Claude eri laitteilla", "Liitännät ja työnkulut", "Claude Code: asennus", "Peruskäyttö",
+       "Git ja GitHub / GitLab", "Työtapa", "Omat skillit ja agentit", "Demot ja jatko"];
+  const ISTUNNOT = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4];
+  const MODUULIT = NIMET.map((nimi, n) => ({ n, istunto: ISTUNNOT[n], nimi, valmis: !EN || EN_PAGES.includes(n) }));
   const href = (m) => `moduuli-${m.n}.html`;
-
   function navigation(current) {
     const side = document.querySelector("nav.side");
     if (side) {
@@ -25,7 +34,7 @@
           istunto = m.istunto;
           const s = document.createElement("div");
           s.className = "s";
-          s.textContent = `Istunto ${istunto}`;
+          s.textContent = `${T.istunto} ${istunto}`;
           side.appendChild(s);
         }
         const el = document.createElement(m.valmis ? "a" : "span");
@@ -51,9 +60,9 @@
     const prev = MODUULIT[i - 1];
     const next = MODUULIT[i + 1];
     if (prev) link("prev", prev.valmis && href(prev), `← ${prev.n} ${prev.nimi}`);
-    else link("prev", "../index.html", "← Etusivu");
+    else link("prev", "../index.html", `← ${T.etusivu}`);
     if (next) link("next", next.valmis && href(next), `${next.n} ${next.nimi} →`);
-    else link("next", "../index.html", "Etusivu →");
+    else link("next", "../index.html", `${T.etusivu} →`);
   }
 
   function copyButtons(root) {
@@ -63,12 +72,12 @@
       const b = document.createElement("button");
       b.type = "button";
       b.className = "btn copy";
-      b.textContent = "Kopioi";
+      b.textContent = T.copy;
       let timer;
       const done = (t) => {
         b.textContent = t;
         clearTimeout(timer);
-        timer = setTimeout(() => (b.textContent = "Kopioi"), 2500);
+        timer = setTimeout(() => (b.textContent = T.copy), 2500);
       };
       const fallback = () => {
         const r = document.createRange();
@@ -76,12 +85,12 @@
         const s = getSelection();
         s.removeAllRanges();
         s.addRange(r);
-        done("Valittu, paina Ctrl+C");
+        done(T.selected);
       };
       b.addEventListener("click", () => {
         if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
         try {
-          navigator.clipboard.writeText(code.textContent).then(() => done("Kopioitu"), fallback);
+          navigator.clipboard.writeText(code.textContent).then(() => done(T.copied), fallback);
         } catch {
           fallback();
         }
@@ -101,15 +110,15 @@
     dlg.hidden = true;
     dlg.setAttribute("role", "dialog");
     dlg.setAttribute("aria-modal", "true");
-    dlg.setAttribute("aria-label", "Diatila");
+    dlg.setAttribute("aria-label", T.diatila);
     dlg.innerHTML =
       '<div class="slide-body" id="slideBody" tabindex="-1"></div>' +
       '<div class="slide-foot"><span class="grow"></span>' +
-      '<button class="btn" id="prevS" type="button" aria-label="Edellinen dia">←</button>' +
+      `<button class="btn" id="prevS" type="button" aria-label="${T.prevSlide}">←</button>` +
       '<span id="count" aria-live="polite"></span>' +
-      '<button class="btn" id="nextS" type="button" aria-label="Seuraava dia">→</button>' +
-      '<button class="btn" id="exitS" type="button" aria-label="Sulje diatila">Esc</button></div>';
-    dlg.querySelector(".grow").textContent = m ? `Moduuli ${m.n} · ${m.nimi}` : document.title;
+      `<button class="btn" id="nextS" type="button" aria-label="${T.nextSlide}">→</button>` +
+      `<button class="btn" id="exitS" type="button" aria-label="${T.exit}">Esc</button></div>`;
+    dlg.querySelector(".grow").textContent = m ? `${T.moduuli} ${m.n} · ${m.nimi}` : document.title;
     document.body.appendChild(dlg);
     const body = dlg.querySelector("#slideBody");
     const count = dlg.querySelector("#count");
@@ -182,8 +191,66 @@
     });
   }
 
+  // Blocked storage is expected (private windows, strict settings): the switch still navigates, only the memory is lost.
+  const KEY = "kurssi-lang";
+  const stored = () => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  };
+  const store = (lang) => {
+    try {
+      localStorage.setItem(KEY, lang);
+    } catch {}
+  };
+
+  function languageSwitch(current, isModule) {
+    const top = document.querySelector(".top");
+    if (!top) return;
+    const target = (lang) => {
+      if (lang === "en") return isModule ? `../en/moduulit/moduuli-${current}.html` : "en/index.html";
+      return isModule ? `../../moduulit/moduuli-${current}.html` : "../index.html";
+    };
+    const group = document.createElement("div");
+    group.className = "lang";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", T.langs);
+    for (const lang of ["fi", "en"]) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn";
+      b.dataset.lang = lang;
+      b.textContent = lang.toUpperCase();
+      const here = lang === (EN ? "en" : "fi");
+      b.setAttribute("aria-pressed", String(here));
+      if (!here) {
+        const exists = lang === "fi" || !isModule || EN_PAGES.includes(current);
+        if (exists) {
+          b.addEventListener("click", () => {
+            store(lang);
+            location.href = target(lang) + location.hash;
+          });
+        } else {
+          b.disabled = true;
+          b.setAttribute("aria-disabled", "true");
+          b.title = T.noEnglish;
+        }
+      }
+      group.appendChild(b);
+    }
+    const bar = top.querySelector(".pagebar");
+    top.insertBefore(group, bar);
+  }
+
   const current = Number(document.body.dataset.moduuli);
   const isModule = document.body.dataset.moduuli !== undefined;
+  if (!EN && !isModule && stored() === "en") {
+    location.replace("en/index.html" + location.hash);
+    return;
+  }
+  languageSwitch(current, isModule);
   if (isModule) {
     navigation(current);
     diatila(current);
