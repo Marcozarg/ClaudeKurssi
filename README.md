@@ -1,7 +1,7 @@
 # Claude-kurssi
 
-Suomenkielinen Claude-kurssi IT-ylläpidolle ja kehittäjille: perusteista Claude Codeen. Kurssissa on 12 moduulia
-neljässä istunnossa. Jokaisessa moduulissa on ydin, joka käydään läpi istunnossa, ja lisä, jonka voi tehdä
+Suomenkielinen Claude-kurssi IT-ylläpidolle ja kehittäjille: perusteista Claude Codeen. Kurssissa on 17 moduulia
+viidessä istunnossa. Jokaisessa moduulissa on ydin, joka käydään läpi istunnossa, ja lisä, jonka voi tehdä
 jälkikäteen.
 
 Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
@@ -30,7 +30,10 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 
 - [9 Työtapa](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-9.html)
 - [10 Omat skillit ja subagentit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-10.html)
-- [11 Demot ja jatko](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-11.html)
+
+### Istunto 5: Turvallisesti pidemmälle
+
+- [16 Demot ja jatko](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-16.html)
 
 ## English edition
 
@@ -60,7 +63,10 @@ An English edition of the course is available. Finnish is the default; the FI | 
 
 - [9 Way of working](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-9.html)
 - [10 Your own skills and subagents](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-10.html)
-- [11 Demos and next steps](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-11.html)
+
+### Session 5: Further, safely
+
+- [16 Demos and next steps](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-16.html)
 
 ## Lisenssi
 

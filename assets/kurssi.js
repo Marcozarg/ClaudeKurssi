@@ -1,6 +1,6 @@
 "use strict";
 (() => {
-  const EN_PAGES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const PAGES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16];
   const EN = document.documentElement.lang === "en";
   const T = EN
     ? {
@@ -18,12 +18,16 @@
   const NIMET = EN
     ? ["What is Claude?", "The first conversation", "A good prompt", "Files, Projects and Artifacts",
        "Claude on different devices", "Connectors and workflows", "Claude Code: installation", "Basic use",
-       "Git and GitHub / GitLab", "Way of working", "Your own skills and subagents", "Demos and next steps"]
+       "Git and GitHub / GitLab", "Way of working", "Your own skills and subagents", "Debugging with Claude",
+       "Trust and prompt injection", "Mods", "Automation: headless and CI", "Claude API and Agent SDK",
+       "Demos and next steps"]
     : ["Mikä Claude on?", "Ensimmäinen keskustelu", "Hyvä kehote", "Tiedostot, Projektit ja Artifactit",
        "Claude eri laitteilla", "Liitännät ja työnkulut", "Claude Code: asennus", "Peruskäyttö",
-       "Git ja GitHub / GitLab", "Työtapa", "Omat skillit ja subagentit", "Demot ja jatko"];
-  const ISTUNNOT = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4];
-  const MODUULIT = NIMET.map((nimi, n) => ({ n, istunto: ISTUNNOT[n], nimi, valmis: !EN || EN_PAGES.includes(n) }));
+       "Git ja GitHub / GitLab", "Työtapa", "Omat skillit ja subagentit", "Vianetsintä Clauden kanssa",
+       "Luottamus ja kehoteinjektio", "Modit", "Automaatio: headless ja CI", "Claude API ja Agent SDK",
+       "Demot ja jatko"];
+  const ISTUNNOT = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5];
+  const MODUULIT = NIMET.map((nimi, n) => ({ n, istunto: ISTUNNOT[n], nimi, valmis: PAGES.includes(n) }));
   const href = (m) => `moduuli-${m.n}.html`;
   function navigation(current) {
     const side = document.querySelector("nav.side");
@@ -54,7 +58,10 @@
       if (!a) return;
       a.textContent = text;
       if (target) a.href = target;
-      else a.setAttribute("aria-disabled", "true");
+      else {
+        a.removeAttribute("href");
+        a.setAttribute("aria-disabled", "true");
+      }
     };
     const i = MODUULIT.findIndex((m) => m.n === current);
     const prev = MODUULIT[i - 1];
@@ -226,7 +233,7 @@
       const here = lang === (EN ? "en" : "fi");
       b.setAttribute("aria-pressed", String(here));
       if (!here) {
-        const exists = lang === "fi" || !isModule || EN_PAGES.includes(current);
+        const exists = !isModule || PAGES.includes(current);
         if (exists) {
           b.addEventListener("click", () => {
             store(lang);
