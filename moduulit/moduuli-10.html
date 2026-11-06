@@ -102,6 +102,97 @@
   </section>
 
   <section>
+    <h2>Lisä: kehotteet, skillien karsinta</h2>
+    <div class="optbox">
+      <p>Kehotteet ovat englanniksi, ja ne kopioidaan sellaisinaan. Ne auttavat pitämään skillit lyhyinä: turhat rivit pois ja päällekkäisyydet yhteen.</p>
+      <div class="note">Kerätyt kehotteet, tekijä tuntematon; eivät kuulu kurssin CC BY 4.0 -lisenssiin.</div>
+      <h3>Turhat rivit pois</h3>
+      <p>Claude käy skillit läpi lause kerrallaan, poistaa lauseet, jotka Claude olisi tehnyt muutenkin, sekä etsii päällekkäiset skillit. Kehote muuttaa skillejä suoraan, joten tee ensin commit.</p>
+      <div class="codebox" data-prompt="kit-noop-audit"><pre><code>Audit my skills for no-op lines.
+For every sentence, ask: would Claude have done that anyway? If yes, delete the whole sentence. Rewrite any "don't" line as what I want instead.
+Then check which of my skills overlap. Show me which to condense into one or cut entirely.
+End with a list of every sentence you deleted.</code></pre></div>
+      <h3>Kaksi tapaa löytää turhat rivit</h3>
+      <p>Tarkka tapa ja aggressiivinen tapa. Tämä ei ole kehote vaan ohje sinulle.</p>
+      <div class="codebox" data-text="kit-precise-aggressive"><pre><code>Precise
+Go line by line. Remove the line you suspect is a no-op. Run it again. And if the output didn't change, it was never doing anything in the first place.
+Aggressive
+(Which I personally prefer), is just have Claude scan the whole thing for no-op language and delete those words, then just see what happens.</code></pre></div>
+      <h3>Lyhennä skillit</h3>
+      <p>Claude ehdottaa jokaiselle skillille lyhyemmän version ja merkitsee ne, jotka kannattaa tehdä vain itse kutsuttaviksi (<code>disable-model-invocation: true</code>). Mitään ei muuteta ennen hyväksyntääsi.</p>
+      <div class="codebox" data-prompt="kit-simplify"><pre><code>Simplify my existing skills.
+For each one, propose a shorter version that keeps only the lines that change the output.
+Then flag which skills are good candidates to make user-invoked only: ones I'd rather call myself than have you fire on your own. For those, set disable-model-invocation: true in the frontmatter.
+Show me everything first. Apply only what I approve.</code></pre></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: kehotteet, vakiintuneet termit</h2>
+    <div class="optbox">
+      <p>Kun selität skillissä jotain alusta asti, vaikka asialla on jo vakiintunut nimi, voit lyhentää tekstiä käyttämällä nimeä.</p>
+      <h3>Etsi puuttuvat termit</h3>
+      <p>Claude käy skillit läpi, nimeää kohdat, joissa vakiintunut termi korvaisi selityksen ja järjestää ne säästyneiden rivien mukaan.</p>
+      <div class="codebox" data-prompt="kit-leading-words"><pre><code>Audit my skills for missing leading words.
+Find every place I explained something from scratch that already has an established framework or term.
+For each one, quote my description, name the leading word that replaces it, and show how many lines it saves. Rank by lines saved.
+Only suggest terms that really exist. If there isn't one, say so and leave it alone.</code></pre></div>
+      <h3>Yksittäisen asian nimi</h3>
+      <p>Kysyy Claudelta, onko kuvaamallesi asialle vakiintunutta termiä tai viitekehystä.</p>
+      <div class="codebox" data-prompt="kit-term"><pre><code>Is there an established framework or term for what I'm describing?</code></pre></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: kehotteet, opi käytöstä</h2>
+    <div class="optbox">
+      <p>Skillit paranevat, kun niitä käytetään oikeassa työssä ja korjaukset kerätään keskusteluhistoriasta.</p>
+      <h3>Kolmen vaiheen kierros</h3>
+      <p>Tämä ei ole kehote vaan työtapa.</p>
+      <div class="codebox" data-text="kit-test-refine"><pre><code>1. Run your skill on real work, not test cases.
+2. Analyze chat history to fix recurring corrections.
+3. Once you have that fix, stop and try again.</code></pre></div>
+      <h3>Toistuvat korjaukset</h3>
+      <p>Claude käy läpi 30 päivän keskusteluhistorian, kokoaa kohdat, joissa korjasit Claudea ja järjestää ne skilliehdokkaiksi. Saman työn ja enemmän tekee Kopioitava <a href="#kopioi-retrospective"><code>retrospective</code></a>.</p>
+      <div class="codebox" data-prompt="kit-recurring"><pre><code>Scan my conversation history from the past 30 days.
+Flag every place I sent something back: where I corrected, redid, or re-explained what you gave me.
+Group the repeats. For each one, show me my correction in my own words and the specific step of the process it happened in.
+Rank which ones are candidates to become a skill.
+Stop at the ranked list.</code></pre></div>
+      <h3>Skriptiksi sopivat vaiheet</h3>
+      <p>Claude etsii skilleistä vaiheet, jotka voisi tehdä skriptinä, ja ehdottaa uusia skillejä keskusteluhistorian perusteella.</p>
+      <div class="codebox" data-prompt="kit-scripts"><pre><code>Analyze my project and identify and steps in my existing skills that can be programmatic scripts. Share those skills as well as how you'd migrate them to script optimized skills.
+Review my entire conversation history to identify any additional skills I should create.</code></pre></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: kehotteet, setupin tarkistus, Codex ja mallit</h2>
+    <div class="optbox">
+      <p>Kehotteet asetusten siivoukseen, raskaan työn siirtoon Codexille ja halvimman riittävän mallin valintaan.</p>
+      <h3>Setupin tarkistus</h3>
+      <p>Claude käy läpi kontekstitiedostot ja merkitsee vanhentuneet tai keskenään ristiriitaiset kohdat. Mitään ei muuteta ennen hyväksyntääsi. Saman työn ja enemmän tekee Kopioitava <a href="#kopioi-align-style"><code>align-style</code></a>.</p>
+      <div class="codebox" data-prompt="kit-audit-setup"><pre><code>Review every contextual file I've got and flag anything that's gone stale: info that's outdated, or rules that conflict with each other.
+For each one, tell me whether to update, merge, or delete it. Don't change anything until I sign off.</code></pre></div>
+      <h3>Codex raskaaseen työhön</h3>
+      <p>Pyytää Claudea asentamaan Codex-lisäosan ja lisäämään CLAUDE.md:hen säännön, että raskas toteutustyö annetaan Codexille. Claude näyttää muutoksen ennen kirjoittamista. Asennuskomennot voit ajaa myös itse. Lisäosa on OpenAI:n virallinen (<code>openai/codex-plugin-cc</code>), ja asennus tehdään sen README:n mukaan.</p>
+      <div class="codebox" data-prompt="kit-codex"><pre><code>Install the Codex plugin for Claude Code. Then add a rule to my CLAUDE.md: hand any token-heavy execution task to Codex instead of running it here — bulk file edits, well-specced builds, and bugs still failing after 2 tries. Show me the diff before writing.</code></pre></div>
+      <ul>
+        <li><b>Asennus:</b> <code>/plugin marketplace add openai/codex-plugin-cc</code>, sitten <code>/plugin install codex@openai-codex</code>, sitten <code>/reload-plugins</code>.</li>
+        <li><b>Tarkistus:</b> <code>/codex:setup</code> kertoo, onko Codex valmis. Jos Codex on asennettu mutta et ole kirjautunut, aja <code>!codex login</code>.</li>
+        <li><b>Vaatimukset:</b> ChatGPT-tilaus (myös Free) tai OpenAI API -avain sekä Node.js 18.18 tai uudempi. Käyttö kuluttaa Codexin käyttörajoja.</li>
+      </ul>
+      <h3>Halvin riittävä malli</h3>
+      <p>Claude käy skillit ja subagentit läpi ja ehdottaa kevyeltä työltä halvempaa mallia (<code>haiku</code>); ei muuta mitään. Sama ajatus on Kopioitava <a href="#kopioi-routing"><code>routing</code></a> -mallireitityksessä.</p>
+      <div class="codebox" data-prompt="kit-mvm"><pre><code>Find the Minimum Viable Model for every skill in .claude/skills/ and subagent in .claude/agents/
+Grunt work (scrape, summarize, classify, fetch, format) → model: haiku.
+Judgment work (synthesize, decide, judge) → keep the top model.
+Return a table: file → recommended change.
+Don't change anything yet.</code></pre></div>
+    </div>
+  </section>
+
+  <section>
     <h2>Valitse ja asenna Kopioitavat</h2>
     <p>Kaikkea ei tarvitse asentaa. Suositus aloittajalle: <code>done-check</code> ja mahdollisesti <code>plan-review</code>. Muut, kun tarve on tuttu. Jokaisen asennus noudattaa samaa kaavaa: tiedostot kansioon <code>%USERPROFILE%\.claude\</code>, vanhoista varmuuskopio ja tarvittaessa hook käsin.</p>
     <div class="tablewrap"><table>

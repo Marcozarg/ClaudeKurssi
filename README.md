@@ -35,6 +35,6 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 ## Lisenssi
 
 - Koodi (sivujen skriptit, tyylit ja ladattavat työkalut): MIT.
-- Teksti ja kuvat: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- Teksti ja kuvat: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); poikkeus: moduulin 10 kerätyt kehotteet (tekijä tuntematon) eivät kuulu tähän lisenssiin.
 
 Claude on Anthropicin tuote; tämä kurssi ei ole Anthropicin tekemä.
