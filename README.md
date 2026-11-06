@@ -35,6 +35,7 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 
 - [11 Vianetsintä Clauden kanssa](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-11.html)
 - [12 Luottamus ja kehoteinjektio](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-12.html)
+- [13 Modit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-13.html)
 - [15 Claude API ja Agent SDK](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-15.html)
 - [16 Demot ja jatko](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-16.html)
 
@@ -71,6 +72,7 @@ An English edition of the course is available. Finnish is the default; the FI | 
 
 - [11 Debugging with Claude](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-11.html)
 - [12 Trust and prompt injection](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-12.html)
+- [13 Mods](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-13.html)
 - [15 Claude API and Agent SDK](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-15.html)
 - [16 Demos and next steps](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-16.html)
 

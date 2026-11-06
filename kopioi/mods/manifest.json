@@ -1,0 +1,30 @@
+{
+  "tool": "mods",
+  "kind": "plugin",
+  "marketplace": "claude-kurssi",
+  "plugins": [
+    "git-status-line",
+    "done-toast",
+    "reach-band"
+  ],
+  "files": [
+    ".claude-plugin/marketplace.json",
+    "done-toast/.claude-plugin/plugin.json",
+    "done-toast/hooks/hooks.json",
+    "done-toast/hooks/register.ts",
+    "done-toast/tests/done-toast.test.ts",
+    "git-status-line/.claude-plugin/plugin.json",
+    "git-status-line/hooks/hooks.json",
+    "git-status-line/hooks/register.ts",
+    "git-status-line/tests/git-status-line.test.ts",
+    "reach-band/.claude-plugin/plugin.json",
+    "reach-band/hooks/hooks.json",
+    "reach-band/hooks/rate.ts",
+    "reach-band/hooks/register.tsx",
+    "reach-band/tests/reach-band.test.tsx",
+    "reach-band/types/index.d.ts"
+  ],
+  "prerequisites": [
+    "Claude Code 2.1.319"
+  ]
+}
