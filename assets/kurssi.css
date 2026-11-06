@@ -100,6 +100,15 @@ details summary{cursor:pointer;color:var(--accent);font-weight:600;margin-top:6p
 .effort{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .effort li{border-top:3px solid var(--accent);padding-top:6px;font-size:15px}
 .effort li > b{font:500 14px var(--f-mono);display:block}
+.scopes{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:16px 0}
+.scope-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.scope{min-width:0;overflow-wrap:anywhere;background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;padding:8px 10px;font-size:15px}
+.scope b{display:block;font:600 15px var(--f-body);color:var(--fg)}
+.scope small{display:block;font-size:13px;color:var(--muted)}
+.scope code{font-size:12px}
+.scope-join{text-align:center;color:var(--muted);font-size:20px;line-height:1.2;margin:8px 0}
+.scope-ctx{background:var(--accent-soft);border:2px solid var(--accent);border-radius:6px;padding:10px 14px;text-align:center;font:600 16px var(--f-body);color:var(--fg)}
+.scopes figcaption{font-size:15px;color:var(--muted);margin-top:8px;text-align:center}
 
 .slides{position:fixed;inset:0;z-index:50;background:var(--surface);display:flex;flex-direction:column;padding:24px 24px 16px}
 .slide-body{flex:1;overflow:auto;display:flex;flex-direction:column;justify-content:safe center;max-width:960px;margin:0 auto;width:100%;font-size:clamp(18px,2.2vw,24px)}
@@ -109,6 +118,7 @@ details summary{cursor:pointer;color:var(--accent);font-weight:600;margin-top:6p
 .slide-foot{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font:500 14px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
 .slide-foot .grow{margin-right:auto}
 
+@media (max-width:520px){.scope-row{grid-template-columns:1fr}}
 @media (max-width:760px){
   .layout{grid-template-columns:1fr}
   .side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;padding:6px}

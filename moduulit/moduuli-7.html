@@ -83,13 +83,44 @@
     <div class="shot">[KUVA: m7-rewind - rewind-valikko ja palautusvaihtoehdot]</div>
   </section>
 
-  <section>
-    <h2>CLAUDE.md ja muisti</h2>
+  <section id="muistin-tasot">
+    <h2>Muistin tasot</h2>
     <p>Jokainen istunto alkaa tyhjällä kontekstilla. Kaksi tapaa antaa Claudelle pysyvää tietoa:</p>
     <ul>
-      <li><b>CLAUDE.md</b> on sinun kirjoittamasi ohjetiedosto projektin kansiossa. Se ladataan joka istunnossa. Komento <code>/init</code> luo siitä ensimmäisen version analysoimalla kansion.</li>
+      <li><b>CLAUDE.md</b> on sinun kirjoittamasi ohjetiedosto. Se ladataan joka istunnossa. Komento <code>/init</code> luo siitä ensimmäisen version analysoimalla kansion.</li>
       <li><b>Automaattinen muisti</b> (auto memory) on muistiinpanoja, joita Claude kirjoittaa itse korjauksistasi ja mieltymyksistäsi. Ne tallentuvat käyttäjäkansion <code>%USERPROFILE%\.claude\projects\</code> alle.</li>
     </ul>
+    <p>Yhdessä nämä muodostavat kuusi tasoa. Taso kertoo, kuka tiedoston kirjoittaa ja ketä se koskee.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Taso</th><th>Tiedosto</th><th>Kirjoittaja</th><th>Koskee</th><th>Gitissä?</th></tr></thead>
+      <tbody>
+        <tr><td><b>Organisaatio</b></td><td><code>%ProgramFiles%\ClaudeCode\CLAUDE.md</code></td><td>IT</td><td>Kaikkia koneen käyttäjiä</td><td>Ei, IT jakaa sen koneille</td></tr>
+        <tr><td><b>Sinä, kaikki projektit</b></td><td><code>%USERPROFILE%\.claude\CLAUDE.md</code></td><td>Sinä</td><td>Vain sinua, kaikissa projekteissa</td><td>Ei</td></tr>
+        <tr><td><b>Projekti, tiimi</b></td><td><code>.\CLAUDE.md</code> tai <code>.\.claude\CLAUDE.md</code></td><td>Tiimi</td><td>Kaikkia projektin tekijöitä</td><td>Kyllä, tiimi jakaa sen gitin kautta</td></tr>
+        <tr><td><b>Sinä, tämä projekti</b></td><td><code>.\CLAUDE.local.md</code></td><td>Sinä</td><td>Vain sinua, tässä projektissa</td><td>Ei, lisää se <code>.gitignore</code>en</td></tr>
+        <tr><td><b>Polkusäännöt</b></td><td><code>.\.claude\rules\</code> tai <code>%USERPROFILE%\.claude\rules\</code></td><td>Sinä tai tiimi</td><td>Kaikkia tiedostoja tai vain <code>paths</code>-rajauksen tiedostoja</td><td>Projektin säännöt kyllä, omat säännöt ei</td></tr>
+        <tr><td><b>Automaattinen muisti</b></td><td><code>%USERPROFILE%\.claude\projects\&lt;projekti&gt;\memory\</code></td><td>Claude</td><td>Sinua, yhtä repoa</td><td>Ei, tallentuu vain tälle koneelle</td></tr>
+      </tbody>
+    </table></div>
+    <p>Automaattisesta muistista ladataan istunnon alussa <code>MEMORY.md</code>-tiedoston 200 ensimmäistä riviä tai 25 kilotavua, sen mukaan kumpi täyttyy ensin. Loput jäävät lataamatta.</p>
+    <figure class="scopes">
+      <div class="scope-row">
+        <div class="scope"><b>Organisaatio</b><small>IT asettaa</small><code>%ProgramFiles%\ClaudeCode\CLAUDE.md</code></div>
+        <div class="scope"><b>Sinä, kaikki projektit</b><small>sinä kirjoitat</small><code>%USERPROFILE%\.claude\CLAUDE.md</code></div>
+        <div class="scope"><b>Projekti, tiimi</b><small>gitissä</small><code>CLAUDE.md</code></div>
+        <div class="scope"><b>Sinä, tämä projekti</b><small>ei gitissä</small><code>CLAUDE.local.md</code></div>
+        <div class="scope"><b>Polkusäännöt</b><small>tiedostotyypin mukaan</small><code>.claude\rules\</code></div>
+        <div class="scope"><b>Automaattinen muisti</b><small>Claude kirjoittaa</small><code>MEMORY.md</code></div>
+      </div>
+      <div class="scope-join" aria-hidden="true">&darr;</div>
+      <div class="scope-ctx">Istunnon konteksti</div>
+      <figcaption>kaikki ladataan yhdessä, mikään ei ohita toista</figcaption>
+    </figure>
+    <p>Tämä koskee Claude Codea. Muisti claude.ai:ssa on eri asia: <a href="moduuli-3.html#muisti-claudeaissa">Moduuli 3</a>.</p>
+  </section>
+
+  <section id="muisti-kaytannossa">
+    <h2>Muisti käytännössä</h2>
     <p>Hyvä CLAUDE.md on lyhyt ja täsmällinen: kerro asiat, joita Claude ei voi päätellä koodista.</p>
     <div class="codebox"><pre><code># Ohjeet
 
@@ -97,6 +128,23 @@
 - Älä koskaan aja skriptejä tuotantopalvelimia vastaan; kaikki testit tehdään testiympäristössä.
 - Kirjoita ohjeet ja kommentit suomeksi.
 - Testit: Invoke-Pester .\tests</code></pre></div>
+    <h3>Esimerkki: kolme ohjetta, kolme tasoa</h3>
+    <p>Sinulla on kolme ohjetta, ja jokainen kuuluu eri paikkaan:</p>
+    <ul>
+      <li>Oma tyylitoiveesi, esimerkiksi "Vastaa lyhyesti ja ilman täytesanoja", kuuluu tiedostoon <code>%USERPROFILE%\.claude\CLAUDE.md</code>. Se pätee kaikissa projekteissasi.</li>
+      <li>Tiimin sääntö, esimerkiksi "Aja testit komennolla <code>Invoke-Pester .\tests</code> ennen jokaista commitia", kuuluu projektin <code>CLAUDE.md</code>-tiedostoon. Se kulkee gitin mukana kaikille.</li>
+      <li>Oma testiosoitteesi kuuluu tiedostoon <code>CLAUDE.local.md</code>. Se pysyy vain sinulla.</li>
+    </ul>
+    <div class="codebox"><pre><code># Omat asetukseni tässä projektissa
+
+- Paikallinen testipalvelin on http://localhost:8080</code></pre></div>
+    <p>Lisää <code>CLAUDE.local.md</code> tiedostoon <code>.gitignore</code>, ettei se päädy repoon. Voit tarkistaa, mitkä tiedostot istuntoon ladattiin, komennolla <code>/context all</code>: lista on kohdassa <b>Memory files</b>.</p>
+    <h3>Kun ohjeet ovat ristiriidassa</h3>
+    <p>Claude Code liittää löytämänsä tiedostot yhteen kontekstiin, eikä mikään taso ohita toista. Projektin ohje tulee kontekstiin käyttäjän omien ohjeiden jälkeen, mutta se ei tee siitä voittajaa: jos kaksi ohjetta on ristiriidassa, Claude voi noudattaa kumpaa tahansa. Pidä tasot yhdenmukaisina äläkä oleta, että tarkempi taso voittaa.</p>
+    <h3>Ohje ei ole pakote</h3>
+    <p>Claude pitää CLAUDE.md-tiedostoja kontekstina, ei valvottuna asetuksena. Jos jokin pitää estää varmasti, älä luota pelkkään ohjeeseen. Käytä lupia (permissions) tai <code>PreToolUse</code>-hookia, joka pysäyttää toiminnon riippumatta siitä, mitä Claude päättää. Organisaatiolla tämä tarkoittaa hallittuja asetuksia, ei organisaatiotason CLAUDE.md-tiedostoa.</p>
+    <h3>Tuonnit</h3>
+    <p>CLAUDE.md voi tuoda toisen tiedoston kirjoittamalla sen polun eteen <code>@</code>, esimerkiksi <code>@docs/git-ohje.md</code>. Polku lasketaan tuovasta tiedostosta, ja tuonnit voivat ketjuuntua enintään neljä askelta. Tuotu tiedosto ladataan kontekstiin yhdessä tuovan tiedoston kanssa, joten tuonti siistii tiedostoa mutta ei säästä kontekstia.</p>
     <h3>Muistin kytkeminen pois</h3>
     <ul>
       <li>Komento <code>/memory</code> avaa listan ja kytkimen automaattiselle muistille.</li>
