@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>15 Claude API ja Agent SDK - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="15">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev">&larr; Edellinen</a>
+    <a class="btn" id="next" href="moduuli-16.html">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 15 &middot; Istunto 5</span>
+  <h1>Claude API ja Agent SDK</h1>
+  <div class="meta"><span class="chip">Ydin ~25 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">API-avain</span></div>
+
+  <section id="api-ja-tilaus">
+    <h2>API ja tilaus ovat eri asioita</h2>
+    <p>Tähän asti olet käyttänyt Claudea claude.ai:ssa ja Claude Codessa tilauksella (Free, Pro tai Max). <b>Claude API</b> on tapa kutsua Claudea omasta koodista: skriptistä, palvelusta tai integraatiosta. Se on eri tuote kuin tilaus:</p>
+    <ul>
+      <li><b>Erillinen laskutus:</b> API laskutetaan käytön mukaan, tokeneittain, Claude Consolessa (<a href="https://platform.claude.com/">platform.claude.com</a>). Pro- tai Max-tilaus ei sisällä API-käyttöä, eikä API-käyttö kuluta tilauksen rajaa.</li>
+      <li><b>API-avain:</b> koodi tunnistautuu avaimella, jonka luot Consolessa. Avain on salaisuus samalla tavalla kuin salasana (moduuli 0): se ei kuulu koodiin, gitiin, keskusteluun eikä kuvakaappaukseen.</li>
+      <li><b>Kulurajat:</b> aseta Consolessa kuukausiraja, ennen kuin ajat mitään silmukassa. Virheellinen silmukka voi kuluttaa rahaa nopeasti.</li>
+    </ul>
+    <div class="note">Työpaikalla API-avaimen ja laskutuksen omistaa yleensä organisaatio. Kysy ennen kuin luot avaimen työkäyttöön tai liität työn dataa API-kutsuun.</div>
+  </section>
+
+  <section id="ensimmainen-kutsu">
+    <h2>Ensimmäinen kutsu Pythonilla</h2>
+    <p>Asenna Anthropicin Python-kirjasto ja anna avain ympäristömuuttujana. Alla oleva PowerShell-rivi asettaa muuttujan vain tähän ikkunaan, joten avain ei jää tiedostoon.</p>
+    <div class="codebox"><pre><code>pip install anthropic
+$env:ANTHROPIC_API_KEY = "liitä-avain-tähän"</code></pre></div>
+    <p>Tallenna tiedostoon <code>ensimmainen.py</code> ja aja <code>python ensimmainen.py</code>:</p>
+    <div class="codebox"><pre><code>import anthropic
+
+client = anthropic.Anthropic()
+response = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    messages=[{"role": "user", "content": "Selitä yhdellä virkkeellä, mitä DNS tekee."}],
+)
+for block in response.content:
+    if block.type == "text":
+        print(block.text)
+print("tokenit sisään:", response.usage.input_tokens, "ulos:", response.usage.output_tokens)</code></pre></div>
+    <ul>
+      <li><code>anthropic.Anthropic()</code> lukee avaimen muuttujasta <code>ANTHROPIC_API_KEY</code>. Älä kirjoita avainta koodiin.</li>
+      <li><code>model</code> on mallin tunnus, <code>max_tokens</code> vastauksen yläraja.</li>
+      <li>Vastaus on lista lohkoja; tekstilohkot tulostetaan. <code>usage</code> kertoo, kuinka monesta tokenista maksat.</li>
+    </ul>
+  </section>
+
+  <section id="malli-ja-hinta">
+    <h2>Mallin valinta ja hinta</h2>
+    <p>Sama hinnasto kuin <a href="moduuli-0.html">moduulissa 0</a>, nyt mallin tunnuksen kanssa. Hinnat dollareina miljoonaa tokenia kohden, tarkistettu 11/2026 (<a href="https://platform.claude.com/docs/en/about-claude/pricing">Pricing</a>):</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Malli</th><th>Tunnus</th><th>Syöte</th><th>Tuloste</th><th>Milloin</th></tr></thead>
+      <tbody>
+        <tr><td>Haiku 5.5</td><td><code>claude-haiku-5-5</code></td><td>0,10 $</td><td>0,50 $</td><td>Suuret määrät yksinkertaista työtä: luokittelu, poiminta. Hinta koskee enintään 100 000 tokenin kehotteita.</td></tr>
+        <tr><td>Sonnet 5.5</td><td><code>claude-sonnet-5-5</code></td><td>2 $</td><td>10 $</td><td>Arkinen koodi ja tekstityö nopeasti.</td></tr>
+        <tr><td>Opus 5.5</td><td><code>claude-opus-5-5</code></td><td>4 $</td><td>20 $</td><td>Oletusvalinta vaativaan työhön.</td></tr>
+        <tr><td>Fable 5.1</td><td><code>claude-fable-5-1</code></td><td>10 $</td><td>50 $</td><td>Vaikeimmat tehtävät, kun laatu ratkaisee.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Laske ennen kuin ajat: 1 000 tikettiä, joissa kussakin 2 000 tokenia sisään ja 300 ulos, on 2 miljoonaa syötetokenia ja 0,3 miljoonaa tulostetokenia. Haikulla se maksaa noin 0,35 $, Opuksella noin 14 $. Kun tehtävä on yksinkertainen ja toistuva, kokeile ensin halvempaa mallia ja tarkista tulos muutamasta esimerkistä.</p>
+    <p>Mallit ajattelevat ennen vastausta, ja ajattelu laskutetaan tulostetokeneina. Ajattelun määrää säädetään parametrilla <code>output_config={"effort": "low"}</code> (myös <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code>); kevyt tehtävä ei tarvitse korkeaa effortia.</p>
+  </section>
+
+  <section id="agent-sdk">
+    <h2>Agent SDK lyhyesti</h2>
+    <p>Yksi API-kutsu on yksi kysymys ja yksi vastaus. Kun haluat ohjelman, joka lukee tiedostoja, ajaa komentoja ja tekee monta askelta itse, tarvitset agentin. Kolme tapaa:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tapa</th><th>Mitä saat</th><th>Milloin</th></tr></thead>
+      <tbody>
+        <tr><td>API-kutsu</td><td>Vastaus kehotteeseen. Työkalut ja silmukan teet itse.</td><td>Luokittelu, tiivistys, poiminta omassa skriptissä.</td></tr>
+        <tr><td><code>claude -p</code></td><td>Claude Code skriptissä tai CI:ssä (moduuli 14).</td><td>Valmis Claude Code ajettuna ilman käyttäjää.</td></tr>
+        <tr><td>Agent SDK</td><td>Claude Code kirjastona Pythoniin tai TypeScriptiin: valmiit työkalut (tiedostot, komennot, haku), luvat, hookit ja subagentit.</td><td>Oma ohjelma tai palvelu, jonka sisällä toimii agentti.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Agent SDK käyttää samoja lupia ja turvarajoja kuin Claude Code (moduulit 7 ja 12): agentti, joka saa ajaa komentoja, tarvitsee yhtä tiukat rajat kuin Claude Code. Dokumentaatio ja esimerkit: <a href="https://code.claude.com/docs/en/agent-sdk">code.claude.com/docs/en/agent-sdk</a>.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Ensimmäinen API-kutsu</h3>
+      <div class="req">Edellyttää: API-avain Consolessa, saldoa ja Python 3. Ei avainta? Liitä skripti claude.ai-keskusteluun (Free) ja pyydä Claudea selittämään se rivi riviltä ja kertomaan, mitä se tulostaa.</div>
+      <p>Aja osion "Ensimmäinen kutsu Pythonilla" skripti. Vaihda sitten malliksi <code>claude-haiku-5-5</code> ja aja uudelleen. Vertaa vastauksia ja tokenimääriä, ja laske kummankin kutsun hinta taulukon hinnoilla.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Skripti tulostaa yhden virkkeen (esimerkiksi "DNS muuttaa verkkotunnukset IP-osoitteiksi, jotta koneet löytävät toisensa.") ja tokenimäärät, tyypillisesti muutama kymmenen sisään ja muutamasta kymmenestä muutamaan sataan ulos, koska ajattelu lasketaan tulosteeseen. Kumpikin kutsu maksaa alle sentin. Jos saat virheen <code>authentication_error</code>, muuttuja puuttuu tai avain on väärä: aseta muuttuja samassa PowerShell-ikkunassa, jossa ajat skriptin.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Laske kustannus ennen ajoa</h3>
+      <div class="req">Edellyttää: ei mitään; laskin tai claude.ai (Free) riittää.</div>
+      <p>Aiot luokitella 500 tikettiä. Kussakin on noin 1 500 tokenia sisään ja 200 ulos. Laske hinta Haikulla, Sonnetilla ja Opuksella taulukon hinnoilla.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Syötettä on 500 × 1 500 = 750 000 tokenia (0,75 miljoonaa), tulostetta 500 × 200 = 100 000 tokenia (0,1 miljoonaa). Haiku: 0,75 × 0,10 + 0,1 × 0,50 = noin 0,13 $. Sonnet: 0,75 × 2 + 0,1 × 10 = 2,50 $. Opus: 0,75 × 4 + 0,1 × 20 = 5 $. Luokittelu on yksinkertaista työtä, joten aloita Haikulla ja tarkista tulos muutamasta tiketistä käsin.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Luokittele tiketit</h3>
+      <div class="req">Edellyttää: API-avain, saldoa ja Python 3. Ei avainta? Anna sama ohje ja tiketit claude.ai-keskustelussa (Free) ja vertaa tulosta esimerkkivastaukseen.</div>
+      <p>Skripti luokittelee kolme keksittyä tikettiä Haikulla matalalla effortilla. Aja se ja tarkista, ovatko luokat oikein. Lisää sitten oma tiketti listaan.</p>
+      <div class="codebox"><pre><code>import anthropic
+
+client = anthropic.Anthropic()
+tiketit = [
+    "Tulostin kolmannessa kerroksessa ei tulosta, valo vilkkuu oranssina.",
+    "Unohdin salasanani enkä pääse kirjautumaan koneelle.",
+    "Tarvitsen Visio-lisenssin projektia varten.",
+]
+for tiketti in tiketit:
+    vastaus = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1000,
+        output_config={"effort": "low"},
+        system="Luokittele IT-tiketti yhteen luokkaan: laitteisto, tunnukset, ohjelmisto tai muu. Vastaa pelkällä luokan nimellä.",
+        messages=[{"role": "user", "content": tiketti}],
+    )
+    luokka = next(b.text for b in vastaus.content if b.type == "text").strip()
+    print(f"{luokka}: {tiketti}")</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Odotettu tulos: tulostin on <code>laitteisto</code>, salasana <code>tunnukset</code> ja Visio-lisenssi <code>ohjelmisto</code>. Järjestelmäkehote (<code>system</code>) on sama joka kutsussa, ja vain tiketti vaihtuu. Jos luokka tulee lauseena eikä pelkkänä sanana, tarkenna ohjetta tai pyydä vastaus JSON-muodossa. Ennen kuin ajat tuhansia tikettejä, tarkista tulos pienestä otoksesta käsin ja laske hinta kuten harjoituksessa 2.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: työkalut, välimuisti ja muuta</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Työkalut (tool use):</b> määrittelet funktion nimen, kuvauksen ja parametrit, ja Claude pyytää kutsua sitä, kun tarvitsee tietoa tai toimintoa. Sinun koodisi ajaa funktion ja palauttaa tuloksen. Näin Claude voi esimerkiksi hakea tiketin tilan omasta järjestelmästäsi. Ohje: <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use</a>.</li>
+        <li><b>Välimuisti (prompt caching):</b> kun sama pitkä alku (järjestelmäkehote, ohjeet, dokumentti) toistuu monessa kutsussa, se voidaan tallentaa välimuistiin, ja uudelleen luettuna se maksaa noin kymmenesosan. Yksinkertaisin tapa on yksi parametri:
+          <div class="codebox"><pre><code>response = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    cache_control={"type": "ephemeral"},
+    system="Pitkä ohje, joka on sama joka kutsussa...",
+    messages=[{"role": "user", "content": "Tiivistä tämä tiketti."}],
+)
+print(response.usage.cache_read_input_tokens)</code></pre></div>
+          Välimuisti toimii vain, kun alku on joka kutsussa täsmälleen sama: aikaleima kehotteen alussa estää sen. Ohje: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a>.</li>
+        <li><b>Erätyöt (Batches):</b> kun tulos saa tulla myöhemmin, erä-API maksaa noin puolet tavallisesta.</li>
+        <li><b>Miksi vastaus päättyi:</b> <code>response.stop_reason</code> on tavallisesti <code>end_turn</code>; <code>max_tokens</code> tarkoittaa, että raja tuli vastaan, ja <code>refusal</code>, että malli kieltäytyi. Tarkista se ennen kuin luet vastauksen.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

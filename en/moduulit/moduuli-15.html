@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>15 Claude API and Agent SDK - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="15">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev">&larr; Previous</a>
+    <a class="btn" id="next" href="moduuli-16.html">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 15 &middot; Session 5</span>
+  <h1>Claude API and Agent SDK</h1>
+  <div class="meta"><span class="chip">Core ~25 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">API key</span></div>
+
+  <section id="api-ja-tilaus">
+    <h2>The API and your subscription are different things</h2>
+    <p>So far you have used Claude in claude.ai and Claude Code with a subscription (Free, Pro or Max). The <b>Claude API</b> is how you call Claude from your own code: a script, a service or an integration. It is a different product from the subscription:</p>
+    <ul>
+      <li><b>Separate billing:</b> the API is billed by use, per token, in the Claude Console (<a href="https://platform.claude.com/">platform.claude.com</a>). A Pro or Max subscription does not include API use, and API use does not count against your subscription's limit.</li>
+      <li><b>API key:</b> your code identifies itself with a key you create in the Console. The key is a secret just like a password (module 0): it does not belong in code, in git, in a chat or in a screenshot.</li>
+      <li><b>Spend limits:</b> set a monthly limit in the Console before you run anything in a loop. A buggy loop can spend money quickly.</li>
+    </ul>
+    <div class="note">At work, the API key and the billing usually belong to the organization. Ask before you create a key for work or put work data into an API call.</div>
+  </section>
+
+  <section id="ensimmainen-kutsu">
+    <h2>A first call in Python</h2>
+    <p>Install Anthropic's Python library and give the key as an environment variable. The PowerShell line below sets the variable for this window only, so the key is not left in a file.</p>
+    <div class="codebox"><pre><code>pip install anthropic
+$env:ANTHROPIC_API_KEY = "paste-the-key-here"</code></pre></div>
+    <p>Save this as <code>first.py</code> and run <code>python first.py</code>:</p>
+    <div class="codebox"><pre><code>import anthropic
+
+client = anthropic.Anthropic()
+response = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    messages=[{"role": "user", "content": "Explain in one sentence what DNS does."}],
+)
+for block in response.content:
+    if block.type == "text":
+        print(block.text)
+print("tokens in:", response.usage.input_tokens, "out:", response.usage.output_tokens)</code></pre></div>
+    <ul>
+      <li><code>anthropic.Anthropic()</code> reads the key from the <code>ANTHROPIC_API_KEY</code> variable. Do not write the key into the code.</li>
+      <li><code>model</code> is the model's ID, <code>max_tokens</code> the upper limit of the answer.</li>
+      <li>The answer is a list of blocks; the text blocks are printed. <code>usage</code> tells you how many tokens you pay for.</li>
+    </ul>
+  </section>
+
+  <section id="malli-ja-hinta">
+    <h2>Choosing a model, and the price</h2>
+    <p>The same price list as in <a href="moduuli-0.html">module 0</a>, now with each model's ID. Prices in dollars per million tokens, checked 11/2026 (<a href="https://platform.claude.com/docs/en/about-claude/pricing">Pricing</a>):</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Model</th><th>ID</th><th>Input</th><th>Output</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>Haiku 5.5</td><td><code>claude-haiku-5-5</code></td><td>$0.10</td><td>$0.50</td><td>Large amounts of simple work: classification, extraction. The price applies to prompts of up to 100,000 tokens.</td></tr>
+        <tr><td>Sonnet 5.5</td><td><code>claude-sonnet-5-5</code></td><td>$2</td><td>$10</td><td>Everyday code and text work, fast.</td></tr>
+        <tr><td>Opus 5.5</td><td><code>claude-opus-5-5</code></td><td>$4</td><td>$20</td><td>The default choice for demanding work.</td></tr>
+        <tr><td>Fable 5.1</td><td><code>claude-fable-5-1</code></td><td>$10</td><td>$50</td><td>The hardest tasks, when quality decides.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Do the sum before you run: 1,000 tickets with 2,000 tokens in and 300 out each is 2 million input tokens and 0.3 million output tokens. With Haiku that costs about $0.35, with Opus about $14. When a task is simple and repetitive, try the cheaper model first and check the result on a few examples.</p>
+    <p>The models think before they answer, and thinking is billed as output tokens. You set how much they think with <code>output_config={"effort": "low"}</code> (also <code>medium</code>, <code>high</code>, <code>xhigh</code>, <code>max</code>); a light task does not need high effort.</p>
+  </section>
+
+  <section id="agent-sdk">
+    <h2>The Agent SDK in brief</h2>
+    <p>One API call is one question and one answer. When you want a program that reads files, runs commands and takes many steps by itself, you need an agent. Three ways:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Way</th><th>What you get</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>API call</td><td>An answer to a prompt. You build the tools and the loop yourself.</td><td>Classifying, summarizing, extracting in your own script.</td></tr>
+        <tr><td><code>claude -p</code></td><td>Claude Code in a script or in CI (module 14).</td><td>Claude Code as it is, run without a person.</td></tr>
+        <tr><td>Agent SDK</td><td>Claude Code as a library for Python or TypeScript: built-in tools (files, commands, search), permissions, hooks and subagents.</td><td>Your own program or service with an agent inside it.</td></tr>
+      </tbody>
+    </table></div>
+    <p>The Agent SDK uses the same permissions and safety limits as Claude Code (modules 7 and 12): an agent that may run commands needs limits as tight as Claude Code does. Documentation and examples: <a href="https://code.claude.com/docs/en/agent-sdk">code.claude.com/docs/en/agent-sdk</a>.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. A first API call</h3>
+      <div class="req">Needs: an API key in the Console, credit and Python 3. No key? Paste the script into a claude.ai chat (Free) and ask Claude to explain it line by line and say what it prints.</div>
+      <p>Run the script from "A first call in Python". Then change the model to <code>claude-haiku-5-5</code> and run it again. Compare the answers and the token counts, and work out the price of each call with the prices in the table.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The script prints one sentence (for example "DNS turns domain names into IP addresses so that computers can find each other.") and the token counts, typically a few dozen in and from a few dozen to a few hundred out, because thinking counts as output. Each call costs less than a cent. If you get an <code>authentication_error</code>, the variable is missing or the key is wrong: set the variable in the same PowerShell window where you run the script.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Work out the cost before you run</h3>
+      <div class="req">Needs: nothing; a calculator or claude.ai (Free) is enough.</div>
+      <p>You plan to classify 500 tickets. Each has about 1,500 tokens in and 200 out. Work out the price with Haiku, Sonnet and Opus using the prices in the table.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The input is 500 × 1,500 = 750,000 tokens (0.75 million), the output 500 × 200 = 100,000 tokens (0.1 million). Haiku: 0.75 × 0.10 + 0.1 × 0.50 = about $0.13. Sonnet: 0.75 × 2 + 0.1 × 10 = $2.50. Opus: 0.75 × 4 + 0.1 × 20 = $5. Classification is simple work, so start with Haiku and check the result on a few tickets by hand.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Classify tickets</h3>
+      <div class="req">Needs: an API key, credit and Python 3. No key? Give the same instruction and tickets in a claude.ai chat (Free) and compare the result with the example answer.</div>
+      <p>The script classifies three made-up tickets with Haiku at low effort. Run it and check whether the categories are right. Then add a ticket of your own to the list.</p>
+      <div class="codebox"><pre><code>import anthropic
+
+client = anthropic.Anthropic()
+tickets = [
+    "The printer on the third floor does not print, the light blinks orange.",
+    "I forgot my password and cannot log in to my computer.",
+    "I need a Visio licence for a project.",
+]
+for ticket in tickets:
+    answer = client.messages.create(
+        model="claude-haiku-5-5",
+        max_tokens=1000,
+        output_config={"effort": "low"},
+        system="Classify the IT ticket into one category: hardware, accounts, software or other. Answer with the category name only.",
+        messages=[{"role": "user", "content": ticket}],
+    )
+    category = next(b.text for b in answer.content if b.type == "text").strip()
+    print(f"{category}: {ticket}")</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div><p>The expected result: the printer is <code>hardware</code>, the password <code>accounts</code> and the Visio licence <code>software</code>. The system prompt (<code>system</code>) is the same in every call, and only the ticket changes. If the category comes back as a sentence and not a single word, make the instruction more precise or ask for the answer as JSON. Before you run thousands of tickets, check the result on a small sample by hand and work out the price as in exercise 2.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: tools, caching and more</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Tool use:</b> you define a function's name, description and parameters, and Claude asks to call it when it needs information or an action. Your code runs the function and returns the result. This way Claude can, for example, look up a ticket's status in your own system. Guide: <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use</a>.</li>
+        <li><b>Prompt caching:</b> when the same long beginning (system prompt, instructions, a document) repeats in many calls, it can be cached, and read again it costs about a tenth. The simplest way is one parameter:
+          <div class="codebox"><pre><code>response = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    cache_control={"type": "ephemeral"},
+    system="A long instruction that is the same in every call...",
+    messages=[{"role": "user", "content": "Summarize this ticket."}],
+)
+print(response.usage.cache_read_input_tokens)</code></pre></div>
+          Caching works only when the beginning is exactly the same in every call: a timestamp at the start of the prompt breaks it. Guide: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a>.</li>
+        <li><b>Batches:</b> when the result may come later, the batch API costs about half the normal price.</li>
+        <li><b>Why the answer ended:</b> <code>response.stop_reason</code> is usually <code>end_turn</code>; <code>max_tokens</code> means the limit was reached, and <code>refusal</code> that the model declined. Check it before you read the answer.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
