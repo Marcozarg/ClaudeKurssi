@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 Debugging with Claude - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="11">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-10.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 11 &middot; Session 5</span>
+  <h1>Debugging with Claude</h1>
+  <div class="meta"><span class="chip">Core ~30 min</span><span class="chip opt">Optional ~15 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section id="mita-annetaan">
+    <h2>What to give Claude</h2>
+    <p>"The script doesn't work" forces Claude to guess. The guess may land, but Claude often fixes something that was not broken. Give it three things instead:</p>
+    <ul>
+      <li><b>Symptom:</b> what happens and what you expected to happen. "The report lists every disk, even though D: has 15 % free."</li>
+      <li><b>The exact error message:</b> the whole text, copied, not from memory. The line number and the error type often say more than an explanation.</li>
+      <li><b>Steps:</b> which command and which input make the bug appear. Also the environment (PowerShell 5.1 or 7, Windows version) and what changed last.</li>
+    </ul>
+    <div class="codebox"><pre><code>Bug: &lt;what happens&gt;. I expected: &lt;what should happen&gt;.
+The whole error message:
+&lt;paste here&gt;
+I reproduce it like this: &lt;command and input&gt;
+Environment: &lt;PowerShell version, operating system&gt;. Last change: &lt;what I changed&gt;.
+Find the cause first. Do not change the code before you tell me what causes the bug.</code></pre></div>
+    <p>The last line matters: it keeps Claude debugging instead of letting it jump straight to a fix.</p>
+  </section>
+
+  <section id="toista-ensin">
+    <h2>Reproduce the bug first</h2>
+    <p>Before the fix you need a way to see the bug yourself: a command that gives the wrong result every time. Without it you do not know whether a change fixed anything. Ask Claude to build the reproduction before it touches the code:</p>
+    <div class="codebox"><pre><code>Make the smallest command or script that shows this bug every time. Run it and show the output. Do not fix anything yet.</code></pre></div>
+    <p>A good reproduction is fast and always the same. If the bug shows only sometimes, ask Claude to run the reproduction many times in a row and count how often it appears.</p>
+  </section>
+
+  <section id="hypoteesi">
+    <h2>One hypothesis at a time</h2>
+    <p>When Claude changes five things at once and the bug goes away, nobody knows which change helped and which four were useless or harmful. Ask for one suspected cause at a time:</p>
+    <ol>
+      <li>Claude lists the possible causes, most likely first.</li>
+      <li>For each, it says how to check the suspicion without changing code (for example by printing an intermediate value).</li>
+      <li>They are checked one at a time, and only a confirmed cause gets fixed.</li>
+    </ol>
+    <div class="codebox"><pre><code>List the three most likely causes. For each, say how to confirm it without changing code. We check them one at a time.</code></pre></div>
+  </section>
+
+  <section id="testi-ensin">
+    <h2>A failing test before the fix</h2>
+    <p>Once the cause is found, ask first for a test that fails with the current code because of exactly this bug. Only then the fix. The test proves two things: the fix works, and the same bug does not come back unnoticed later.</p>
+    <div class="codebox"><pre><code>Write a Pester test that fails with the current code because of this bug. Run it and show that it fails. Only then fix it and run the test again.</code></pre></div>
+    <div class="note">Check that the test really failed before the fix. A test that passes already before the fix does not test this bug.</div>
+  </section>
+
+  <section id="lokit">
+    <h2>Logs and stack traces, safely</h2>
+    <p>Logs and stack traces are the best material for debugging, but they often hold usernames, server names, paths and sometimes passwords or tokens. The same rules as in <a href="moduuli-0.html#anonymisointi">module 0</a>:</p>
+    <ul>
+      <li>Replace names, addresses and paths with placeholders before pasting.</li>
+      <li>Paste only the lines that matter for the bug, not the whole log.</li>
+      <li>If a password or token shows in the log, change it. It has already leaked into the log.</li>
+    </ul>
+    <p>In Claude Code, Claude can read the log file itself. The same limit applies: say which file it may read, and keep secrets out of its reach.</p>
+  </section>
+
+  <section id="pysahdy">
+    <h2>When to stop</h2>
+    <p>If Claude has tried three fixes and none helped, the conversation is full of false leads, and the next attempt builds on them. Stop:</p>
+    <ul>
+      <li>Ask Claude to write a short summary: what is known, what was tried and what was ruled out.</li>
+      <li>Run <code>/clear</code> and start a new conversation with the summary. A clean context also saves your usage limit.</li>
+      <li>Go back to the reproduction: does the bug still show with the same command?</li>
+    </ul>
+    <p>If Claude made useless changes on the way, <code>/rewind</code> (module 7) undoes the file changes it made. Git (module 8) restores the rest.</p>
+  </section>
+
+  <section id="diagnosing-bugs">
+    <h2>The diagnosing-bugs skill</h2>
+    <p>Matt Pocock's skill collection (<a href="moduuli-9.html">module 9</a>) has <code>diagnosing-bugs</code>, which follows the way of working above step by step: first a feedback loop that shows the bug, then hypotheses one at a time, a failing test and the fix. It also tells Claude to hide secrets in its output.</p>
+    <div class="codebox"><pre><code>/mattpocock-skills:diagnosing-bugs The disk report lists every disk, even though D: has 15 % free.</code></pre></div>
+    <p>The skill is most useful for hard bugs. A plain prompt is enough for a simple typo.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Fix the disk report</h3>
+      <div class="req">Needs: a Pro subscription. No Pro? Paste the script and the symptom into a claude.ai chat (Free) and ask for the cause before the fix.</div>
+      <p>Save the script as <code>disk-report.ps1</code> in a new folder. The script should list the disks with less than 10 % free. Run it with <code>.\disk-report.ps1</code>: it lists all three disks and claims each is 0 % free. Start <code>claude</code> in the folder and describe the bug with the template from "What to give Claude".</p>
+      <div class="codebox"><pre><code># disk-report.ps1: lists the disks whose free space is below the limit (percent)
+param([int]$Limit = 10)
+$disks = @(
+    [pscustomobject]@{ Name = 'C:'; SizeGB = 256;  FreeGB = 20 }
+    [pscustomobject]@{ Name = 'D:'; SizeGB = 1000; FreeGB = 150 }
+    [pscustomobject]@{ Name = 'E:'; SizeGB = 500;  FreeGB = 45 }
+)
+foreach ($d in $disks) {
+    $percent = [int]($d.FreeGB / $d.SizeGB) * 100
+    if ($percent -lt $Limit) {
+        "$($d.Name) only $percent % free"
+    }
+}</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div><p>The cause is where the brackets are on the line <code>$percent = ...</code>. <code>[int]</code> rounds the quotient (for example 20 / 256 = 0.078) to zero before the multiplication, so every disk is 0 % and below the limit. The fix: <code>$percent = [int]($d.FreeGB / $d.SizeGB * 100)</code>. The fixed script prints <code>C: only 8 % free</code> and <code>E: only 9 % free</code>, not D: (15 %). A good Claude tells you the cause before the fix and shows an intermediate value, for example by printing the quotient before and after the <code>[int]</code> conversion.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. A test before the fix</h3>
+      <div class="req">Needs: a Pro subscription and Pester (Windows PowerShell 5.1 has an old version; <code>Install-Module Pester -Scope CurrentUser</code> installs a new one). No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Restore the original script from exercise 1 (or do this exercise first). Ask Claude with the prompt from "A failing test before the fix": the test first, show that it fails, then the fix. Check yourself that the test failed before the fix and passed after it.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude makes for example a file <code>disk-report.Tests.ps1</code> that runs the script and checks that the output has C: and E: but not D:. The first run (<code>Invoke-Pester</code>) fails because D: is listed. After the fix the same test passes. If Claude fixed the script before running the test, ask it to restore the original and show the failing run: otherwise you do not know whether the test tests the right thing.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. A good bug report</h3>
+      <div class="req">Needs: a Claude account (Free is enough), claude.ai.</div>
+      <p>A coworker writes: "The backup script is broken again, fix it." In claude.ai, write the message that would get you good help from Claude, with made-up details. Then ask Claude to rate your message: what is still missing?</p>
+      <details><summary>Show example answer</summary>
+        <div><p>A good message has the symptom and the expectation ("the run ends in an error, I expected a zip file in the target folder"), the whole exact error message, the command that reproduces the bug, the environment and the last change ("the password was changed on Monday"). It ends with a request to find the cause before the fix. Claude typically asks about what is missing: when the script last worked and whether the error comes every time.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: performance and git bisect</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Slow, not broken:</b> measure before you change anything. Ask Claude to measure the time (<code>Measure-Command { .\script.ps1 }</code>) and find the slowest part, and compare the measurement before and after the change. Without a measurement, "faster" is a guess.</li>
+        <li><b>Which change broke it?</b> If the bug appeared at some point in the history, <code>git bisect</code> finds the breaking commit by halving: you mark one good and one bad commit, and git walks the range. When the reproduction is a command, <code>git bisect run &lt;command&gt;</code> does the search by itself. Ask Claude: "Use git bisect to find the commit after which this test started failing."</li>
+        <li><b>A bug that comes and goes:</b> run the reproduction in a loop and count the hits. A bug that shows every other run can be found; one that shows once in a hundred cannot yet.</li>
+        <li>Read more: <a href="https://git-scm.com/docs/git-bisect">git bisect</a> and <a href="https://github.com/mattpocock/skills">mattpocock/skills</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

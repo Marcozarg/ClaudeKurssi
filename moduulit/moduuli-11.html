@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 Vianetsintä Clauden kanssa - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="11">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-10.html">&larr; Edellinen</a>
+    <a class="btn" id="next">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 11 &middot; Istunto 5</span>
+  <h1>Vianetsintä Clauden kanssa</h1>
+  <div class="meta"><span class="chip">Ydin ~30 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section id="mita-annetaan">
+    <h2>Mitä Claudelle annetaan</h2>
+    <p>"Skripti ei toimi" pakottaa Clauden arvaamaan. Arvaus voi osua, mutta usein Claude korjaa jotain, mikä ei ollut rikki. Anna sen sijaan kolme asiaa:</p>
+    <ul>
+      <li><b>Oire:</b> mitä tapahtuu ja mitä odotit tapahtuvan. "Raportti listaa kaikki levyt, vaikka D:llä on 15 % vapaata."</li>
+      <li><b>Tarkka virheilmoitus:</b> koko teksti kopioituna, ei muistinvaraisesti. Rivinumero ja virheen tyyppi kertovat usein enemmän kuin selitys.</li>
+      <li><b>Askeleet:</b> millä komennolla ja millä syötteellä vika toistuu. Lisäksi ympäristö (PowerShell 5.1 vai 7, Windows-versio) ja mikä muuttui viimeksi.</li>
+    </ul>
+    <div class="codebox"><pre><code>Vika: &lt;mitä tapahtuu&gt;. Odotin: &lt;mitä piti tapahtua&gt;.
+Virheilmoitus kokonaan:
+&lt;liitä tähän&gt;
+Toistan näin: &lt;komento ja syöte&gt;
+Ympäristö: &lt;PowerShell-versio, käyttöjärjestelmä&gt;. Viimeisin muutos: &lt;mitä muutin&gt;.
+Selvitä ensin syy. Älä muuta koodia ennen kuin kerrot, mikä vian aiheuttaa.</code></pre></div>
+    <p>Viimeinen rivi on tärkeä: se pitää Clauden vianetsinnässä eikä päästä sitä suoraan korjaamaan.</p>
+  </section>
+
+  <section id="toista-ensin">
+    <h2>Toista vika ensin</h2>
+    <p>Ennen korjausta tarvitset tavan nähdä vika omin silmin: komennon, joka tuottaa väärän tuloksen joka kerta. Ilman sitä et tiedä, korjasiko muutos mitään. Pyydä Claudea rakentamaan toisto ennen kuin se koskee koodiin:</p>
+    <div class="codebox"><pre><code>Tee pienin mahdollinen komento tai skripti, joka näyttää tämän vian joka kerta. Aja se ja näytä tuloste. Älä korjaa vielä.</code></pre></div>
+    <p>Hyvä toisto on nopea ja aina samanlainen. Jos vika tulee vain joskus, pyydä Claudea ajamaan toistoa monta kertaa peräkkäin ja laskemaan, kuinka usein se näkyy.</p>
+  </section>
+
+  <section id="hypoteesi">
+    <h2>Yksi hypoteesi kerrallaan</h2>
+    <p>Kun Claude muuttaa viittä asiaa kerralla ja vika katoaa, kukaan ei tiedä, mikä muutos auttoi ja mitkä neljä olivat turhia tai haitallisia. Pyydä yksi epäilty syy kerrallaan:</p>
+    <ol>
+      <li>Claude listaa mahdolliset syyt todennäköisyysjärjestyksessä.</li>
+      <li>Jokaiselle se kertoo, miten epäilyn voi tarkistaa muuttamatta koodia (esimerkiksi tulostamalla välituloksen).</li>
+      <li>Tarkistetaan yksi kerrallaan, ja vasta vahvistettu syy korjataan.</li>
+    </ol>
+    <div class="codebox"><pre><code>Listaa kolme todennäköisintä syytä. Kerro jokaiselle, miten sen voi todentaa ilman koodimuutosta. Tarkistetaan ne yksi kerrallaan.</code></pre></div>
+  </section>
+
+  <section id="testi-ensin">
+    <h2>Kaatuva testi ennen korjausta</h2>
+    <p>Kun syy on löytynyt, pyydä ensin testi, joka kaatuu nykyisellä koodilla juuri tämän vian takia. Vasta sitten korjaus. Testi todistaa kaksi asiaa: korjaus toimii, ja sama vika ei palaa huomaamatta myöhemmin.</p>
+    <div class="codebox"><pre><code>Kirjoita Pester-testi, joka kaatuu nykyisellä koodilla tämän vian takia. Aja se ja näytä, että se kaatuu. Korjaa vasta sitten ja aja testi uudelleen.</code></pre></div>
+    <div class="note">Tarkista, että testi todella kaatui ennen korjausta. Testi, joka menee läpi jo ennen korjausta, ei testaa tätä vikaa.</div>
+  </section>
+
+  <section id="lokit">
+    <h2>Lokit ja pinonjäljet turvallisesti</h2>
+    <p>Lokit ja pinonjäljet (stack trace) ovat vianetsinnän parasta aineistoa, mutta niissä on usein käyttäjänimiä, palvelinten nimiä, polkuja ja joskus salasanoja tai tokeneita. Samat säännöt kuin <a href="moduuli-0.html#anonymisointi">moduulissa 0</a>:</p>
+    <ul>
+      <li>Korvaa nimet, osoitteet ja polut paikkamerkeillä ennen liittämistä.</li>
+      <li>Liitä vain vian kannalta olennaiset rivit, ei koko lokia.</li>
+      <li>Jos lokissa näkyy salasana tai token, vaihda se. Se on jo vuotanut lokiin.</li>
+    </ul>
+    <p>Claude Codessa Claude voi lukea lokitiedoston itse. Sama raja pätee: kerro, mitä tiedostoa se saa lukea, ja pidä salaisuudet sen ulottumattomissa.</p>
+  </section>
+
+  <section id="pysahdy">
+    <h2>Milloin pysähtyä</h2>
+    <p>Jos Claude on kokeillut kolmea korjausta eikä mikään auttanut, keskustelu on täynnä vääriä jälkiä, ja seuraava yritys perustuu niihin. Pysähdy:</p>
+    <ul>
+      <li>Pyydä Claudea kirjoittamaan lyhyt yhteenveto: mitä tiedetään, mitä on kokeiltu ja mikä on suljettu pois.</li>
+      <li>Aja <code>/clear</code> ja aloita uusi keskustelu yhteenvedolla. Puhdas konteksti säästää myös käyttörajaa.</li>
+      <li>Palaa toistoon: näkyykö vika yhä samalla komennolla?</li>
+    </ul>
+    <p>Jos Claude teki matkalla turhia muutoksia, <code>/rewind</code> (moduuli 7) palauttaa sen tekemät tiedostomuutokset. Git (moduuli 8) palauttaa loput.</p>
+  </section>
+
+  <section id="diagnosing-bugs">
+    <h2>diagnosing-bugs-skill</h2>
+    <p>Matt Pocockin skillikokoelmassa (<a href="moduuli-9.html">moduuli 9</a>) on <code>diagnosing-bugs</code>, joka tekee yllä olevan työtavan järjestelmällisesti: ensin palautesilmukka, joka näyttää vian, sitten hypoteesit yksi kerrallaan, kaatuva testi ja korjaus. Se myös ohjaa Claudea peittämään salaisuudet tulosteista.</p>
+    <div class="codebox"><pre><code>/mattpocock-skills:diagnosing-bugs Levyraportti listaa kaikki levyt, vaikka D:llä on 15 % vapaata.</code></pre></div>
+    <p>Skilli on hyödyllisin vaikeissa vioissa. Yksinkertaiseen kirjoitusvirheeseen riittää tavallinen kehote.</p>
+  </section>
+
+  <section>
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Korjaa levyraportti</h3>
+      <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Liitä skripti ja oire claude.ai-keskusteluun (Free) ja pyydä syy ennen korjausta.</div>
+      <p>Tallenna skripti tiedostoon <code>levyraportti.ps1</code> uuteen kansioon. Skriptin pitäisi listata levyt, joilla on alle 10 % vapaata. Aja se komennolla <code>.\levyraportti.ps1</code>: se listaa kaikki kolme levyä ja väittää jokaisen olevan 0 % vapaana. Käynnistä <code>claude</code> kansiossa ja kuvaa vika osion "Mitä Claudelle annetaan" mallilla.</p>
+      <div class="codebox"><pre><code># levyraportti.ps1: listaa levyt, joilla on vapaata alle rajan (prosenttia)
+param([int]$Raja = 10)
+$levyt = @(
+    [pscustomobject]@{ Nimi = 'C:'; KokoGB = 256;  VapaaGB = 20 }
+    [pscustomobject]@{ Nimi = 'D:'; KokoGB = 1000; VapaaGB = 150 }
+    [pscustomobject]@{ Nimi = 'E:'; KokoGB = 500;  VapaaGB = 45 }
+)
+foreach ($l in $levyt) {
+    $prosentti = [int]($l.VapaaGB / $l.KokoGB) * 100
+    if ($prosentti -lt $Raja) {
+        "$($l.Nimi) vain $prosentti % vapaana"
+    }
+}</code></pre></div>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Syy on sulkeiden paikka rivillä <code>$prosentti = ...</code>. <code>[int]</code> pyöristää osamäärän (esimerkiksi 20 / 256 = 0,078) nollaksi ennen kertomista, joten jokainen levy on 0 % ja alle rajan. Korjaus: <code>$prosentti = [int]($l.VapaaGB / $l.KokoGB * 100)</code>. Korjattu skripti tulostaa <code>C: vain 8 % vapaana</code> ja <code>E: vain 9 % vapaana</code>, ei D:tä (15 %). Hyvä Claude kertoo syyn ennen korjausta ja näyttää välituloksen, esimerkiksi tulostamalla osamäärän ennen ja jälkeen <code>[int]</code>-muunnoksen.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Testi ennen korjausta</h3>
+      <div class="req">Edellyttää: Pro-tilaus ja Pester (Windows PowerShell 5.1:ssä on vanha versio; <code>Install-Module Pester -Scope CurrentUser</code> asentaa uuden). Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
+      <p>Palauta harjoituksen 1 alkuperäinen skripti (tai tee harjoitus ensin tähän). Pyydä Claudea osion "Kaatuva testi ennen korjausta" kehotteella: testi ensin, näytä että se kaatuu, sitten korjaus. Tarkista itse, että testi kaatui ennen korjausta ja meni läpi sen jälkeen.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Claude tekee esimerkiksi tiedoston <code>levyraportti.Tests.ps1</code>, joka ajaa skriptin ja tarkistaa, että tulosteessa on C: ja E: mutta ei D:tä. Ensimmäinen ajo (<code>Invoke-Pester</code>) kaatuu, koska D: on mukana. Korjauksen jälkeen sama testi menee läpi. Jos Claude korjasi skriptin ennen testin ajamista, pyydä sitä palauttamaan alkuperäinen ja näyttämään kaatuva ajo: muuten et tiedä, testaako testi oikeaa asiaa.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Hyvä vikaraportti</h3>
+      <div class="req">Edellyttää: Claude-tili (Free riittää), claude.ai.</div>
+      <p>Kollega kirjoittaa: "Varmuuskopioskripti ei taas toimi, korjaa." Kirjoita claude.ai:ssa viesti, jolla saisit Claudelta hyvän avun, keksityillä tiedoilla. Pyydä sitten Claudea arvioimaan viestisi: mitä siitä vielä puuttuu?</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Hyvässä viestissä on oire ja odotus ("ajo päättyy virheeseen, odotin zip-tiedostoa kohdekansioon"), tarkka virheilmoitus kokonaan, komento, jolla vika toistuu, ympäristö ja viimeisin muutos ("salasana vaihdettiin maanantaina"). Lopussa pyyntö selvittää syy ennen korjausta. Claude kysyy tyypillisesti puuttuvista tiedoista: milloin skripti viimeksi toimi ja tuleeko virhe joka kerta.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lisä: suorituskyky ja git bisect</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Hidas, ei rikki:</b> mittaa ennen kuin muutat. Pyydä Claudea mittaamaan aika (<code>Measure-Command { .\skripti.ps1 }</code>) ja etsimään hitain kohta, ja vertaa mittausta ennen ja jälkeen muutoksen. Ilman mittausta "nopeampi" on arvaus.</li>
+        <li><b>Mikä muutos rikkoi?</b> Jos vika ilmestyi jossain kohtaa historiaa, <code>git bisect</code> etsii rikkovan commitin puolittamalla: merkitset yhden hyvän ja yhden huonon commitin, ja git käy välin läpi. Kun toisto on komento, <code>git bisect run &lt;komento&gt;</code> tekee etsinnän itse. Pyydä Claudea: "Etsi git bisectillä commit, jonka jälkeen tämä testi alkoi kaatua."</li>
+        <li><b>Satunnainen vika:</b> aja toistoa silmukassa ja laske osumat. Vika, joka näkyy joka toisella ajolla, on selvitettävissä; kerran sadassa näkyvä ei vielä ole.</li>
+        <li>Lue lisää: <a href="https://git-scm.com/docs/git-bisect">git bisect</a> ja <a href="https://github.com/mattpocock/skills">mattpocock/skills</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
