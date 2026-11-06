@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2 A good prompt - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="2">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-1.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 2 &middot; Session 1</span>
+  <h1>A good prompt</h1>
+  <div class="meta"><span class="chip">Core ~45 min</span><span class="chip opt">Optional ~30 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>A prompt is an assignment</h2>
+    <p>A prompt is the message you use to give Claude a task. Think of it as giving a task to a new, capable colleague who knows nothing about your environment. What would they need to succeed the first time?</p>
+    <ul>
+      <li><b>Goal:</b> what you want to achieve and why</li>
+      <li><b>Context:</b> the environment, versions, constraints, what you have already tried</li>
+      <li><b>Input:</b> an error message, a log excerpt, a script or sample data</li>
+      <li><b>Format:</b> what kind of answer you want: a script, a table, a short guide, three options</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Context makes the difference</h2>
+    <h3>Weak</h3>
+    <div class="codebox"><pre><code>Write a script that deletes old users.</code></pre></div>
+    <h3>Better</h3>
+    <div class="codebox"><pre><code>Environment: Windows Server 2022, ActiveDirectory module, PowerShell 5.1.
+Goal: find users who have not signed in for 120 days and DISABLE THEM (not delete).
+Constraints: skip the OU "Service accounts" and accounts whose name starts with "svc-".
+Format: a script with -WhatIf support that writes a CSV report before making changes.
+At the end, tell me what I need to check before I run it in production.</code></pre></div>
+    <p>The second one states the version, limits the risks and sets the format. The answer is almost always more useful, and it is easier to check.</p>
+  </section>
+
+  <section>
+    <h2>Show an example</h2>
+    <p>When you want a specific format, show it. One or two examples say more than a long explanation.</p>
+    <div class="codebox"><pre><code>Turn these log lines into a table with the columns Time, Level, Service, Message.
+Example of a wanted row:
+| 08:14:22 | ERROR | spooler | Print job failed |
+
+Lines:
+2026-11-03T08:14:22 [ERROR] spooler: Print job failed
+2026-11-03T08:15:01 [WARN] w32time: Time sync delayed
+2026-11-03T08:15:40 [INFO] spooler: Service restarted</code></pre></div>
+    <p>The same works with regexes: give a few lines that must match and a few that must not.</p>
+  </section>
+
+  <section>
+    <h2>Iterate</h2>
+    <p>The first answer is rarely final. Continue in the same conversation and steer:</p>
+    <ul>
+      <li>"Shorten it by half and remove the explanations."</li>
+      <li>"The script fails with this error: ..." and paste the error as it is.</li>
+      <li>"Use PowerShell 5.1 features, not 7."</li>
+      <li>"Good, but do not use Write-Host, return objects."</li>
+    </ul>
+    <p>If the conversation goes off track, go back and <b>edit your earlier message</b> instead of correcting afterwards. That way the wrong direction does not stay in the context.</p>
+  </section>
+
+  <section>
+    <h2>Ask Claude to ask questions</h2>
+    <p>When the task is large or unclear, Claude guesses the missing details. Prevent the guessing by asking it to ask first:</p>
+    <div class="codebox"><pre><code>I want a guide for the helpdesk on creating accounts for a new employee.
+Do not write the guide yet. First ask me the things you need to know,
+one at a time, and give a recommended answer with each question.</code></pre></div>
+    <p>Only when you have answered, ask for the guide. The same approach works for all planning, and it is the basis of the Claude Code way of working (module 9).</p>
+  </section>
+
+  <section id="sama-tarve">
+    <h2>Same need, five prompts</h2>
+    <p>The same need, cheap coffee, can be asked in five ways. The more precisely you say what you want, the more Claude can do, but at the same time it becomes clear what it needs around it: a search tool, information about your location, or a place where the task is run. Here are the first four. The fifth is in module 9.</p>
+
+    <h3>1. A vague wish</h3>
+    <div class="codebox" data-prompt="coffee-1"><pre><code>I want cheap coffee</code></pre></div>
+    <ul>
+      <li><b>What Claude can do:</b> guess what you mean. It can give general tips (comparing coffee packages, price per kilo, sale periods) or ask you back what you are after.</li>
+      <li><b>Tool and plan:</b> an ordinary conversation, Free is enough. No search is needed, because nothing up to date is looked up.</li>
+      <li><b>What is missing:</b> everything. Claude does not know whether you are looking for a shop, a buying tip or a cafe, or where you are.</li>
+    </ul>
+
+    <h3>2. A concrete search</h3>
+    <div class="codebox" data-prompt="coffee-2"><pre><code>Find the cheapest coffee deal near me</code></pre></div>
+    <ul>
+      <li><b>What Claude can do:</b> search the web and gather the deals it finds. It tells you which sources the information comes from.</li>
+      <li><b>Tool and plan:</b> web search in claude.ai. You turn it on from the chat's <b>+</b> button under Web search. According to the help article, Free users have usage limits and web search uses them. On Team and Enterprise accounts an administrator must first enable search. Help: <a href="https://support.claude.com/en/articles/10684626-enabling-and-using-web-search">support.claude.com</a>.</li>
+      <li><b>What is missing:</b> your location. Give a city or a postal code, because "near me" tells Claude nothing. Always check the price and validity on the shop's own page, because a search finds only what is on the web.</li>
+    </ul>
+
+    <h3>3. A recurring task</h3>
+    <div class="codebox" data-prompt="coffee-3"><pre><code>I want to regularly find out where to get the cheapest coffee, based on my postal code</code></pre></div>
+    <ul>
+      <li><b>What Claude can do:</b> repeat the search on an agreed schedule. In Claude Cowork you schedule the task from <b>Scheduled</b> in the sidebar. According to the help article, a task can also do web research.</li>
+      <li><b>Tool and plan:</b> Cowork and scheduled tasks. According to the help article, "Scheduled tasks are available on all paid plans (Pro, Max, Ultra, Team, and Enterprise)". The Free account does not have them. If a task needs local files or apps, it runs only locally. Help: <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork">support.claude.com</a>.</li>
+      <li><b>What is missing:</b> the postal code, the schedule (how often), and where the result goes and how the comparison is made. Provide these, and the task is ready to be scheduled.</li>
+    </ul>
+
+    <h3>4. Your own app</h3>
+    <div class="codebox" data-prompt="coffee-4"><pre><code>Build an app that fetches coffee deals from nearby stores</code></pre></div>
+    <ul>
+      <li><b>What Claude can do:</b> write the code for the app and advise how to run it. Everything works only once it is known where the deal data comes from.</li>
+      <li><b>Tool and plan:</b> Claude Code (modules 6 and 7), which requires at least a Pro plan. A lighter option is to ask for a small app in claude.ai (module 3).</li>
+      <li><b>What is missing:</b> almost all the decisions: where the app runs, what language it is written in, where the deals are fetched from, where the history is stored, how the location is given and how the results are ordered. Without them Claude has to guess.</li>
+    </ul>
+
+    <p>In prompt 5 these decisions have been made, and Claude has been told that it must ask for the rest: <a href="../../moduulit/moduuli-9.html#kehote-5">prompt 5 in module 9</a>.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Improve a weak prompt</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Write the prompt on paper and try it on a partner's machine.</div>
+      <p>First send the prompt "Make a regex that finds errors in a log". Then write a better version with context, example lines and the wanted format, and compare the answers.</p>
+      <details><summary>Show example answer</summary>
+        <div>
+          <p>A better prompt could be:</p>
+          <pre><code>Write a .NET/PowerShell regex that picks out the time, level and message from lines
+where the level is ERROR or FATAL.
+Matches: "2026-11-03T08:14:22 [ERROR] spooler: Print job failed"
+Does not match: "2026-11-03T08:15:40 [INFO] spooler: Service restarted"
+Give the regex, a short explanation and a Select-String example.</code></pre>
+          <p>The answer could be <code>^(\S+) \[(ERROR|FATAL)\] (.+)$</code> with the example <code>Select-String -Path .\app.log -Pattern $rx</code>. Always test a regex with your own lines.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. A ticket reply from an example</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Work with a partner.</div>
+      <p>Give Claude one earlier, proven ticket reply as a style example (without personal data). Then ask for a reply in the same style to the ticket: "Outlook keeps asking for the password after a password change."</p>
+      <details><summary>Show example answer</summary>
+        <div><p>A good reply follows the tone and length of the example, states the likely cause (old credentials in the cache) and gives 2-4 numbered steps: close Outlook, remove the old credentials in Windows Credential Manager, start Outlook and sign in with the new password. At the end it says to get in touch if the problem continues.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Let Claude ask first</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Work with a partner so that one of you answers Claude's questions.</div>
+      <p>Ask Claude to make a runbook for a server's monthly update, but tell it to first ask for the information it needs, one question at a time. Answer the questions and finally ask for the runbook.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude asks, for example: which operating system, whether it is a cluster or a single server, the maintenance window, how the backup is verified, who approves the restart, and how to roll back if the update fails. The finished runbook is a numbered list with checks before, during and after, and a rollback plan.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>4. Optional: climb the ladder with a vague IT request</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Write four versions on paper and compare with a partner.</div>
+      <p>Take a vague request: "The printer is not working." Write four steps from it in the style of the coffee example: a vague wish, a concrete request, a recurring task, and a finished assignment where you state the decisions and ask Claude to ask for the rest. At each step, think about what Claude needs and what it is missing.</p>
+      <details><summary>Show example answer</summary>
+        <div>
+          <ol>
+            <li><code>The printer is not working</code>. Claude can only guess and ask: which printer, what happens.</li>
+            <li><code>The office Canon printer does not print from a Windows 11 machine, the error message is "Printer is not available". What do I check first?</code> Now there is a model, an operating system and an error.</li>
+            <li><code>Once a week I want a summary of the printer faults that recur most often in tickets (without personal data).</code> This needs a schedule, the ticket data and a place for the summary to go.</li>
+            <li><code>Write a PowerShell script that checks the state of the print queue and restarts the print spooler when the queue is stuck. Do not change anything until I have approved the command. Ask me for the missing details until we agree. If you do not know something, say that you do not know.</code></li>
+          </ol>
+          <p>At each step the prompt says more: what, where, how often and what Claude may change.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: the most common beginner mistakes</h2>
+    <div class="optbox">
+      <ol>
+        <li><b>A prompt that is too short:</b> "fix this" with no error, version or goal.</li>
+        <li><b>Running without checking:</b> a script straight into production without a test or a <code>-WhatIf</code> run.</li>
+        <li><b>Pasting too much:</b> a whole log or credentials, when an excerpt and placeholders would do.</li>
+        <li><b>One endless conversation:</b> all topics in the same thread, the limit runs out and the answers get mixed up.</li>
+        <li><b>Correcting afterwards:</b> five correcting messages instead of editing the original.</li>
+        <li><b>Believing the confident tone:</b> a confident answer is not proof. Check it.</li>
+        <li><b>Not stating the format:</b> a long essay when you needed a three-line command.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

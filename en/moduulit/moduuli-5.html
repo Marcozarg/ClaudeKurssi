@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5 Connectors and workflows - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="5">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-4.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 5 &middot; Session 2</span>
+  <h1>Connectors and workflows</h1>
+  <div class="meta"><span class="chip">Core ~25 min</span><span class="chip opt">Optional ~15 min</span><span class="chip plan">Free / Pro</span></div>
+
+  <section>
+    <h2>What is a connector?</h2>
+    <p>A connector gives Claude access to another service: a code repository, email, a calendar or documents. Claude can then fetch information straight from there, and you do not have to copy it into the conversation.</p>
+    <ul>
+      <li>Connectors are under <b>Customize &gt; Connectors</b>.</li>
+      <li>A connector is turned on per conversation from the <b>+</b> menu in the message field.</li>
+      <li>For each function of a connector you can choose: <b>Always allow</b>, <b>Needs approval</b> or <b>Blocked</b>. Start with Needs approval.</li>
+    </ul>
+    <div class="note">A connector gives Claude access to everything your account has access to. Follow your organization's guidance on which services may be connected.</div>
+  </section>
+
+  <section>
+    <h2>The GitHub connector</h2>
+    <span class="chip plan">Free</span>
+    <p>The GitHub connector works on all plans. Claude reads public repos and those private repos you give it access to. It sees <b>file names and contents</b> and branches, but <b>not commit history, pull requests or issues</b>.</p>
+    <h3>Connecting</h3>
+    <ol>
+      <li>Open <b>Customize &gt; Connectors</b> and choose <b>GitHub Integration</b>.</li>
+      <li>Choose <b>Connect</b> and sign in to GitHub if it asks.</li>
+      <li>For private repos, GitHub asks you to install the Claude GitHub App. Choose <b>Only select repositories</b> and give access only to the repos you need.</li>
+    </ol>
+    <h3>Using it in a conversation</h3>
+    <ol>
+      <li>Choose <b>+</b> &gt; <b>Add from GitHub</b> in the message field.</li>
+      <li>Pick a repo from the list or paste its address, and choose <b>Add repository</b>.</li>
+      <li>Ask: "What does this repo do, and which file would you start from?"</li>
+    </ol>
+    <p>To add a repo to a Project, use the <b>+</b> button of the Project's files &gt; GitHub, and you can pick only the folders you need. <b>Sync now</b> updates the content when the repo changes.</p>
+    <div class="shot">[KUVA: m5-github-connect - Customize &gt; Connectors, GitHub Integration]</div>
+    <div class="shot">[KUVA: m5-github-repo - Add from GitHub, a repo selected for the conversation]</div>
+    <p><b>Issues and pull requests:</b> GitHub's own <a href="https://github.com/github/github-mcp-server">MCP server</a> can be added as a custom connector (see below), and then Claude also sees issues and pull requests. Claude Code is used for making changes to code (module 8).</p>
+  </section>
+
+  <section>
+    <h2>GitLab</h2>
+    <span class="chip plan">Free</span>
+    <p>As of this writing (11/2026), GitLab has no official connector in Claude's connector directory. First check the directory (<b>Customize &gt; Connectors &gt; Discover</b>) to see whether one has appeared.</p>
+    <p>If not, you can try adding GitLab's own <a href="https://docs.gitlab.com/user/model_context_protocol/mcp_server/">MCP server</a> as a custom connector: <b>Customize &gt; Connectors &gt; Add custom connector</b>, with the address <code>https://&lt;gitlab-address&gt;/api/v4/mcp</code>. GitLab's guide describes using this server with Claude Code and Claude Desktop, not in claude.ai, so this is an experiment: it works only if the MCP server is enabled on your GitLab server and the server is visible to the internet. Ask your GitLab administrator. A free account can add one custom connector.</p>
+    <p>The surest way to use GitLab with Claude is Claude Code, which you see in module 8: there GitLab and GitHub work side by side.</p>
+  </section>
+
+  <section>
+    <h2>Other connectors in brief</h2>
+    <p>The directory has over a thousand connectors. Connectors are available on all plans, but the service itself may require its own subscription. Examples:</p>
+    <ul>
+      <li><b>Microsoft 365:</b> search in Outlook, OneDrive, SharePoint and Teams</li>
+      <li><b>Google Drive, Gmail, Google Calendar</b></li>
+      <li><b>Atlassian</b> (Jira, Confluence), <b>Notion</b>, <b>Slack</b>, <b>Asana</b>, <b>Linear</b></li>
+    </ul>
+    <p>To add a connector: <b>Customize &gt; Connectors &gt; Discover</b>, choose the service, <b>Connect</b> and sign in to the service. The directory marks entries as Verified or Community. Verified does not mean a security review.</p>
+    <div class="shot">[KUVA: m5-connectors-discover - the connector directory]</div>
+  </section>
+
+  <section>
+    <h2>Research mode, Cowork and skills</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Feature</th><th>What it does</th><th>Plan</th></tr></thead>
+      <tbody>
+        <tr><td>Research mode (Research)</td><td>Claude researches a question thoroughly on the web and writes a report with sources. Requires web search to be on; it is started from the <b>+</b> menu in the message field.</td><td>Pro</td></tr>
+        <tr><td>Cowork</td><td>Claude Code's way of working, but for ordinary knowledge work: multi-step tasks with the machine's files in the desktop app, without a command line.</td><td>Pro</td></tr>
+        <tr><td>Skills</td><td>A folder of instructions and scripts that Claude takes into use for a particular task, for example making a certain document template. Managed under <b>Customize &gt; Skills</b>; requires code execution to be on.</td><td>Free</td></tr>
+      </tbody>
+    </table></div>
+    <p>For organizations there is the <b>Team</b> plan (from $20/user/month billed annually, at least 2 users), with central administration and shared connectors.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Ask about a public repo</h3>
+      <div class="req">Requires: a Claude account (Free is enough) and a GitHub account. No GitHub account? Work with a partner or follow the instructor's demo.</div>
+      <p>Connect GitHub and add this course's repo <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a> to the conversation. Ask: "How is Slide mode implemented and which keys does it support?"</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude finds the file <code>assets/kurssi.js</code> and says that every section with a heading is its own slide, S opens and closes the mode, the arrows, PageUp/PageDown and the space bar change the slide, and Esc closes it. It also mentions that S does not work in a text field. Check the answer by opening the file yourself: does Claude refer to the right places?</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Research mode: changes before an upgrade</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Start research mode and ask: "What are the most significant changes affecting administration when moving from Windows Server 2022 to 2025? List the removed features and the changes that need testing, with sources."</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude makes several searches and returns a report with references to Microsoft's documentation. A good report separates removed and deprecated features and says what needs testing. Open at least two sources and check that they say the same as the report.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. A connector's permissions</h3>
+      <div class="req">Requires: a Claude account (Free is enough) and the GitHub connector from exercise 1. No connector? Watch the instructor's screen.</div>
+      <p>Open <b>Customize &gt; Connectors</b> and the settings of the GitHub connector. Find out which repos Claude has access to and how the access can be removed. Look at the same from GitHub's side (Settings &gt; Applications).</p>
+      <details><summary>Show example answer</summary>
+        <div><p>On Claude's side you can cut the connection (Disconnect). On GitHub's side, Settings &gt; Applications shows the installed Claude app and the repos it has access to. There you can narrow the access or remove the app entirely. When you stop using the connector, remove the access in both places.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: custom connectors and security</h2>
+    <div class="optbox">
+      <ul>
+        <li>A custom connector connects Claude to any MCP server. Add only servers whose maintainer you trust: through them Claude receives information and can take actions.</li>
+        <li>Text that arrives through a connector can contain instructions that try to steer Claude (prompt injection). Keep write actions on Needs approval.</li>
+        <li>Read how connectors work: <a href="https://claude.com/connectors">claude.com/connectors</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

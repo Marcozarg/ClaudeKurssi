@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>0 What is Claude? - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="0">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="../index.html">&larr; Home</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 0 &middot; Session 1</span>
+  <h1>What is Claude?</h1>
+  <div class="meta"><span class="chip">Core ~45 min</span><span class="chip opt">Optional ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Claude in brief</h2>
+    <p>Claude is an AI assistant made by Anthropic. You write to it in plain language, and it answers with text, code, tables or whole documents. You can also attach files, images and logs.</p>
+    <p>You use Claude in the browser at <a href="https://claude.ai">claude.ai</a>, in the desktop and mobile apps, and in the programming tool Claude Code. They all share the same account and the same usage limits.</p>
+    <p>In this course you first learn to use Claude in conversation (modules 0-5). After that you see how Claude Code works directly on your own machine (modules 6-10).</p>
+  </section>
+
+  <section>
+    <h2>What Claude can and cannot do</h2>
+    <h3>Claude is good at</h3>
+    <ul>
+      <li>explaining an error message, a log line or an unfamiliar command</li>
+      <li>writing and fixing PowerShell scripts, regexes and SQL queries</li>
+      <li>summarizing a long text and shaping a ticket reply or a guide</li>
+      <li>converting data from one form to another, for example CSV to a table</li>
+      <li>brainstorming and going through options</li>
+    </ul>
+    <h3>Claude does not</h3>
+    <ul>
+      <li>see your environment: it does not know your servers, versions or settings unless you tell it</li>
+      <li>always know the latest changes: its knowledge is from a certain point in time unless it searches the web</li>
+      <li>remember earlier conversations automatically, unless the memory feature is on</li>
+      <li>always get it right, even when the answer sounds sure</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Claude can be confidently wrong</h2>
+    <p>Claude produces text that looks plausible. Sometimes it invents things that do not exist: a cmdlet parameter, a registry key path, a setting name, or the version in which a feature supposedly appeared. This is called a <b>hallucination</b>. The answer sounds just as confident when it is wrong as when it is right.</p>
+    <p>Make checking a habit before you run anything in production:</p>
+    <ul>
+      <li><b>Read the help:</b> <code>Get-Help Get-ADUser -Parameter *</code> or <code>Get-Command -Syntax</code> shows whether a parameter exists.</li>
+      <li><b>Run it safely first:</b> in a test environment, with the <code>-WhatIf</code> switch, or as a read-only operation.</li>
+      <li><b>Check the source:</b> ask Claude which documentation the answer is based on, and open it yourself.</li>
+      <li><b>Ask back:</b> "Are you sure this parameter exists? From which version?" Claude often corrects itself when you ask it to check.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What you never paste</h2>
+    <p>Everything you paste into Claude goes to Anthropic's service. Do not paste:</p>
+    <ul>
+      <li><b>credentials and secrets:</b> passwords, API keys, tokens, connection strings, private keys of certificates</li>
+      <li><b>customer and user data:</b> names, personal identity numbers, emails, phone numbers, personal data in tickets</li>
+      <li><b>directory exports:</b> AD or Entra user lists, group memberships, org charts</li>
+      <li><b>raw logs:</b> a log often contains usernames, IP addresses, server names and sometimes passwords</li>
+      <li><b>internal information:</b> network diagrams, firewall rules, vulnerability reports, contracts</li>
+    </ul>
+    <div class="note"><b>Follow your own organization's AI guidelines.</b> If your organization has a policy on using AI, it always takes precedence over this course. If you do not know whether you may paste something, do not paste it and ask first.</div>
+  </section>
+
+  <section>
+    <h2>Anonymizing a log</h2>
+    <p>A log is useful to Claude once you remove the identifying details. Replace them with placeholders that keep the structure: the same user is always <code>&lt;USER1&gt;</code>, the same server always <code>&lt;SERVER1&gt;</code>. Claude can then still see what happened and to whom.</p>
+    <p>An example of an anonymized log excerpt:</p>
+    <div class="codebox"><pre><code>2026-11-03 08:14:22 &lt;SERVER1&gt; Kerberos pre-authentication failed for &lt;USER1&gt; from &lt;IP1&gt;
+2026-11-03 08:14:25 &lt;SERVER1&gt; Kerberos pre-authentication failed for &lt;USER1&gt; from &lt;IP1&gt;
+2026-11-03 08:14:31 &lt;SERVER1&gt; Account &lt;USER1&gt; locked out, caller &lt;WORKSTATION1&gt;</code></pre></div>
+    <p>After anonymizing, check by eye: is there a name, an email address, a server name or a path containing a username left anywhere?</p>
+    <div class="optbox"><b>Optional:</b> ask Claude to write a PowerShell script that replaces IP addresses, emails and usernames in a log with placeholders. Test the script on an invented log, not a real one, and use it only after you have read it through.</div>
+  </section>
+
+  <section>
+    <h2>The training setting and data retention</h2>
+    <p>On Free, Pro, Max and Ultra accounts you decide yourself whether your conversations are used to improve Claude. The setting is under <b>Settings &gt; Privacy</b>, the switch <b>Help improve our AI models</b> (the name may vary slightly).</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Setting</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>On</td><td>New conversations may be used to train models, and they are kept in de-identified form for up to 5 years.</td></tr>
+        <tr><td>Off</td><td>Conversations are not used for training, and they are kept for 30 days.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Check the setting yourself right after you sign in.</b> Do not assume it is off. Also note:</p>
+    <ul>
+      <li><b>Incognito conversations</b> are not used for training even if the setting is on.</li>
+      <li>A deleted conversation disappears from your history immediately and from the servers within 30 days.</li>
+      <li>Thumbs up or down feedback is stored separately and kept longer.</li>
+      <li>On an organization's Team and Enterprise accounts, conversations are not used for training.</li>
+    </ul>
+    <div class="shot">[KUVA: m0-privacy-asetus - Settings &gt; Privacy, the training switch visible]</div>
+  </section>
+
+  <section>
+    <h2>Prices</h2>
+    <p>Prices checked 11/2026 from <a href="https://claude.com/pricing">claude.com/pricing</a>. Prices change, so check the current information there.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Plan</th><th>Price</th><th>For whom</th></tr></thead>
+      <tbody>
+        <tr><td>Free</td><td>$0</td><td>For trying it out and occasional use. Modules 0-5 of this course work with it.</td></tr>
+        <tr><td>Pro</td><td>$20/month, or $17/month billed annually</td><td>For regular use. Includes Claude Code.</td></tr>
+        <tr><td>Max</td><td>$100/month</td><td>For heavy use, with roughly five times the limits of Pro.</td></tr>
+        <tr><td>Ultra</td><td>$200/month</td><td>For very heavy use, with a weekly limit roughly ten times that of Pro.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Organizations can also get Team and Enterprise plans, which come with central administration.</p>
+  </section>
+
+  <section id="kayttorajat">
+    <h2>Usage limits: how they work</h2>
+    <p>Every plan has a usage limit. It is not a number of messages: it depends on how much Claude has to process. A long conversation, large attachments and a heavier model use more.</p>
+    <ol>
+      <li><b>5-hour limit:</b> usage is measured in five-hour windows, and the limit resets every five hours. On Ultra, verified accounts do not have this limit. If you hit the limit, Claude tells you when you can continue.</li>
+      <li><b>Weekly limit:</b> paid plans also have a weekly limit that covers all models together. The week resets at an account-specific moment that is shown in the usage view.</li>
+      <li><b>Shared limit:</b> claude.ai, the desktop app and Claude Code all use the same limit. An afternoon of Claude Code work therefore also shows up on the browser side.</li>
+    </ol>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Plan</th><th>5-hour limit</th><th>Weekly limit</th><th>Fable models</th></tr></thead>
+      <tbody>
+        <tr><td>Free</td><td>Yes, resets every 5 hours</td><td>The pricing page also mentions a weekly limit</td><td>Not available</td></tr>
+        <tr><td>Pro</td><td>Yes, base level</td><td>Yes, all models together</td><td>Not part of the limit, paid separately with usage credits</td></tr>
+        <tr><td>Max</td><td>5 times Pro</td><td>5 times Pro</td><td>Own weekly limit for Fable models</td></tr>
+        <tr><td>Ultra</td><td>No 5-hour limit on verified accounts</td><td>10 times Pro</td><td>Own weekly limit for Fable models</td></tr>
+      </tbody>
+    </table></div>
+    <p>You can see your remaining usage under <b>Settings &gt; Usage</b>: the time left in the current window and the next weekly reset. In Claude Code the <code>/usage</code> command shows the same (module 7).</p>
+    <div class="shot">[KUVA: m0-usage - Settings &gt; Usage, the current window and the weekly limit]</div>
+    <p>Information checked 11/2026 from the article <a href="https://support.claude.com/en/articles/11647753-usage-and-length-limits">Usage and length limits</a> and the plans' help pages. Limits change, so check the current information there.</p>
+  </section>
+
+  <section>
+    <h2>How model and effort matter</h2>
+    <p>What uses up the limit is how much text Claude reads and produces. These affect it:</p>
+    <ul>
+      <li><b>Model:</b> a heavier model uses the limit faster than a light one.</li>
+      <li><b>Effort:</b> a higher effort level means more thinking and therefore more text processed.</li>
+      <li><b>Conversation length:</b> with every message Claude processes the whole conversation so far again.</li>
+      <li><b>Attachments:</b> large files and logs are read again with every message.</li>
+      <li><b>Caching:</b> a Project's content is cached, and when it is reused it uses less of the limit (module 3).</li>
+      <li><b>Claude Code agents:</b> one request can start many model calls and subagents, so a single task can use a lot.</li>
+    </ul>
+    <div class="note"><b>A subscription is not billed per token.</b> A heavier model and a higher effort use more of the limit, but Anthropic does not publish a ratio. The API prices below show the price differences between models in API use, not how much of your subscription limit is used.</div>
+    <figure class="chart">
+      <figcaption><b>API list price</b>, base price in dollars per million tokens, checked 11/2026 (<a href="https://platform.claude.com/docs/en/about-claude/pricing">Pricing</a>)</figcaption>
+      <table>
+        <thead><tr><th>Model</th><th>Input</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Haiku 5.5<small>prompts up to 100,000 tokens; above that $0.50 / $2.50</small></th><td><span class="bar" style="--w:1"></span>$0.10</td><td><span class="bar" style="--w:1"></span>$0.50</td></tr>
+          <tr><th scope="row">Sonnet 5.5</th><td><span class="bar" style="--w:20"></span>$2</td><td><span class="bar" style="--w:20"></span>$10</td></tr>
+          <tr><th scope="row">Opus 5.5</th><td><span class="bar" style="--w:40"></span>$4</td><td><span class="bar" style="--w:40"></span>$20</td></tr>
+          <tr><th scope="row">Fable 5.1</th><td><span class="bar" style="--w:100"></span>$10</td><td><span class="bar" style="--w:100"></span>$50</td></tr>
+        </tbody>
+      </table>
+      <div class="effort-head"><b>Effort levels</b> from lowest to highest</div>
+      <ol class="effort" aria-label="Effort levels from lowest to highest">
+        <li><b>low</b>Most efficient. Clearly saves tokens, with slightly reduced capability.</li>
+        <li><b>medium</b>Balanced, saves a moderate amount of tokens.<small>Default: Opus 5.5 and Haiku 5.5</small></li>
+        <li><b>high</b>Uses as many tokens as the task needs for an excellent result.<small>Default: other models</small></li>
+        <li><b>xhigh</b>Extended capability for long-running work.</li>
+        <li><b>max</b>Maximum capability with no limit on token use.</li>
+      </ol>
+    </figure>
+    <p>The effort level descriptions paraphrase Anthropic's <a href="https://platform.claude.com/docs/en/build-with-claude/effort">effort documentation</a>. The levels are an order, not measured multipliers: a higher level thinks more and uses more, but how much depends on the task.</p>
+  </section>
+
+  <section>
+    <h2>How to save your limit</h2>
+    <ul>
+      <li><b>Start with a lighter model.</b> Sonnet is enough for most work; switch to a heavier one only if the answer is not good enough.</li>
+      <li><b>Lower the effort for simple questions.</b> A short question does not need much thinking.</li>
+      <li><b>Start a new conversation for a new topic.</b> A long conversation is read again with every message (module 1).</li>
+      <li><b>Paste only what is needed.</b> Trim a log or file down to the part the question is about.</li>
+      <li><b>Write the request complete the first time.</b> A precise first message saves rounds of corrections.</li>
+      <li><b>Keep an eye on usage.</b> Check Settings &gt; Usage, or <code>/usage</code> in Claude Code, and clear Claude Code's context between tasks with <code>/clear</code> (module 7).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Claude Code needs a paid account</h2>
+    <p>Claude Code is not included in the free account. It requires at least a Pro plan (or an organization's Team or Enterprise account). That is why Sessions 2-4 are mostly demos by the instructor: Pro users can do the same things on their own machine, and the others follow the demo or do the exercises with a partner.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Find the mistake in Claude's answer</h3>
+      <div class="req">Requires: nothing, done on paper or on your own machine in PowerShell. No access to a machine? Work with a partner.</div>
+      <p>Someone asked Claude: "How do I list the AD users who have not signed in for 90 days?" and got this answer. The answer contains one invented thing. What is it, and how could you have noticed it before running the command?</p>
+      <div class="codebox"><pre><code>Import-Module ActiveDirectory
+Get-ADUser -Filter * -InactiveDays 90 -Properties LastLogonDate |
+    Select-Object Name, SamAccountName, LastLogonDate |
+    Sort-Object LastLogonDate</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div>
+          <p>The <code>Get-ADUser</code> cmdlet has no <code>-InactiveDays</code> parameter. You can see that with <code>Get-Help Get-ADUser -Parameter InactiveDays</code>, which gives an error, or by running the command, which fails with the error "A parameter cannot be found that matches parameter name 'InactiveDays'".</p>
+          <p>A working approach is, for example:</p>
+          <pre><code>Search-ADAccount -AccountInactive -TimeSpan 90.00:00:00 -UsersOnly |
+    Select-Object Name, SamAccountName, LastLogonDate</code></pre>
+          <p>Note that <code>LastLogonDate</code> updates with a delay, so the cutoff is not accurate to the day.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Anonymize a log excerpt</h3>
+      <div class="req">Requires: nothing. No machine at hand? Do it on paper with a partner.</div>
+      <p>Below is an invented log excerpt. Rewrite it so that it could be pasted into Claude. Keep the structure so that the course of events is still visible.</p>
+      <div class="codebox"><pre><code>Nov 03 09:02:11 web-prod-03 sshd[2211]: Failed password for matti.virtanen from 203.0.113.45 port 51122
+Nov 03 09:02:15 web-prod-03 sshd[2211]: Failed password for matti.virtanen from 203.0.113.45 port 51122
+Nov 03 09:02:19 web-prod-03 sshd[2214]: Accepted password for backup-svc from 198.51.100.7 port 40022
+Nov 03 09:02:19 web-prod-03 sudo: backup-svc : TTY=pts/0 ; PWD=/srv/backup ; COMMAND=/usr/bin/rsync</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div>
+          <pre><code>Nov 03 09:02:11 &lt;SERVER1&gt; sshd[2211]: Failed password for &lt;USER1&gt; from &lt;IP1&gt; port 51122
+Nov 03 09:02:15 &lt;SERVER1&gt; sshd[2211]: Failed password for &lt;USER1&gt; from &lt;IP1&gt; port 51122
+Nov 03 09:02:19 &lt;SERVER1&gt; sshd[2214]: Accepted password for &lt;SERVICEACCOUNT1&gt; from &lt;IP2&gt; port 40022
+Nov 03 09:02:19 &lt;SERVER1&gt; sudo: &lt;SERVICEACCOUNT1&gt; : TTY=pts/0 ; PWD=/srv/backup ; COMMAND=/usr/bin/rsync</code></pre>
+          <p>The person's name, the service account name, the server name and the IP addresses have been replaced. The same value always gets the same placeholder, so Claude can still see that the same user tried twice from the same address. The ports, times and command can stay, because on their own they do not identify anyone.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Check your own training setting</h3>
+      <div class="req">Requires: a Claude account (free is enough). No account yet? Do this after module 1 or watch the instructor's screen.</div>
+      <p>Sign in to claude.ai, open Settings &gt; Privacy and see whether the training switch is on or off. Decide which you want, and write down one thing you will never paste into Claude at work.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The setting appears as a switch on the Privacy page. Either choice is allowed, as long as it is a conscious one and follows your own organization's guidelines. An example of something to write down: "I do not paste AD user lists or logs that contain usernames."</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: read more</h2>
+    <ul>
+      <li><a href="https://privacy.claude.com">privacy.claude.com</a>: Anthropic's privacy guidance for consumer accounts</li>
+      <li><a href="https://support.claude.com/en/articles/11647753-usage-and-length-limits">Usage and length limits</a>: usage limits in more detail</li>
+      <li><a href="https://claude.com/pricing">claude.com/pricing</a>: what the plans include and what they cost</li>
+    </ul>
+  </section>
+</main>
+</div>
+</body>
+</html>

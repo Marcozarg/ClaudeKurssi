@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 Files, Projects and Artifacts - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="3">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-2.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 3 &middot; Session 1</span>
+  <h1>Files, Projects and Artifacts</h1>
+  <div class="meta"><span class="chip">Core ~25 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Files in a conversation</h2>
+    <p>You can attach a file to a message by dragging it into the conversation or with the <b>+</b> button next to the message field. Claude reads text files, PDFs, Office files and images.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>What</th><th>Limit (checked 11/2026)</th></tr></thead>
+      <tbody>
+        <tr><td>File size in a conversation</td><td>500 MB / file</td></tr>
+        <tr><td>Files in a conversation</td><td>20 / conversation</td></tr>
+        <tr><td>PDF</td><td>up to 1000 pages</td></tr>
+        <tr><td>File types</td><td>for example PDF, DOCX, CSV, TXT, HTML, JSON, XLSX; images JPEG, PNG, GIF, WebP</td></tr>
+      </tbody>
+    </table></div>
+    <p>A large file uses a lot of the usage limit, and every following message processes it again. Attach only the part you need. The rules from module 0 apply: no credentials, personal data or raw logs.</p>
+    <div class="shot">[KUVA: m3-liite - a CSV file attached to a message]</div>
+  </section>
+
+  <section>
+    <h2>Projects for recurring work</h2>
+    <p>A Project is a folder for conversations. You attach instructions and files to it, and they are included in every conversation in the Project. You do not have to say the same things every time.</p>
+    <ul>
+      <li><b>Instructions:</b> for example "Answer in Finnish. The environment is Windows Server 2022 and PowerShell 5.1. Scripts always with -WhatIf support."</li>
+      <li><b>Files (project knowledge):</b> for example your own runbook template, style examples of ticket replies, the naming convention. Limit 30 MB / file.</li>
+      <li><b>Conversations:</b> every conversation in the Project sees the instructions and files.</li>
+    </ul>
+    <p>Projects are available on the free account too, up to five Projects. A Project's files also save limit, because content that is used repeatedly is counted more lightly.</p>
+    <div class="shot">[KUVA: m3-projekti - a Project's instructions and files]</div>
+  </section>
+
+  <section id="muisti-claudeaissa">
+    <h2>Optional: Memory in claude.ai</h2>
+    <div class="optbox">
+      <ul>
+        <li>Memory is on by default on Free, Pro, Max and Ultra accounts on the web, in the desktop app and on mobile. On Team and Enterprise accounts the owners decide whether memory is available.</li>
+        <li>The memory switch is under Settings &gt; Your Claude. Pause keeps the memory stored, but Claude does not use it. Reset permanently deletes all memories, including the memories of Projects.</li>
+        <li>Every project has its own memory. If you want to keep a project's memory completely separate, turn off Use account memory on the project's page.</li>
+        <li>A Project's instructions are a different thing from memory: Claude uses them in all conversations in the Project.</li>
+        <li>An Incognito conversation is not saved to memory or to the conversation history.</li>
+        <li>Claude Code's memory is its own system, with six levels: <a href="../../moduulit/moduuli-7.html#muistin-tasot">Module 7</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Artifacts</h2>
+    <p>An Artifact is a separate output made by Claude that opens next to the conversation: a document, a table, a chart, an HTML page or a small tool. You can edit it by asking for changes, and the versions are kept.</p>
+    <ul>
+      <li>Available on all plans, including Free.</li>
+      <li>Requires that code execution and file creation (Code execution and file creation) is turned on under <b>Settings &gt; Capabilities</b>.</li>
+      <li>An Artifact is private at first. You can share it with a link from the Share menu. Anyone with the link can see it without an account, so do not share anything internal.</li>
+    </ul>
+    <p>Good uses: a checklist from a runbook, a table from a CSV, a simple calculator or a memo.</p>
+    <div class="shot">[KUVA: m3-artifact - an Artifact open next to the conversation]</div>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Clean up a CSV</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Work with a partner.</div>
+      <p>Save the invented data below as a file called <code>devices.csv</code> and attach it. Ask Claude to make the columns consistent: dates in the form YYYY-MM-DD, operating systems in one spelling, empty locations set to "unknown". Also ask for a PowerShell command that does the same.</p>
+      <div class="codebox"><pre><code>Name;OS;Purchased;Location
+TT-0012;win 11;3.2.2024;Floor 2
+TT-0013;Windows11;2024-02-05;
+TT-0014;Windows 10;5/2/2023;floor 3
+TT-0015;W10;12.12.2022;Floor 2</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div>
+          <pre><code>Name;OS;Purchased;Location
+TT-0012;Windows 11;2024-02-03;Floor 2
+TT-0013;Windows 11;2024-02-05;unknown
+TT-0014;Windows 10;2023-02-05?;Floor 3
+TT-0015;Windows 10;2022-12-12;Floor 2</code></pre>
+          <p>A good answer points out that <code>5/2/2023</code> is ambiguous (5 February or 2 May) and asks which is meant instead of guessing. The PowerShell solution uses <code>Import-Csv -Delimiter ';'</code>, fixes the values and writes a new file with <code>Export-Csv</code>.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. A Project for runbooks</h3>
+      <div class="req">Requires: a Claude account (Free is enough, up to five Projects). No account? Follow the instructor's demo.</div>
+      <p>Create a Project called "Runbooks". In the instructions, write the basics of your environment (without names and addresses) and the runbook structure you want: purpose, prerequisites, steps, verification, rollback. In the Project, ask for a runbook for restarting the DNS service.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude follows the Project's structure without asking: the runbook has the same headings as the instructions, and the commands are right for the operating system (for example <code>Restart-Service DNS</code> and verification with <code>Resolve-DnsName</code>). When you open a new conversation in the Project and ask for a second runbook, the structure stays the same.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. A checklist as an Artifact</h3>
+      <div class="req">Requires: a Claude account (Free is enough) and the Code execution setting on. No account? Follow the instructor's demo.</div>
+      <p>Ask Claude to turn the previous runbook into an interactive checklist as an Artifact: a checkbox for each step, and a summary of the completed steps at the end.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>An Artifact opens next to the conversation with the steps as checkboxes. You can ask for changes, for example "add a timestamp to each step when it is ticked", and Claude makes a new version. If no Artifact appears, check Settings &gt; Capabilities.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: files and security</h2>
+    <div class="optbox">
+      <ul>
+        <li>Remove hidden information (author, comments, revision history) from Office files before attaching them.</li>
+        <li>A screenshot can show names, addresses or open tabs. Crop the image.</li>
+        <li>A Project's files are included in every conversation in it. Keep only what you need in the Project.</li>
+        <li>A shared Artifact's link works for anyone. Stop sharing when you no longer need it.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

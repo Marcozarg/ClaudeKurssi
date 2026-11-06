@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1 The first conversation - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="1">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-0.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 1 &middot; Session 1</span>
+  <h1>The first conversation</h1>
+  <div class="meta"><span class="chip">Core ~30 min</span><span class="chip opt">Optional ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>Signing in</h2>
+    <ol>
+      <li>Open <a href="https://claude.ai">claude.ai</a> in your browser.</li>
+      <li>Sign in with a Google account or an email address. If you use email, you get a sign-in link or a code in your inbox.</li>
+      <li>The first time, Claude asks for your name and a few settings. A free account (Free) is enough for the whole of Session 1.</li>
+      <li>Open <b>Settings &gt; Privacy</b> right away and check the training setting (module 0).</li>
+    </ol>
+    <div class="note">For work matters, use the account and follow the rules that your organization has approved. If your organization has its own Claude account, sign in with that.</div>
+    <div class="shot">[KUVA: m1-kirjautuminen - the claude.ai sign-in page]</div>
+  </section>
+
+  <section>
+    <h2>The first conversation</h2>
+    <p>Type a message in the field at the bottom and press Enter. To start a new line inside a message, use Shift+Enter.</p>
+    <p>A good first try is something whose answer you already know. Then you can see how Claude answers and where it is sure or unsure. For example:</p>
+    <div class="codebox"><pre><code>Briefly explain what this PowerShell command does, and tell me whether it has any risks:
+Get-ChildItem -Path . -Recurse -Filter *.log | Where-Object LastWriteTime -lt (Get-Date).AddDays(-30) | Remove-Item</code></pre></div>
+    <p>You can continue in the same conversation: "Change it so that it only lists the files and does not delete anything." Claude remembers the earlier messages in the same conversation.</p>
+    <p>Below the answer there are buttons for copying, regenerating and giving feedback. In the history on the left you find your old conversations.</p>
+    <div class="shot">[KUVA: m1-keskustelu - the first question and answer, buttons visible]</div>
+  </section>
+
+  <section>
+    <h2>Choosing a model</h2>
+    <p>Claude has several models. You pick the model from the menu next to the message field. Names and versions change, but the basic idea stays the same:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Model</th><th>When</th><th>Plan</th></tr></thead>
+      <tbody>
+        <tr><td>Haiku</td><td>Quick and simple questions, short texts</td><td>Free</td></tr>
+        <tr><td>Sonnet</td><td>Most work: scripts, logs, guides. A good default.</td><td>Free</td></tr>
+        <tr><td>Opus</td><td>Hard problems, long reasoning, large code</td><td>Pro or higher</td></tr>
+        <tr><td>Fable</td><td>The most demanding tasks</td><td>Max and Ultra; on Pro for an extra charge</td></tr>
+      </tbody>
+    </table></div>
+    <p>A heavier model uses the usage limit faster. Start with Sonnet and switch only if the answer is not good enough. You can see the price differences between models and how the usage limit works in <a href="moduuli-0.html#kayttorajat">the usage limits section of module 0</a>.</p>
+  </section>
+
+  <section>
+    <h2>Extended thinking</h2>
+    <p>With extended thinking (Thinking), Claude spends more time breaking the problem down before it answers. A collapsible <b>Thinking</b> section appears above the answer, where you can see a summary of its reasoning.</p>
+    <ul>
+      <li>The setting is in the model menu under <b>Effort</b>. In the newest models, thinking is always on, and the amount of it is adjusted with the effort level.</li>
+      <li>Use more thinking when the problem has several steps: troubleshooting from several logs, the logic of a script, a comparison.</li>
+      <li>A light level is enough for short questions. More thinking is slower and uses more of the limit.</li>
+    </ul>
+    <p>The effort levels in order and their effect on the usage limit: <a href="moduuli-0.html#kayttorajat">module 0, usage limits</a>.</p>
+    <div class="shot">[KUVA: m1-malli-effort - the model menu open, the Effort setting visible]</div>
+  </section>
+
+  <section>
+    <h2>A long conversation uses the limit</h2>
+    <p>Claude does not remember a conversation the way a person does. With every new message it processes the whole conversation so far again, attachments included. That is why:</p>
+    <ul>
+      <li>The tenth message in a long conversation costs much more of the usage limit than the first.</li>
+      <li>When a conversation grows very long, Claude automatically summarizes old messages. That uses more of the limit, and details can get lost.</li>
+      <li>Old content that no longer belongs to the topic can also confuse the answers.</li>
+    </ul>
+    <h3>Start a new conversation when</h3>
+    <ul>
+      <li>the topic changes</li>
+      <li>the conversation has grown long and Claude starts repeating itself or forgetting instructions from the start</li>
+      <li>you have your solution and want to move on to the next thing</li>
+    </ul>
+    <p>Tip: before starting a new conversation, ask "Summarize the outcome of this conversation and the open issues in a few points" and paste the summary at the start of the new conversation.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Explain an error message</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Work with a partner or follow the instructor's screen.</div>
+      <p>Ask Claude what this error means and how to fix it. Ask for the answer step by step, safest option first.</p>
+      <div class="codebox"><pre><code>The trust relationship between this workstation and the primary domain failed.</code></pre></div>
+      <details><summary>Show example answer</summary>
+        <div>
+          <p>Claude explains that the workstation's machine account password no longer matches the domain (for example a restored old snapshot, or a machine that has been off the network for a long time). The safest fix is usually to sign in with a local administrator account and run:</p>
+          <pre><code>Test-ComputerSecureChannel -Repair -Credential (Get-Credential)</code></pre>
+          <p>The alternative is to remove the machine from the domain and join it again. Check yourself with <code>Get-Help Test-ComputerSecureChannel</code> that the parameters are correct.</p>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. The same question with two models</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Compare with a partner, on their screen.</div>
+      <p>Ask Haiku and Sonnet the same thing in separate conversations: "Write a PowerShell function that checks whether a list of servers responds to ping and to port 443, and prints a table." Compare the answers: which is better, and was the difference worth it?</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Both should use <code>Test-Connection</code> and <code>Test-NetConnection -Port 443</code>, or something similar. Sonnet is more likely to add parameter checks, a timeout and tidier output. For a simple task Haiku is often enough, and it saves limit.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Summarize and start fresh</h3>
+      <div class="req">Requires: a Claude account (Free is enough). No account? Work with a partner.</div>
+      <p>Continue the conversation from exercise 1 with a couple of follow-up questions. Then ask for a summary of the outcome and the open issues. Start a new conversation with the summary and ask: "Write a short guide for the helpdesk from this."</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The summary contains the cause of the problem, the fix command and a warning, for example that a local administrator account is needed. In the new conversation Claude writes the guide from the summary alone. You notice that the whole old conversation was not needed.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: useful features</h2>
+    <ul>
+      <li><b>Searching conversations:</b> the search on the left finds your old conversations.</li>
+      <li><b>Incognito conversation:</b> it does not stay in your history and is not used for training.</li>
+      <li><b>Editing a message:</b> you can edit an earlier message and get a new answer. That is often better than a new correcting message.</li>
+      <li><b>Usage:</b> after the exercises, look at <b>Settings &gt; Usage</b> to see how much of the limit was used.</li>
+    </ul>
+  </section>
+</main>
+</div>
+</body>
+</html>

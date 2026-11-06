@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>4 Claude on different devices - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="4">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-3.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 4 &middot; Session 2</span>
+  <h1>Claude on different devices</h1>
+  <div class="meta"><span class="chip">Core ~25 min</span><span class="chip opt">Optional ~15 min</span><span class="chip plan">Free / Pro</span></div>
+
+  <section>
+    <h2>Which app for what</h2>
+    <p>All the apps share the same account, the same conversations and the same usage limit. Choose the one that is closest to your work. Plans checked 11/2026.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>App</th><th>For</th><th>Plan</th></tr></thead>
+      <tbody>
+        <tr><td>Browser, claude.ai</td><td>Everywhere, no installation</td><td>Free</td></tr>
+        <tr><td>Windows desktop app</td><td>A window of its own, screenshots, Cowork and Claude Code in the same app</td><td>Free (Cowork and Code: Pro)</td></tr>
+        <tr><td>Mobile app</td><td>Questions on the move, photos and voice input</td><td>Free</td></tr>
+        <tr><td>Claude in Chrome</td><td>Claude works in the browser on your behalf: reads pages, fills in forms</td><td>Pro</td></tr>
+        <tr><td>Claude for Microsoft 365</td><td>Claude in Excel, Word, PowerPoint and Outlook</td><td>Pro</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>The Windows desktop app</h2>
+    <span class="chip plan">Free</span>
+    <ol>
+      <li>Open <a href="https://claude.com/download">claude.com/download</a> and choose Windows. The app is also in the Microsoft Store.</li>
+      <li>Download the installer. Most machines are x64 machines; for ARM machines (for example Snapdragon) there is a separate ARM64 version.</li>
+      <li>Open the downloaded file, and the installation proceeds on its own.</li>
+      <li>Start Claude from the Start menu and sign in with the same account as in the browser.</li>
+    </ol>
+    <p>Requirement: Windows 10 or newer. On a work machine, first check whether you may install apps yourself or whether installation goes through software distribution.</p>
+    <div class="shot">[KUVA: m4-desktop-lataus - claude.com/download, Windows selected]</div>
+    <div class="shot">[KUVA: m4-desktop-sovellus - the desktop app open, Chat, Cowork and Code in the sidebar]</div>
+  </section>
+
+  <section>
+    <h2>Using the desktop app</h2>
+    <ul>
+      <li><b>A window of its own:</b> Claude sits in the taskbar as its own app and does not get lost among the browser tabs.</li>
+      <li><b>Screenshots and files:</b> drag a file or paste a screenshot (Win+Shift+S, then Ctrl+V) straight into the message. Crop the image before pasting.</li>
+      <li><b>Cowork</b> (Pro): Claude does multi-step tasks with your machine's files, without a command line. More about it in module 5.</li>
+      <li><b>Code</b> (Pro): Claude Code inside the app, without a separate installation. More about it in module 6.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The mobile app</h2>
+    <span class="chip plan">Free</span>
+    <p>Claude is available for iPhone from the App Store and for Android from Google Play (the links are also on the page <a href="https://claude.com/download">claude.com/download</a>). Sign in with the same account, and your conversations appear on all your devices.</p>
+    <ul>
+      <li>Photograph an error message on a screen and ask what it means. Make sure the picture does not show names or anything else confidential.</li>
+      <li>Speak your question when your hands are busy.</li>
+      <li>Continue a conversation you started on your computer on your phone.</li>
+    </ul>
+    <div class="shot">[KUVA: m4-mobiili - the mobile app, a photo attached to a message]</div>
+  </section>
+
+  <section>
+    <h2>Claude in Chrome</h2>
+    <span class="chip plan">Pro</span>
+    <p>Claude in Chrome is a browser extension with which Claude can read open pages and act on them on your behalf: click, fill in forms and move from page to page. It works only in Chrome, not in other Chromium browsers or on mobile.</p>
+    <ol>
+      <li>In Chrome, open the extension <b>Claude</b> in the Chrome Web Store and choose <b>Add to Chrome</b>.</li>
+      <li>Sign in with your Claude account.</li>
+      <li>Pin the extension to the toolbar from the puzzle icon.</li>
+      <li>Grant only the permissions you need. Claude asks for permission site by site.</li>
+    </ol>
+    <div class="note">The extension sees the services you are signed in to in the browser. Do not let it work in admin consoles or on pages with customer data, unless your organization's guidelines allow it.</div>
+    <div class="shot">[KUVA: m4-chrome - the Claude in Chrome side panel open]</div>
+  </section>
+
+  <section>
+    <h2>Claude for Microsoft 365</h2>
+    <span class="chip plan">Pro</span>
+    <p>Claude works inside the Office apps as an add-in: Excel, Word and PowerPoint are generally available on all paid plans, Outlook as a beta. The add-ins are installed from the Office add-in store, with the links on the page <a href="https://claude.com/download">claude.com/download</a>.</p>
+    <ul>
+      <li><b>Excel:</b> explain a formula, clean up data, make a pivot table or a chart.</li>
+      <li><b>Word:</b> edit a guide, summarize a long document.</li>
+      <li><b>PowerPoint:</b> sketch slides from text.</li>
+    </ul>
+    <p>In organizations, installing Office add-ins is often blocked or centralized. Ask IT before installing.</p>
+    <div class="shot">[KUVA: m4-excel - the Claude add-in in Excel]</div>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Install the desktop app and ask with a screenshot</h3>
+      <div class="req">Requires: a Claude account (Free is enough) and permission to install the app. No permission or account? Use the browser or follow the instructor's screen.</div>
+      <p>Install the app and sign in. Open PowerShell, run the command <code>Get-Service -Name EiOlemassa</code> and take a screenshot of the error (Win+Shift+S). Paste the image into a message and ask for an explanation and a command that lists all stopped services.</p>
+      <details><summary>Show example answer</summary>
+        <div>
+          <p>Claude reads the error "Cannot find any service with service name 'EiOlemassa'" from the image and says that there is no service with that name. Stopped services:</p>
+          <pre><code>Get-Service | Where-Object Status -eq 'Stopped' | Sort-Object DisplayName</code></pre>
+        </div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Photograph an error message with your phone</h3>
+      <div class="req">Requires: a Claude account (Free is enough) and the mobile app. No app? Work with a partner or use the desktop app.</div>
+      <p>Photograph an error message on a screen with your phone (for example the error from exercise 1, or a printer error code). Crop the image so that nothing else shows. Ask Claude for the three most likely causes in order of priority.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude reads the text from the image and answers with a numbered list. If the image is unclear, it says so or reads it wrong: check that it read the error code correctly before you rely on the answer.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Claude in Chrome summarizes a documentation page</h3>
+      <div class="req">Requires: a Pro plan and Chrome. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>In Chrome, open the release notes of some public software. Ask Claude in Chrome to summarize the changes that matter for administration: breaking changes, security fixes and deprecated features.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude reads the open page and returns three headed lists. A good summary refers to parts of the page, so you can check them. If the page is long, Claude can scroll and read more, and it tells you what it did.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: mobile and Office in more detail</h2>
+    <div class="optbox">
+      <ul>
+        <li>In the mobile app you cannot change the sharing settings of Artifacts. Do that on a computer.</li>
+        <li>Pro users: try the Excel add-in with the CSV from the first exercise of module 3. Ask for an explanation of every formula that Claude adds.</li>
+        <li>Settings and usage: <b>Settings &gt; Usage</b> shows the same limit regardless of the app.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 "use strict";
 (() => {
-  const EN_PAGES = [];
+  const EN_PAGES = [0, 1, 2, 3, 4, 5];
   const EN = document.documentElement.lang === "en";
   const T = EN
     ? {
