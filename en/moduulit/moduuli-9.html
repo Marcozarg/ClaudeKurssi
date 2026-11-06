@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Module 9 &middot; Session 4</span>
   <h1>Way of working</h1>
-  <div class="meta"><span class="chip">Core ~40 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Core ~45 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Why the way of working decides</h2>
@@ -40,9 +40,12 @@
       <li><b>Ask, do not guess.</b> An unknown path, version or setting is looked up in the repository or asked from you. A confident guess looks exactly like a fact.</li>
       <li><b>Test first.</b> Every new behaviour and every confirmed bug gets a test that fails without the change. The test is run first and seen red, then the change that turns it green is made.</li>
       <li><b>Check before "done".</b> Claude runs the tests and says what was run and what was not. The words "works" and "verified" belong only to things that were run.</li>
+      <li><b>Give a check that passes or fails.</b> A test or another command Claude can run itself. Ask for the command it ran and its output as evidence; "all tests pass" on its own tells you very little.</li>
+      <li><b>Hard rules go in hooks or deny rules.</b> CLAUDE.md is guidance that Claude may decide does not apply. If something has to happen or be blocked every time, make it a hook or a permission deny rule.</li>
       <li><b>Short commits.</b> One short line, one logical change. Commit and push are separate steps.</li>
       <li><b>No secrets.</b> Passwords, keys and <code>.env</code> files do not belong in the conversation, in plans or in commits. Refer to the place where the secret is.</li>
     </ol>
+    <p>Source: <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs/en/best-practices</a>, checked 11/2026.</p>
     <div class="note">Follow your organization's rules on what information may be given to an AI service. When in doubt, ask first.</div>
   </section>
 

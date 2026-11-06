@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Moduuli 9 &middot; Istunto 4</span>
   <h1>Työtapa</h1>
-  <div class="meta"><span class="chip">Ydin ~40 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Ydin ~45 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Miksi työtapa ratkaisee</h2>
@@ -40,9 +40,12 @@
       <li><b>Kysy, älä arvaa.</b> Tuntematon polku, versio tai asetus selvitetään repositoriosta tai kysytään sinulta. Varma arvaus näyttää täsmälleen samalta kuin tosiasia.</li>
       <li><b>Testi ensin.</b> Jokainen uusi toiminta ja jokainen vahvistettu virhe saa testin, joka epäonnistuu ilman muutosta. Testi ajetaan ensin punaisena, sitten tehdään muutos, jolla se menee vihreäksi.</li>
       <li><b>Tarkista ennen "valmis".</b> Claude ajaa testit ja kertoo, mitä ajettiin ja mitä ei. Sanat "toimii" ja "varmistettu" kuuluvat vain ajetuille asioille.</li>
+      <li><b>Anna tarkistus, joka menee läpi tai ei.</b> Testi tai muu komento, jonka Claude voi ajaa itse. Pyydä näytöksi ajettu komento ja sen tuloste; pelkkä "testit menevät läpi" kertoo vähän.</li>
+      <li><b>Ehdottomat säännöt hookeiksi tai estosäännöiksi.</b> CLAUDE.md on ohje, josta Claude voi poiketa. Jos jonkin pitää tapahtua tai estyä joka kerta, tee siitä hook tai lupien estosääntö (<code>deny</code>).</li>
       <li><b>Lyhyet commitit.</b> Yksi lyhyt rivi, yksi looginen muutos. Commit ja push ovat eri vaiheita.</li>
       <li><b>Ei salaisuuksia.</b> Salasanat, avaimet ja <code>.env</code>-tiedostot eivät kuulu keskusteluun, suunnitelmiin eivätkä committeihin. Viittaa paikkaan, jossa salaisuus on.</li>
     </ol>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs/en/best-practices</a>, tarkistettu 11/2026.</p>
     <div class="note">Noudata organisaatiosi sääntöjä siitä, mitä tietoa tekoälypalvelulle saa antaa. Epäselvässä tilanteessa kysy ensin.</div>
   </section>
 

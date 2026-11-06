@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Module 7 &middot; Session 3</span>
   <h1>Basic use</h1>
-  <div class="meta"><span class="chip">Core ~65 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Core ~70 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Basic commands</h2>
@@ -57,9 +57,11 @@
       <li><code>/context</code> shows what the context contains.</li>
       <li><code>/compact</code> summarizes the conversation and continues the same work. You can steer the summary: <code>/compact focus on the script's errors</code>.</li>
       <li><code>/clear</code> starts from scratch. Use it when you move to a completely different task. You can find the previous conversation with <code>/resume</code>.</li>
+      <li>If Claude is still wrong after two corrections, do not correct a third time. Run <code>/clear</code> and write one new prompt that folds in what you learned.</li>
     </ul>
     <figure class="shot-img"><img src="../../kuvat/m7-context.png" alt="/context: context use by category" width="1600" height="1411" loading="lazy"></figure>
     <div class="note">Rule of thumb: one task, one conversation. When the task changes, use <code>/clear</code>. When the same task continues but the conversation is long, use <code>/compact</code>.</div>
+    <p>Source: <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs/en/best-practices</a>, checked 11/2026.</p>
   </section>
 
   <section>
@@ -123,6 +125,12 @@
   <section id="muisti-kaytannossa">
     <h2>Memory in practice</h2>
     <p>A good CLAUDE.md is short and precise: tell Claude things it cannot work out from the code.</p>
+    <ul>
+      <li>Anthropic recommends under 200 lines: the file is loaded into every session, and every line costs Claude's attention on every task.</li>
+      <li>Write only what Claude cannot see in the repository: exact test and lint commands, misleading spots in the code, decisions that are not in the repo, and things you have had to correct twice.</li>
+      <li>Once <code>/init</code> has created a first version, the work is mostly removing lines.</li>
+    </ul>
+    <p>Source: <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs/en/best-practices</a>, checked 11/2026.</p>
     <div class="codebox"><pre><code># Instructions
 
 - The scripts are PowerShell 7 scripts. Use Verb-Noun names.
