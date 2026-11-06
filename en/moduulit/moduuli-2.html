@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Module 2 &middot; Session 1</span>
   <h1>A good prompt</h1>
-  <div class="meta"><span class="chip">Core ~45 min</span><span class="chip opt">Optional ~30 min</span><span class="chip plan">Free</span></div>
+  <div class="meta"><span class="chip">Core ~55 min</span><span class="chip opt">Optional ~30 min</span><span class="chip plan">Free</span></div>
 
   <section>
     <h2>A prompt is an assignment</h2>
@@ -83,6 +83,29 @@ Lines:
 Do not write the guide yet. First ask me the things you need to know,
 one at a time, and give a recommended answer with each question.</code></pre></div>
     <p>Only when you have answered, ask for the guide. The same approach works for all planning, and it is the basis of the Claude Code way of working (module 9).</p>
+  </section>
+
+  <section>
+    <h2>More techniques</h2>
+    <p>A few more techniques from Anthropic's guidance that work in almost any prompt:</p>
+    <ul>
+      <li><b>Put pasted material inside tags</b>, for example &lt;log&gt;...&lt;/log&gt;. Then Claude keeps the data apart from the instructions.</li>
+      <li><b>Allow "I don't know".</b> Say for example "if the information is not enough, say so". It reduces made-up answers.</li>
+      <li><b>For a long document, ask for quotes first.</b> Ask Claude to quote the relevant parts and answer only from those quotes.</li>
+      <li><b>Material first, question last.</b> With long material the answers can improve by up to 30 %.</li>
+      <li><b>Say what you want, not what you do not want.</b> "Do not use markdown" -> "write flowing paragraphs".</li>
+      <li><b>Give a one-line role</b>, for example "You are an experienced Windows administrator." Even a single sentence makes a difference.</li>
+      <li><b>Split a big job into numbered steps</b> when order or completeness matters, for example a migration: 1 inventory, 2 plan, 3 change, 4 check.</li>
+    </ul>
+    <p>An example with a role, the material inside tags first, the question last and permission to say it does not know:</p>
+    <div class="codebox" data-prompt="prompt-tags-role"><pre><code>You are an experienced Windows server administrator.
+&lt;log&gt;
+2026-11-03T08:14:22 [ERROR] server01 spooler: Print job failed
+2026-11-03T08:15:01 [WARN] server01 w32time: Time sync delayed
+2026-11-03T08:15:40 [INFO] server01 spooler: Service restarted
+&lt;/log&gt;
+Which of these lines is probably a fault and which is just a warning? If the log is not enough to answer, say so and tell me what information you need.</code></pre></div>
+    <p>Source: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices">Prompting best practices</a> and <a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations">Reduce hallucinations</a>, checked 11/2026.</p>
   </section>
 
   <section id="sama-tarve">

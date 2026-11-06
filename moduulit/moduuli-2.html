@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Moduuli 2 &middot; Istunto 1</span>
   <h1>Hyvä kehote</h1>
-  <div class="meta"><span class="chip">Ydin ~45 min</span><span class="chip opt">Lisä ~30 min</span><span class="chip plan">Free</span></div>
+  <div class="meta"><span class="chip">Ydin ~55 min</span><span class="chip opt">Lisä ~30 min</span><span class="chip plan">Free</span></div>
 
   <section>
     <h2>Kehote on tehtävänanto</h2>
@@ -83,6 +83,29 @@ Rivit:
 Älä kirjoita ohjetta vielä. Kysy minulta ensin ne asiat, jotka sinun pitää tietää,
 yksi kerrallaan, ja kerro jokaisen kysymyksen kohdalla suositeltu vastaus.</code></pre></div>
     <p>Kun olet vastannut, pyydä vasta sitten ohje. Sama tapa toimii kaikessa suunnittelussa, ja se on Claude Coden työtavan perusta (moduuli 9).</p>
+  </section>
+
+  <section>
+    <h2>Lisää keinoja</h2>
+    <p>Anthropicin ohjeista vielä muutama keino, jotka toimivat melkein missä tahansa kehotteessa:</p>
+    <ul>
+      <li><b>Liitä aineisto tagien sisään</b>, esimerkiksi &lt;loki&gt;...&lt;/loki&gt;. Silloin Claude erottaa tiedon ohjeista.</li>
+      <li><b>Salli "en tiedä".</b> Sano esimerkiksi "jos tieto ei riitä, sano se". Se vähentää keksittyjä vastauksia.</li>
+      <li><b>Pitkässä dokumentissa pyydä ensin lainaukset.</b> Pyydä Claudea lainaamaan olennaiset kohdat ja vastaamaan vain niiden pohjalta.</li>
+      <li><b>Aineisto ensin, kysymys viimeiseksi.</b> Pitkässä aineistossa vastaukset voivat parantua jopa 30 %.</li>
+      <li><b>Kerro, mitä haluat, älä mitä et halua.</b> "Älä käytä markdownia" -> "kirjoita sujuvia kappaleita".</li>
+      <li><b>Anna yhden rivin rooli</b>, esimerkiksi "Olet kokenut Windows-ylläpitäjä." Jo yksi lause tekee eron.</li>
+      <li><b>Pilko iso työ numeroituihin vaiheisiin</b>, kun järjestys tai kattavuus on tärkeä, esimerkiksi migraatiossa: 1 kartoitus, 2 suunnitelma, 3 muutos, 4 tarkistus.</li>
+    </ul>
+    <p>Esimerkki, jossa on rooli, aineisto tagien sisällä ensin, kysymys viimeisenä ja lupa sanoa, ettei tiedä:</p>
+    <div class="codebox" data-prompt="prompt-tags-role"><pre><code>Olet kokenut Windows-palvelinten ylläpitäjä.
+&lt;loki&gt;
+2026-11-03T08:14:22 [ERROR] palvelin01 spooler: Print job failed
+2026-11-03T08:15:01 [WARN] palvelin01 w32time: Time sync delayed
+2026-11-03T08:15:40 [INFO] palvelin01 spooler: Service restarted
+&lt;/loki&gt;
+Mikä näistä riveistä on todennäköisesti vika ja mikä vain varoitus? Jos loki ei riitä vastaukseen, sano se ja kerro mitä tietoa tarvitset.</code></pre></div>
+    <p>Lähde: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices">Prompting best practices</a> ja <a href="https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations">Reduce hallucinations</a>, tarkistettu 11/2026.</p>
   </section>
 
   <section id="sama-tarve">
