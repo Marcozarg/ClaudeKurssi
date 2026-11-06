@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>14 Automaatio: headless ja CI - Claude-kurssi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/kurssi.css">
+<script src="../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="14">
+<header class="top">
+  <a class="brand" href="../index.html">Claude-kurssi</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Diatila (S)</button>
+    <a class="btn" id="prev" href="moduuli-13.html">&larr; Edellinen</a>
+    <a class="btn" id="next" href="moduuli-15.html">Seuraava &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Moduulit"></nav>
+<main class="page" id="page">
+  <span class="label">Moduuli 14 &middot; Istunto 5</span>
+  <h1>Automaatio: headless ja CI</h1>
+  <div class="meta"><span class="chip">Ydin ~30 min</span><span class="chip opt">Lisä ~15 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section id="claude-p">
+    <h2>Claude ilman käyttäjää: claude -p</h2>
+    <p>Tähän asti olet keskustellut Clauden kanssa. Automaatiossa ei ole ketään vastaamassa kysymyksiin: skripti, ajastus tai CI-työ antaa Claudelle tehtävän ja lukee tuloksen. Tämä on <b>headless-ajo</b>, ja se tehdään lisäämällä <code>claude</code>-komentoon valitsin <code>-p</code> (print):</p>
+    <div class="codebox"><pre><code>claude -p "Mitä auth-moduuli tekee?"
+cat build-error.txt | claude -p "Selitä tiiviisti, mikä tätä virhettä aiheuttaa"</code></pre></div>
+    <ul>
+      <li>Claude tekee tehtävän, tulostaa vastauksen ja päättyy. Onnistuessa poistumiskoodi on 0, virheessä muu kuin 0, joten skripti voi haarautua sen mukaan.</li>
+      <li>Putkitettu syöte (stdin) luetaan mukaan. Raja on 10 Mt.</li>
+      <li>Kun lupakysymys tulisi, ketään ei ole vastaamassa. Ilman erillistä lupaa kutsu, joka vaatisi hyväksynnän, evätään. Siksi luvat ja työkalut päätetään etukäteen (osio "Turvallinen ajo").</li>
+      <li><code>--output-format json</code> antaa vastauksen JSON-muodossa: teksti on kentässä <code>result</code> ja arvioitu kustannus kentässä <code>total_cost_usd</code>. Muut muodot ovat <code>text</code> (oletus) ja <code>stream-json</code>.</li>
+    </ul>
+    <div class="note">Headless-ajo on sama Claude Code kuin muualla, ei kevyempi versio. Se voi lukea, muokata ja ajaa komentoja täsmälleen niillä oikeuksilla, jotka sille annat.</div>
+    <p>Ohjeet: <a href="https://code.claude.com/docs/en/headless">Run Claude Code programmatically</a>.</p>
+  </section>
+
+  <section id="skripti">
+    <h2>Skripti, joka kutsuu Claudea</h2>
+    <p>Tämä Bash-skripti lähettää haaran muutokset Claudelle ja tulostaa löydetyt kirjoitusvirheet. Se kuuluu CI-työhön, GitHub Actionsin ajoympäristöön tai Git Bashiin. Tallenna nimellä <code>typo-check.sh</code>:</p>
+    <div class="codebox"><pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+base="${1:-main}"
+result=$(git diff "$base"...HEAD | claude -p \
+  "Etsi kirjoitusvirheet tästä diffistä. Palauta jokaisesta rivi tiedosto:rivi ja virhe. Muuta ei." \
+  --output-format json \
+  --max-turns 3 \
+  --max-budget-usd 0.50)
+
+echo "$result" | jq -r '.result'
+echo "arvioitu kulu: $(echo "$result" | jq -r '.total_cost_usd') USD" >&2</code></pre></div>
+    <ul>
+      <li><code>set -euo pipefail</code> pysäyttää skriptin, jos jokin vaihe epäonnistuu. Epäonnistumista ei lasketa onnistumiseksi.</li>
+      <li>Diffi tulee putkea pitkin, joten Claude ei tarvitse oikeutta ajaa <code>git</code>-komentoja.</li>
+      <li><code>--max-turns</code> rajoittaa askeleiden määrää ja <code>--max-budget-usd</code> arvioitua kulua dollareina. Molemmat toimivat vain <code>-p</code>-ajossa. Kulu on Clauden oma arvio ja voi poiketa laskusta, joten jätä rajan alle väljyyttä.</li>
+      <li><code>jq</code> poimii tuloksen JSON-vastauksesta.</li>
+    </ul>
+    <p>Windowsissa PowerShellissä sama toimii näin (lainausmerkit ovat PowerShellin sääntöjen mukaiset):</p>
+    <div class="codebox"><pre><code>(git diff | claude -p "Etsi kirjoitusvirheet tästä diffistä. Palauta jokaisesta rivi tiedosto:rivi ja virhe. Muuta ei." --output-format json --max-turns 3 | ConvertFrom-Json).result</code></pre></div>
+  </section>
+
+  <section id="turvallinen-ajo">
+    <h2>Turvallinen ajo: luvat, rajat ja kulut</h2>
+    <p>Valvomaton ajo on vaarallisempi kuin keskustelu, koska kukaan ei huomaa virhettä ajoissa. Kolme sääntöä:</p>
+    <ul>
+      <li><b>Anna vain tarvittavat työkalut.</b> <code>--allowedTools "Read"</code> sallii pelkän lukemisen. Komennot rajataan kuvioilla: <code>Bash(git diff *)</code> sallii vain komennot, jotka alkavat <code>git diff</code>. Välilyönti ennen tähteä on tärkeä.</li>
+      <li><b>Valitse lupatila tehtävälle.</b> <code>--permission-mode acceptEdits</code> hyväksyy tiedostomuutokset. <code>--permission-mode dontAsk</code> kieltää kaiken, mitä ei ole erikseen sallittu, ja sopii lukittuihin CI-ajoihin. Älä käytä <code>bypassPermissions</code>-tilaa tai valitsinta <code>--dangerously-skip-permissions</code> ajossa, jota kukaan ei valvo (moduulit 7 ja 12).</li>
+      <li><b>Aseta katot.</b> <code>--max-turns</code>, <code>--max-budget-usd</code> ja CI-työn aikaraja (<code>timeout-minutes</code> GitHubissa, <code>timeout</code> GitLabissa) estävät, että virheellinen silmukka jää pyörimään.</li>
+    </ul>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Ajotapa</th><th>Kuka maksaa</th></tr></thead>
+      <tbody>
+        <tr><td><code>claude -p</code> omalla koneella, kirjautuneena tilauksellasi</td><td>Tilauksen käyttörajasi.</td></tr>
+        <tr><td><code>claude --bare -p</code> tai CI-työ, jossa on <code>ANTHROPIC_API_KEY</code></td><td>API-lasku, tokeneittain (<a href="moduuli-15.html#api-ja-tilaus">moduuli 15</a>). <code>--bare</code> ei käytä tilauksen kirjautumista.</td></tr>
+        <tr><td>GitHub Action, jossa <code>claude_code_oauth_token</code></td><td>Tilauksesi käyttö. Luodaan komennolla <code>claude setup-token</code>, ja se on sidottu henkilön tilaukseen.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">Yhteiseen työhön käytetään organisaation API-avainta, ei yhden ihmisen tilausta. Avain tallennetaan CI:n salaisuutena (secret), ei koskaan koodiin, lokiin tai keskusteluun (moduuli 0). Kysy avaimesta ja laskutuksesta organisaatiolta ennen kuin luot niitä.</div>
+    <p>Syötteet ovat epäluotettavaa dataa myös CI:ssä: pull requestin teksti, issue tai tiedosto voi sisältää ohjeita Claudelle. Pidä siksi valvomattoman työn työkalut niin kapeina, ettei onnistunut injektio pääse mihinkään (<a href="moduuli-12.html">moduuli 12</a>).</p>
+  </section>
+
+  <section id="modit-headless">
+    <h2>Modit headless-ajossa</h2>
+    <p>Anthropicin ohjeen mukaan <code>claude -p</code> hakee ja lataa asennetut pluginit, hookit, MCP-palvelimet ja CLAUDE.md-tiedostot samalla tavalla kuin interaktiivinen istunto, ellet käytä valitsinta <code>--bare</code>. Modi on plugin, joten koneelle asennettu modi latautuu myös ilman <code>--bare</code>-valitsinta ajettuun <code>claude -p</code> -kutsuun. Headless-ajossa ei ole käyttöliittymää, joten tilarivi, toast ja kaista eivät näy kenellekään, eikä lupakysymykseen ole vastaajaa.</p>
+    <ul id="headless-reunat">
+      <li><b><code>--bare</code> ohittaa asennetut pluginit.</b> Silloin modi ei lataudu, eikä sen tarkistusta tehdä lainkaan. Valitsimella <code>--plugin-dir</code> annetun pluginin hookit eivät aja bare-tilassa.</li>
+      <li><b><code>dontAsk</code> ei sulje modeja pois.</b> Ohjeen mukaan asentamasi modi voi silti hyväksyä osan kutsuista tässäkin tilassa.</li>
+      <li>GitHubin ja GitLabin ajoympäristö on puhdas kone. Siellä on vain ne modit, jotka työ itse asentaa.</li>
+    </ul>
+    <div class="note" id="reach-band-headless"><b>reach-bandin toimintaa <code>claude -p</code> -ajossa ei ole testattu.</b> Emme tiedä, mitä tason 3 kutsulle tapahtuu siellä: kysyykö se, estääkö se vai päästääkö se kutsun läpi. Älä luota siihen valvomattomassa ajossa. Käytä sen sijaan tiukkoja <code>--allowedTools</code>-rajauksia ja lupatilaa, <code>--max-turns</code>- ja <code>--max-budget-usd</code>-rajoja, aikarajaa ja kertakäyttöistä ajoympäristöä. reach-bandin tasot ja testatut ympäristöt: <a href="moduuli-13.html#reach-band-rajat">moduuli 13</a>.</div>
+  </section>
+
+  <section id="github-actions">
+    <h2>GitHub Actions</h2>
+    <p>Anthropicin virallinen toiminto on <code>anthropics/claude-code-action</code>. Kun työnkulku antaa sille <code>prompt</code>-syötteen, se toimii automaatiotilassa: Claude ajetaan tapahtumasta (esimerkiksi ajastuksesta) ilman <code>@claude</code>-mainintaa, ja tulos näkyy työnkulun lokissa. Ilman <code>prompt</code>-syötettä se vastaa <code>@claude</code>-maininnoihin issuissa ja pull requesteissa.</p>
+    <p>Valmistelu: asenna Claude GitHub App repositorioon (tai aja <code>/install-github-app</code> Claude Codessa) ja tallenna API-avain repositorion salaisuutena nimellä <code>ANTHROPIC_API_KEY</code>. Tarvitset repositorion ylläpitäjän oikeudet.</p>
+    <p>Tiedosto <code>.github/workflows/paivaraportti.yml</code> tekee joka päivä klo 09.00 UTC yhteenvedon eilisistä commiteista ja avoimista issueista:</p>
+    <div class="codebox"><pre><code>name: Päiväraportti
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+      id-token: write
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "Tee yhteenveto eilisen commiteista ja avoimista issueista"
+          claude_args: |
+            --max-turns 5
+            --allowedTools "mcp__github__list_commits,mcp__github__list_issues"</code></pre></div>
+    <ul>
+      <li><code>${{ secrets.ANTHROPIC_API_KEY }}</code> on viittaus salaisuuteen. Avaimen arvoa ei kirjoiteta tiedostoon.</li>
+      <li><code>claude_args</code> välittää Claude Coden valitsimet. <code>--allowedTools</code> antaa Claudelle vain kaksi GitHub-työkalua; ilman sitä pelkällä tekstikehotteella Claudella ei ole shell- eikä GitHub-yhteyttä.</li>
+      <li><code>timeout-minutes</code> on työn aikaraja. <code>workflow_dispatch</code> antaa käynnistää työn käsin kokeilua varten.</li>
+      <li>GitHub ajaa ajastetut työnkulut vain oletushaarasta, ja julkisessa repositoriossa ajastus poistuu käytöstä 60 päivän jälkeen, jos repositoriossa ei ole toimintaa.</li>
+      <li>Toiminto torjuu botin käynnistämät ajot, ellei bottia ole listattu syötteeseen <code>allowed_bots</code>.</li>
+    </ul>
+    <p>Ohjeet ja lisää esimerkkejä (muun muassa koodikatselmointi pull requestissa): <a href="https://code.claude.com/docs/en/github-actions">Claude Code GitHub Actions</a>.</p>
+  </section>
+
+  <section id="gitlab-ci">
+    <h2>GitLab CI</h2>
+    <p>GitLab CI/CD -integraatio on Anthropicin ohjeessa vielä beeta-vaiheessa, ja sitä ylläpitää GitLab. Siinä ei ole omaa toimintoa: asennat Claude Coden ajoympäristöön ja kutsut samaa <code>claude -p</code> -komentoa. API-avain tallennetaan <b>Settings &rarr; CI/CD &rarr; Variables</b> -sivulla maskattuna muuttujana nimellä <code>ANTHROPIC_API_KEY</code>.</p>
+    <p>Tämä työ käy läpi merge requestin muutokset vain lukuoikeuksilla. Tiedosto <code>.gitlab-ci.yml</code>:</p>
+    <div class="codebox"><pre><code>stages:
+  - ai
+
+mr-katselmointi:
+  stage: ai
+  image: node:24-alpine3.21
+  timeout: 15m
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  before_script:
+    - apk add --no-cache git curl bash
+    - curl -fsSL https://claude.ai/install.sh | bash
+    - export PATH="$HOME/.local/bin:$PATH"
+  script:
+    - git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - >
+      git diff "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"...HEAD |
+      claude --bare -p "Katselmoi tämä diffi. Listaa virheet ja riskit lyhyesti."
+      --allowedTools "Read"
+      --max-turns 5
+      --max-budget-usd 1.00</code></pre></div>
+    <ul>
+      <li>Asennusrivit ovat Anthropicin ohjeen mukaiset: asennin sijoittaa <code>claude</code>-komennon kansioon <code>~/.local/bin</code>, joka ei ole tässä kuvassa polulla, siksi <code>PATH</code> asetetaan.</li>
+      <li><code>claude</code> lukee avaimen ympäristömuuttujasta <code>ANTHROPIC_API_KEY</code>. <code>--bare</code> vaatii sen, koska se ei käytä tilauksen kirjautumista, ja pitää työn samanlaisena joka koneella.</li>
+      <li>Katot ovat samat kuin skriptissä: <code>--max-turns</code>, <code>--max-budget-usd</code> ja työn <code>timeout</code>.</li>
+      <li>Diffin muodostus (haaran haku ja vertailupiste) riippuu repositoriosi asetuksista. Kokeile ensin pienellä merge requestilla.</li>
+    </ul>
+    <p>Ohjeet: <a href="https://code.claude.com/docs/en/gitlab-ci-cd">Claude Code GitLab CI/CD</a>. Valmis esimerkki mainintoihin vastaavasta työstä (<code>@claude</code>, GitLabin MCP-työkalut) ja Amazon Bedrock- ja Google Cloud -vaihtoehdot ovat siellä.</p>
+  </section>
+
+  <section id="ajastus">
+    <h2>Ajastetut tehtävät ja /loop</h2>
+    <p>Jos tehtävä toistuu, sitä ei tarvitse ajaa itse. Claude Codessa on kolme tapaa ajastaa:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>Pilvitehtävä (<code>/schedule</code>)</th><th>Desktop-tehtävä</th><th><code>/loop</code></th></tr></thead>
+      <tbody>
+        <tr><td>Missä ajetaan</td><td>Anthropicin pilvessä</td><td>Sinun koneellasi</td><td>Sinun koneellasi</td></tr>
+        <tr><td>Kone päällä</td><td>Ei tarvita</td><td>Tarvitaan</td><td>Tarvitaan, ja istunnon pitää olla auki</td></tr>
+        <tr><td>Paikalliset tiedostot</td><td>Ei, tuore kloonaus</td><td>Kyllä</td><td>Kyllä</td></tr>
+        <tr><td>Pienin väli</td><td>1 tunti</td><td>1 minuutti (lomakkeissa 1 tunti)</td><td>1 minuutti</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>Pilvitehtävä</b> (Anthropicin ohjeessa aiemmin "rutiini", routine) on tallennettu kehote, yksi tai useampi repositorio ja liitännät. Se on saatavilla Pro-, Max-, Ultra-, Team- ja Enterprise-tilauksilla, ja se on tutkimusjulkaisu, joten ominaisuus voi muuttua. Luo se komennolla <code>/schedule</code> tai osoitteessa claude.ai/code/routines, esimerkiksi <code>/schedule daily PR review at 9am</code>. Ajot kuluttavat tilauksesi käyttörajaa kuten tavalliset istunnot. Pilvessä istunto alkaa auto-tilassa, ja tehtävä toimii näkemänsä liitännöillä sinun nimissäsi, joten poista tarpeettomat liitännät.</li>
+      <li><b><code>/loop</code></b> toistaa kehotetta istunnon sisällä, esimerkiksi <code>/loop 5m check if the deployment finished and tell me what happened</code>. Ilman väliä Claude valitsee sen itse. Toisto päättyy, kun istunto suljetaan, ja toistuva tehtävä vanhenee seitsemässä päivässä. Sopii lyhyeen seurantaan, ei pysyvään automaatioon.</li>
+      <li><b>Pysyvä ajastus CI:ssä:</b> GitHub Actionsin <code>schedule</code>-liipaisin (yllä) ajaa työn ilman omaa konettasi.</li>
+    </ul>
+    <p>Ohjeet: <a href="https://code.claude.com/docs/en/routines">Scheduled tasks (routines)</a> ja <a href="https://code.claude.com/docs/en/scheduled-tasks">Run prompts on a schedule</a>.</p>
+  </section>
+
+  <section id="harjoitukset">
+    <h2>Harjoitukset</h2>
+    <div class="ex">
+      <h3>1. Aja claude -p diffille</h3>
+      <div class="req">Edellyttää: Pro-tilaus, Claude Code ja git-repositorio, jossa on muutoksia. Ei Prota tai Claude Codea? Kopioi <code>git diff</code> -tuloste claude.ai-keskusteluun (Free) ja pyydä samaa tehtävää: kirjoitusvirheet muodossa tiedosto:rivi ja virhe.</div>
+      <p>Tee kertakäyttökansioon pieni muutos, jossa on tahallinen kirjoitusvirhe, ja aja osion "Skripti, joka kutsuu Claudea" PowerShell-rivi. Kuinka paljon ajo maksoi? Vaihda rivin lopussa <code>.result</code> muotoon <code>.total_cost_usd</code> ja aja uudelleen.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Tuloste on rivi muodossa <code>tiedosto:rivi</code> ja virhe, esimerkiksi <code>README.md:3 "ymmärtää" kirjoitettu "ymmartää"</code>. JSON-vastauksesta saat lisäksi kentät <code>session_id</code> ja <code>total_cost_usd</code>; yhden pienen diffin arvioitu kulu on tyypillisesti sentin murto-osia. Jos <code>-p</code>-kutsu ei tulosta mitään, tarkista poistumiskoodi (<code>$LASTEXITCODE</code>) ja että olet kirjautunut. Puuttuva todennus tulostetaan tuloksena, ei poikkeuksena.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Aja ajastettu työ CI:ssä</h3>
+      <div class="req">Edellyttää: repositorio GitHubissa tai GitLabissa, ylläpitäjän oikeudet, API-avain organisaation luvalla sekä Claude GitHub App GitHubissa. Ei CI-oikeuksia tai avainta? Lue GitHub- ja GitLab-esimerkki ja vastaa paperilla tai claude.ai-keskustelussa (Free): mitä työkaluja Claudella on, mikä rajaa kulut ja mistä avain tulee.</div>
+      <p>Kopioi sopiva esimerkki repositorioosi, tallenna avain salaisuudeksi tai maskatuksi muuttujaksi ja käynnistä työ käsin (<code>workflow_dispatch</code> GitHubissa, <b>Run pipeline</b> GitLabissa). Vahvista lokista, että työ onnistui ja että se käytti vain sallittuja työkaluja.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>GitHubissa tulos näkyy työnkulun ajon lokissa, ei kommenttina. Jos ajo epäonnistuu todennukseen, tarkista, että salaisuuden nimi on täsmälleen <code>ANTHROPIC_API_KEY</code> ja että työ sai sen (GitLabissa muuttuja voi olla suojattu haaralle, jolla ajat). Paperiversion vastaus: GitHub-työllä on kaksi GitHub-lukutyökalua (<code>--allowedTools</code>); kulun rajaavat <code>--max-turns 5</code> ja <code>timeout-minutes</code>; avain tulee salaisuudesta <code>secrets.ANTHROPIC_API_KEY</code>. GitLab-työllä on vain <code>Read</code>; kulun rajaavat <code>--max-turns</code>, <code>--max-budget-usd</code> ja <code>timeout</code>; avain tulee maskatusta CI/CD-muuttujasta.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Tarkasta vaarallinen työ</h3>
+      <div class="req">Edellyttää: ei mitään; lukeminen ja lista riittävät, tai claude.ai (Free), jos haluat toisen mielipiteen.</div>
+      <p>Kollega ehdottaa tätä komentoa yön yli -ajoon, joka lukee uusia issueita sähköpostin ja verkkosivujen kanssa:</p>
+      <div class="codebox"><pre><code>claude -p "Hoida kaikki uudet issuet" --dangerously-skip-permissions</code></pre></div>
+      <p>Listaa, mitä puuttuu tai on vaarallista, ja korjaa komento.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Viat: (1) kaikki luvat ohitetaan, joten Claude voi ajaa mitä tahansa ilman kysymystä; (2) ei työkalurajausta; (3) ei <code>--max-turns</code>- eikä <code>--max-budget-usd</code> -rajaa, joten virhe voi syödä rahaa koko yön; (4) issuet ovat epäluotettavaa syötettä, ja injektio pääsisi käyttämään kaikkia oikeuksia (moduuli 12); (5) ei aikarajaa eikä kertakäyttöistä ympäristöä. Korjattu: <code>claude -p "Tiivistä uudet issuet" --allowedTools "Read" --permission-mode dontAsk --max-turns 5 --max-budget-usd 1.00</code> kertakäyttöisessä ajoympäristössä, jolla on aikaraja. Mitä enemmän työ saa tehdä (kirjoittaa, ajaa komentoja), sitä tiukempi rajaus tarvitaan.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="lisa">
+    <h2>Lisä: rakenteinen tuloste, istunnot ja tarkistukset</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Vastaus skeeman mukaan:</b> <code>--output-format json</code> yhdessä valitsimen <code>--json-schema</code> kanssa palauttaa tuloksen kentässä <code>structured_output</code>. Tarkista, että kenttä on olemassa, ennen kuin skripti käyttää sitä: jos Claude kieltäytyi, sitä ei ole.</li>
+        <li><b>Jatka keskustelua:</b> <code>claude -p "..." --continue</code> jatkaa viimeisintä keskustelua ja <code>--resume</code> tiettyä istuntoa session_id-tunnuksella.</li>
+        <li><b>Estä kysymykset kokonaan:</b> <code>--permission-prompts none</code> (Claude Code 2.1.259 tai uudempi) kieltää kaiken, mikä muuten kysyisi, ellei hook tai modi salli kutsua, ja kertoo Claudelle, ettei kukaan voi hyväksyä pyyntöä.</li>
+        <li><b>Tarkista, että plugin latautui:</b> <code>--output-format stream-json</code> -ajon <code>system/init</code>-tapahtuma listaa ladatut pluginit (<code>plugins</code>) ja latausvirheet (<code>plugin_errors</code>). CI voi epäonnistua, jos plugin puuttuu.</li>
+        <li><b>Plugin GitHub Actionissa:</b> syötteet <code>plugin_marketplaces</code> ja <code>plugins</code> asentavat pluginin ennen ajoa. Valmis esimerkki on GitHub Actions -ohjeen kohdassa "Run a skill".</li>
+        <li><b>Ei tallennettua avainta:</b> organisaatio voi käyttää työnkulun OIDC-tunnistetta (workload identity federation), jolloin repositoriossa ei ole pitkäikäistä salaisuutta. Ohje on GitHub Actions -sivun kohdassa "Set up for an organization".</li>
+        <li><b>Valmis katselmointi:</b> jos et halua ylläpitää omaa työnkulkua, Anthropicin <a href="https://code.claude.com/docs/en/code-review">Code Review</a> katselmoi pull requestit automaattisesti.</li>
+        <li>Lue lisää: <a href="https://code.claude.com/docs/en/headless">Run Claude Code programmatically</a>, <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a>, <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a>, <a href="https://code.claude.com/docs/en/cli-reference">CLI reference</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>14 Automation: headless and CI - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="14">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-13.html">&larr; Previous</a>
+    <a class="btn" id="next" href="moduuli-15.html">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 14 &middot; Session 5</span>
+  <h1>Automation: headless and CI</h1>
+  <div class="meta"><span class="chip">Core ~30 min</span><span class="chip opt">Optional ~15 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section id="claude-p">
+    <h2>Claude without a user: claude -p</h2>
+    <p>So far you have had a conversation with Claude. In automation there is nobody to answer questions: a script, a schedule or a CI job gives Claude a task and reads the result. This is a <b>headless run</b>, and you make one by adding the option <code>-p</code> (print) to the <code>claude</code> command:</p>
+    <div class="codebox"><pre><code>claude -p "What does the auth module do?"
+cat build-error.txt | claude -p "Concisely explain the root cause of this error"</code></pre></div>
+    <ul>
+      <li>Claude does the task, prints the answer and exits. On success the exit code is 0, on failure it is not 0, so a script can branch on it.</li>
+      <li>Piped input (stdin) is read as well. The limit is 10 MB.</li>
+      <li>When a permission question would come up, nobody is there to answer. Unless something approves it separately, a call that would need approval is denied. That is why permissions and tools are decided in advance (the section "Running safely").</li>
+      <li><code>--output-format json</code> returns the answer as JSON: the text is in the field <code>result</code> and the estimated cost in <code>total_cost_usd</code>. The other formats are <code>text</code> (default) and <code>stream-json</code>.</li>
+    </ul>
+    <div class="note">A headless run is the same Claude Code as everywhere else, not a lighter version. It can read, edit and run commands with exactly the rights you give it.</div>
+    <p>Guide: <a href="https://code.claude.com/docs/en/headless">Run Claude Code programmatically</a>.</p>
+  </section>
+
+  <section id="skripti">
+    <h2>A script that calls Claude</h2>
+    <p>This Bash script sends a branch's changes to Claude and prints the typos it finds. It belongs in a CI job, in a GitHub Actions runner or in Git Bash. Save it as <code>typo-check.sh</code>:</p>
+    <div class="codebox"><pre><code>#!/usr/bin/env bash
+set -euo pipefail
+
+base="${1:-main}"
+result=$(git diff "$base"...HEAD | claude -p \
+  "Find typos in this diff. Return one line per typo: file:line and the typo. Nothing else." \
+  --output-format json \
+  --max-turns 3 \
+  --max-budget-usd 0.50)
+
+echo "$result" | jq -r '.result'
+echo "estimated cost: $(echo "$result" | jq -r '.total_cost_usd') USD" >&2</code></pre></div>
+    <ul>
+      <li><code>set -euo pipefail</code> stops the script when any step fails. A failure is not counted as success.</li>
+      <li>The diff arrives through a pipe, so Claude does not need permission to run <code>git</code> commands.</li>
+      <li><code>--max-turns</code> limits the number of steps and <code>--max-budget-usd</code> the estimated cost in dollars. Both work only in a <code>-p</code> run. The cost is Claude's own estimate and can differ from the bill, so leave some headroom below your limit.</li>
+      <li><code>jq</code> picks the result out of the JSON answer.</li>
+    </ul>
+    <p>On Windows in PowerShell the same thing works like this (the quoting follows PowerShell's rules):</p>
+    <div class="codebox"><pre><code>(git diff | claude -p "Find typos in this diff. Return one line per typo: file:line and the typo. Nothing else." --output-format json --max-turns 3 | ConvertFrom-Json).result</code></pre></div>
+  </section>
+
+  <section id="turvallinen-ajo">
+    <h2>Running safely: permissions, limits and costs</h2>
+    <p>An unattended run is more dangerous than a conversation, because nobody notices a mistake in time. Three rules:</p>
+    <ul>
+      <li><b>Give only the tools that are needed.</b> <code>--allowedTools "Read"</code> allows reading only. Commands are narrowed with patterns: <code>Bash(git diff *)</code> allows only commands that start with <code>git diff</code>. The space before the star matters.</li>
+      <li><b>Pick the permission mode for the task.</b> <code>--permission-mode acceptEdits</code> approves file edits. <code>--permission-mode dontAsk</code> denies everything that is not explicitly allowed and suits locked-down CI runs. Do not use <code>bypassPermissions</code> or <code>--dangerously-skip-permissions</code> in a run nobody watches (modules 7 and 12).</li>
+      <li><b>Set ceilings.</b> <code>--max-turns</code>, <code>--max-budget-usd</code> and the CI job's time limit (<code>timeout-minutes</code> on GitHub, <code>timeout</code> on GitLab) stop a faulty loop from running on.</li>
+    </ul>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Way to run</th><th>Who pays</th></tr></thead>
+      <tbody>
+        <tr><td><code>claude -p</code> on your own computer, signed in with your subscription</td><td>Your subscription's usage limit.</td></tr>
+        <tr><td><code>claude --bare -p</code> or a CI job with <code>ANTHROPIC_API_KEY</code></td><td>The API bill, per token (<a href="moduuli-15.html#api-ja-tilaus">module 15</a>). <code>--bare</code> does not use the subscription sign-in.</td></tr>
+        <tr><td>A GitHub Action with <code>claude_code_oauth_token</code></td><td>Your subscription's usage. Created with <code>claude setup-token</code> and tied to one person's subscription.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">For shared work, use the organization's API key, not one person's subscription. The key is stored as a CI secret, never in code, in a log or in a chat (module 0). Ask the organization about the key and the billing before you create any.</div>
+    <p>Inputs are untrusted data in CI as well: the text of a pull request, an issue or a file can contain instructions for Claude. Keep the tools of an unattended job so narrow that a successful injection has nowhere to go (<a href="moduuli-12.html">module 12</a>).</p>
+  </section>
+
+  <section id="modit-headless">
+    <h2>Mods in a headless run</h2>
+    <p>According to Anthropic's guide, <code>claude -p</code> discovers and loads installed plugins, hooks, MCP servers and CLAUDE.md files the same way an interactive session does, unless you use the option <code>--bare</code>. A mod is a plugin, so a mod installed on the machine also loads in a <code>claude -p</code> call run without <code>--bare</code>. A headless run has no user interface, so the status line, the toast and the band are shown to nobody, and there is nobody to answer a permission question.</p>
+    <ul id="headless-reunat">
+      <li><b><code>--bare</code> skips installed plugins.</b> Then the mod does not load and its check is not done at all. The hooks of a plugin given with <code>--plugin-dir</code> do not run in bare mode either.</li>
+      <li><b><code>dontAsk</code> does not rule mods out.</b> According to the guide, a mod you installed can still approve some calls in this mode too.</li>
+      <li>The runner on GitHub or GitLab is a clean machine. It has only the mods that the job itself installs.</li>
+    </ul>
+    <div class="note" id="reach-band-headless"><b>What reach-band does in a <code>claude -p</code> run has not been tested.</b> We do not know what happens to a tier 3 call there: whether it asks, blocks or lets the call through. Do not rely on it in an unattended run. Use tight <code>--allowedTools</code> limits and a permission mode, <code>--max-turns</code> and <code>--max-budget-usd</code> limits, a time limit and a disposable runner instead. reach-band's tiers and the tested environments: <a href="moduuli-13.html#reach-band-rajat">module 13</a>.</div>
+  </section>
+
+  <section id="github-actions">
+    <h2>GitHub Actions</h2>
+    <p>Anthropic's official action is <code>anthropics/claude-code-action</code>. When a workflow gives it a <code>prompt</code> input, it runs in automation mode: Claude runs on an event (a schedule, for example) without an <code>@claude</code> mention, and the result appears in the workflow run log. Without a <code>prompt</code> input it answers <code>@claude</code> mentions in issues and pull requests.</p>
+    <p>Preparation: install the Claude GitHub App on the repository (or run <code>/install-github-app</code> in Claude Code) and store the API key as a repository secret named <code>ANTHROPIC_API_KEY</code>. You need admin access to the repository.</p>
+    <p>The file <code>.github/workflows/daily-report.yml</code> summarizes yesterday's commits and the open issues every day at 09:00 UTC:</p>
+    <div class="codebox"><pre><code>name: Daily Report
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+      id-token: write
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "Generate a summary of yesterday's commits and open issues"
+          claude_args: |
+            --max-turns 5
+            --allowedTools "mcp__github__list_commits,mcp__github__list_issues"</code></pre></div>
+    <ul>
+      <li><code>${{ secrets.ANTHROPIC_API_KEY }}</code> is a reference to the secret. The value of the key is never written into the file.</li>
+      <li><code>claude_args</code> passes Claude Code's options through. <code>--allowedTools</code> gives Claude just two GitHub tools; with a plain-text prompt and no such line Claude has neither a shell nor GitHub access.</li>
+      <li><code>timeout-minutes</code> is the job's time limit. <code>workflow_dispatch</code> lets you start the job by hand for testing.</li>
+      <li>GitHub runs scheduled workflows only from the default branch, and in a public repository the schedule is switched off after 60 days without repository activity.</li>
+      <li>The action rejects runs started by a bot unless the bot is listed in the <code>allowed_bots</code> input.</li>
+    </ul>
+    <p>Guide and more examples (including code review on a pull request): <a href="https://code.claude.com/docs/en/github-actions">Claude Code GitHub Actions</a>.</p>
+  </section>
+
+  <section id="gitlab-ci">
+    <h2>GitLab CI</h2>
+    <p>The GitLab CI/CD integration is still in beta in Anthropic's guide, and GitLab maintains it. It has no action of its own: you install Claude Code into the runner and call the same <code>claude -p</code> command. The API key is stored on the page <b>Settings &rarr; CI/CD &rarr; Variables</b> as a masked variable named <code>ANTHROPIC_API_KEY</code>.</p>
+    <p>This job goes through a merge request's changes with read-only access. The file <code>.gitlab-ci.yml</code>:</p>
+    <div class="codebox"><pre><code>stages:
+  - ai
+
+mr-review:
+  stage: ai
+  image: node:24-alpine3.21
+  timeout: 15m
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  before_script:
+    - apk add --no-cache git curl bash
+    - curl -fsSL https://claude.ai/install.sh | bash
+    - export PATH="$HOME/.local/bin:$PATH"
+  script:
+    - git fetch origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - >
+      git diff "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"...HEAD |
+      claude --bare -p "Review this diff. List bugs and risks briefly."
+      --allowedTools "Read"
+      --max-turns 5
+      --max-budget-usd 1.00</code></pre></div>
+    <ul>
+      <li>The install lines follow Anthropic's guide: the installer puts the <code>claude</code> command in <code>~/.local/bin</code>, which is not on the path in this image, so <code>PATH</code> is set.</li>
+      <li><code>claude</code> reads the key from the environment variable <code>ANTHROPIC_API_KEY</code>. <code>--bare</code> needs it, because it does not use the subscription sign-in, and it keeps the job the same on every machine.</li>
+      <li>The ceilings are the same as in the script: <code>--max-turns</code>, <code>--max-budget-usd</code> and the job's <code>timeout</code>.</li>
+      <li>How the diff is built (fetching the branch and the comparison point) depends on your repository's settings. Try it on a small merge request first.</li>
+    </ul>
+    <p>Guide: <a href="https://code.claude.com/docs/en/gitlab-ci-cd">Claude Code GitLab CI/CD</a>. A ready-made example of a job that answers mentions (<code>@claude</code>, GitLab MCP tools) and the Amazon Bedrock and Google Cloud options are there.</p>
+  </section>
+
+  <section id="ajastus">
+    <h2>Scheduled tasks and /loop</h2>
+    <p>If a task repeats, you do not need to run it yourself. Claude Code has three ways to schedule:</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>Cloud task (<code>/schedule</code>)</th><th>Desktop task</th><th><code>/loop</code></th></tr></thead>
+      <tbody>
+        <tr><td>Where it runs</td><td>On Anthropic's cloud</td><td>On your computer</td><td>On your computer</td></tr>
+        <tr><td>Computer must be on</td><td>No</td><td>Yes</td><td>Yes, and the session must be open</td></tr>
+        <tr><td>Local files</td><td>No, a fresh clone</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Shortest interval</td><td>1 hour</td><td>1 minute (1 hour in the forms)</td><td>1 minute</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>A <b>cloud task</b> (called a "routine" earlier in Anthropic's guide) is a saved prompt, one or more repositories and connectors. It is available on the Pro, Max, Ultra, Team and Enterprise plans, and it is a research preview, so the feature may change. Create it with <code>/schedule</code> or at claude.ai/code/routines, for example <code>/schedule daily PR review at 9am</code>. Runs use your subscription's usage limit like ordinary sessions. In the cloud the session starts in auto mode, and the task works with the connectors it sees, as you, so remove the connectors it does not need.</li>
+      <li><b><code>/loop</code></b> repeats a prompt inside a session, for example <code>/loop 5m check if the deployment finished and tell me what happened</code>. Without an interval Claude picks one itself. The repeat stops when the session is closed, and a recurring task expires after seven days. It suits short-term watching, not permanent automation.</li>
+      <li><b>Permanent scheduling in CI:</b> a GitHub Actions <code>schedule</code> trigger (above) runs the job without your own computer.</li>
+    </ul>
+    <p>Guides: <a href="https://code.claude.com/docs/en/routines">Scheduled tasks (routines)</a> and <a href="https://code.claude.com/docs/en/scheduled-tasks">Run prompts on a schedule</a>.</p>
+  </section>
+
+  <section id="harjoitukset">
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Run claude -p on a diff</h3>
+      <div class="req">Needs: a Pro subscription, Claude Code and a git repository with changes. No Pro or Claude Code? Copy the output of <code>git diff</code> into a claude.ai chat (Free) and ask for the same task: typos as file:line and the typo.</div>
+      <p>Make a small change with a deliberate typo in a disposable folder and run the PowerShell line from the section "A script that calls Claude". How much did the run cost? Change <code>.result</code> at the end of the line to <code>.total_cost_usd</code> and run it again.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The output is a line of the form <code>file:line</code> and the typo, for example <code>README.md:3 "teh" should be "the"</code>. The JSON answer also has the fields <code>session_id</code> and <code>total_cost_usd</code>; the estimated cost of one small diff is typically a fraction of a cent. If the <code>-p</code> call prints nothing, check the exit code (<code>$LASTEXITCODE</code>) and that you are signed in. Missing authentication is printed as the result, not raised as an exception.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Run a scheduled job in CI</h3>
+      <div class="req">Needs: a repository on GitHub or GitLab, admin access, an API key with the organization's permission, and the Claude GitHub App on GitHub. No CI access or key? Read the GitHub and GitLab examples and answer on paper or in a claude.ai chat (Free): which tools does Claude have, what limits the cost and where does the key come from?</div>
+      <p>Copy the suitable example into your repository, store the key as a secret or a masked variable and start the job by hand (<code>workflow_dispatch</code> on GitHub, <b>Run pipeline</b> on GitLab). Confirm from the log that the job succeeded and that it used only the allowed tools.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>On GitHub the result appears in the workflow run's log, not as a comment. If the run fails on authentication, check that the secret's name is exactly <code>ANTHROPIC_API_KEY</code> and that the job received it (on GitLab the variable may be protected to a branch other than the one you run on). Answer for the paper version: the GitHub job has two read-only GitHub tools (<code>--allowedTools</code>); the cost is limited by <code>--max-turns 5</code> and <code>timeout-minutes</code>; the key comes from the secret <code>secrets.ANTHROPIC_API_KEY</code>. The GitLab job has only <code>Read</code>; the cost is limited by <code>--max-turns</code>, <code>--max-budget-usd</code> and <code>timeout</code>; the key comes from the masked CI/CD variable.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Review a dangerous job</h3>
+      <div class="req">Needs: nothing; reading and a list are enough, or claude.ai (Free) if you want a second opinion.</div>
+      <p>A colleague proposes this command for an overnight run that reads new issues, emails and web pages:</p>
+      <div class="codebox"><pre><code>claude -p "Handle all new issues" --dangerously-skip-permissions</code></pre></div>
+      <p>List what is missing or dangerous, and fix the command.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The faults: (1) all permissions are skipped, so Claude can run anything without asking; (2) no tool limit; (3) no <code>--max-turns</code> and no <code>--max-budget-usd</code> limit, so a mistake can burn money all night; (4) issues are untrusted input, and an injection would get to use every right (module 12); (5) no time limit and no disposable environment. Fixed: <code>claude -p "Summarize the new issues" --allowedTools "Read" --permission-mode dontAsk --max-turns 5 --max-budget-usd 1.00</code> in a disposable runner with a time limit. The more the job may do (write, run commands), the tighter the limits must be.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="lisa">
+    <h2>Optional: structured output, sessions and checks</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>An answer that follows a schema:</b> <code>--output-format json</code> together with <code>--json-schema</code> returns the result in the field <code>structured_output</code>. Check that the field exists before your script uses it: if Claude declined, it is not there.</li>
+        <li><b>Continue a conversation:</b> <code>claude -p "..." --continue</code> continues the latest conversation and <code>--resume</code> a specific session by its session_id.</li>
+        <li><b>Rule out questions entirely:</b> <code>--permission-prompts none</code> (Claude Code 2.1.259 or later) denies everything that would otherwise ask unless a hook or mod allows the call, and tells Claude nobody can approve the request.</li>
+        <li><b>Check that a plugin loaded:</b> in a <code>--output-format stream-json</code> run, the <code>system/init</code> event lists the loaded plugins (<code>plugins</code>) and the load errors (<code>plugin_errors</code>). CI can fail if a plugin is missing.</li>
+        <li><b>A plugin in a GitHub Action:</b> the inputs <code>plugin_marketplaces</code> and <code>plugins</code> install a plugin before the run. A ready example is in the GitHub Actions guide under "Run a skill".</li>
+        <li><b>No stored key:</b> an organization can use the workflow's OIDC token (workload identity federation), so the repository holds no long-lived secret. The guide is on the GitHub Actions page under "Set up for an organization".</li>
+        <li><b>A ready-made review:</b> if you do not want to maintain your own workflow, Anthropic's <a href="https://code.claude.com/docs/en/code-review">Code Review</a> reviews pull requests automatically.</li>
+        <li>Read more: <a href="https://code.claude.com/docs/en/headless">Run Claude Code programmatically</a>, <a href="https://code.claude.com/docs/en/github-actions">GitHub Actions</a>, <a href="https://code.claude.com/docs/en/gitlab-ci-cd">GitLab CI/CD</a>, <a href="https://code.claude.com/docs/en/cli-reference">CLI reference</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
