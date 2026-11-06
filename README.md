@@ -19,18 +19,48 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 
 - [4 Claude eri laitteilla](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-4.html)
 - [5 Liitännät ja työnkulut](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-5.html)
-- 6 Claude Code: asennus (tulossa)
+- [6 Claude Code: asennus](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-6.html)
 
 ### Istunto 3: Claude Code käytössä
 
-- 7 Peruskäyttö (tulossa)
-- 8 Git ja GitHub / GitLab (tulossa)
+- [7 Peruskäyttö](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-7.html)
+- [8 Git ja GitHub / GitLab](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-8.html)
 
 ### Istunto 4: Työtapa ja omat työkalut
 
-- 9 Työtapa (tulossa)
-- 10 Omat skillit ja agentit (tulossa)
-- 11 Demot ja jatko (tulossa)
+- [9 Työtapa](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-9.html)
+- [10 Omat skillit ja agentit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-10.html)
+- [11 Demot ja jatko](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-11.html)
+
+## English edition
+
+An English edition of the course is available. Finnish is the default; the FI | EN switch in the page header changes the language.
+
+- [English home page](https://marcozarg.github.io/ClaudeKurssi/en/index.html)
+
+### Session 1: Basics
+
+- [0 What is Claude?](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-0.html)
+- [1 The first conversation](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-1.html)
+- [2 A good prompt](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-2.html)
+- [3 Files, Projects and Artifacts](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-3.html)
+
+### Session 2: Devices and Claude Code
+
+- [4 Claude on different devices](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-4.html)
+- [5 Connectors and workflows](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-5.html)
+- [6 Claude Code: installation](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-6.html)
+
+### Session 3: Claude Code in use
+
+- [7 Basic use](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-7.html)
+- [8 Git and GitHub / GitLab](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-8.html)
+
+### Session 4: Way of working and your own tools
+
+- [9 Way of working](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-9.html)
+- [10 Your own skills and agents](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-10.html)
+- [11 Demos and next steps](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-11.html)
 
 ## Lisenssi
 

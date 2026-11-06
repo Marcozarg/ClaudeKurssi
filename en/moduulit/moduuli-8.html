@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>8 Git and GitHub / GitLab - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="8">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-7.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 8 &middot; Session 3</span>
+  <h1>Git and GitHub / GitLab</h1>
+  <div class="meta"><span class="chip">Core ~45 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Why git?</h2>
+    <p>Git saves the history of your files: you can go back to an earlier version, compare changes and work in parallel safely. Claude can make many changes quickly, so git is your safety net. In module 7 you saw that /rewind does not track changes made by shell commands. Git tracks everything that has been saved.</p>
+    <p>Git is a tool on your machine. <b>GitHub</b> and <b>GitLab</b> are services where a repo (a code repository) can be stored and where work is tracked with issues and change requests.</p>
+    <div class="note">You need Git for Windows (<code>git --version</code> works in the terminal). If it does not, install it from <a href="https://git-scm.com/downloads/win">git-scm.com</a> and open a new terminal.</div>
+  </section>
+
+  <section>
+    <h2>Basic git commands</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>git clone &lt;address&gt;</code></td><td>Copies a repo to your machine</td></tr>
+        <tr><td><code>git status</code></td><td>Shows what has changed</td></tr>
+        <tr><td><code>git diff</code></td><td>Shows the changes line by line</td></tr>
+        <tr><td><code>git add &lt;file&gt;</code></td><td>Selects a file for the next save</td></tr>
+        <tr><td><code>git commit -m "message"</code></td><td>Saves the selected changes to the history</td></tr>
+        <tr><td><code>git branch</code> and <code>git switch -c &lt;name&gt;</code></td><td>Lists branches / creates a new branch and switches to it</td></tr>
+        <tr><td><code>git push</code></td><td>Sends commits to the server (GitHub or GitLab)</td></tr>
+        <tr><td><code>git pull</code></td><td>Fetches others' changes from the server</td></tr>
+      </tbody>
+    </table></div>
+    <div class="codebox"><pre><code>git clone https://github.com/Marcozarg/ClaudeKurssi
+cd ClaudeKurssi
+git status
+git switch -c my-experiment</code></pre></div>
+    <p>The way of working: make changes on your own branch, check <code>git diff</code>, save a commit and only then send.</p>
+  </section>
+
+  <section>
+    <h2>How Claude Code uses git</h2>
+    <p>Claude Code runs git commands the same way as other commands and asks permission unless you have allowed them. Read-only commands (for example <code>git status</code> and <code>git diff</code>) usually go through without asking.</p>
+    <ul>
+      <li><b>Viewing changes:</b> "What have I changed? Tell me in plain English." Claude reads the diff and summarizes it.</li>
+      <li><b>Commit messages:</b> "Make a commit with a message that describes the change." Claude checks the changes, chooses the files and writes the message.</li>
+      <li><b>Branches:</b> "Create a new branch for this fix and make the change there."</li>
+      <li><b>Conflicts:</b> "Help me resolve this merge conflict."</li>
+    </ul>
+    <div class="note">Always check the diff before committing, and ask for a push only when you are ready. Keep permanent permissions (module 7) deliberately narrow: <code>git push</code> and <code>git reset --hard</code> do not belong on the "allow always" list. Do not commit secrets (<code>.env</code>, passwords, keys).</div>
+    <div class="shot">[KUVA: m8-commit - Claude Code shows the diff and proposes a commit message]</div>
+  </section>
+
+  <section>
+    <h2>GitHub and GitLab side by side</h2>
+    <p>In module 5 you connected GitHub to claude.ai: it <b>only reads files</b> and does not see issues or pull requests. In Claude Code it is different: because Claude can run commands, it can use the service's command-line tool and work with issues.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>GitHub</th><th>GitLab</th></tr></thead>
+      <tbody>
+        <tr><td>Command-line tool</td><td><code>gh</code> (<a href="https://cli.github.com/">cli.github.com</a>); for Windows: <code>winget install --id GitHub.cli --source winget</code></td><td><code>glab</code> (<a href="https://docs.gitlab.com/cli/">docs.gitlab.com/cli</a>); installation guide on GitLab's page</td></tr>
+        <tr><td>Signing in</td><td><code>gh auth login</code></td><td><code>glab auth login</code></td></tr>
+        <tr><td>Issues</td><td><code>gh issue list</code>, <code>gh issue create</code>, <code>gh issue view 12</code>, <code>gh issue comment 12</code></td><td><code>glab issue list</code>, <code>glab issue create</code>, <code>glab issue view 12</code>, <code>glab issue note 12</code></td></tr>
+        <tr><td>Change request</td><td>Pull request: <code>gh pr create</code>, <code>gh pr view</code></td><td>Merge request: <code>glab mr create</code>, <code>glab mr view</code></td></tr>
+        <tr><td>Tracking work</td><td>Projects (table or Kanban): <code>gh project item-list</code>; requires the <code>project</code> scope: <code>gh auth refresh -s project</code></td><td>Issue board (Kanban whose columns are labels): in the browser or with the command <code>glab issue board view</code></td></tr>
+        <tr><td>Concept</td><td>Pull request, Actions</td><td>Merge request, CI/CD pipeline</td></tr>
+      </tbody>
+    </table></div>
+    <p>The same way of working applies to both: sign in to the tool once, and then ask Claude in plain language. Claude chooses the right command.</p>
+    <div class="shot">[KUVA: m8-gh-glab - gh issue list and glab issue list side by side]</div>
+  </section>
+
+  <section>
+    <h2>Example prompts</h2>
+    <p>Sign in first (<code>gh auth login</code> or <code>glab auth login</code>) and start <code>claude</code> in the repo's folder.</p>
+    <div class="codebox"><pre><code>List the open issues and group them by topic. Tell me which ones look the most urgent.</code></pre></div>
+    <div class="codebox"><pre><code>Create an issue: "The backup script does not log errors". Add steps to reproduce and a proposed fix to the description.</code></pre></div>
+    <div class="codebox"><pre><code>Read issue 12, make the fix on your own branch, run the tests and make a commit. Do not push yet.</code></pre></div>
+    <div class="codebox"><pre><code>Make a pull request (GitHub) or merge request (GitLab) of the changes, with a description that says what was changed and why.</code></pre></div>
+    <p>Note that the content of issues is text written by others. Claude reads it as part of the work, and the text may contain instructions that try to steer it. Check what Claude is about to run before you approve.</p>
+    <div class="note">Publishing is a step that cannot be undone: <code>git push</code>, creating an issue and a pull request are visible to others. Keep these behind a permission prompt.</div>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Clone a repo and ask about its history</h3>
+      <div class="req">Requires: a Pro plan and Git for Windows. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Clone the course repo <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a>, start <code>claude</code> in the folder and ask: "Show the last 5 commits and tell me what each one changed."</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude runs the command <code>git log</code> (for example <code>git log -5 --stat</code>) and tells you what each commit changed: which files were added or modified. This is reading, so Claude Code does not usually ask permission. Check the result yourself by running <code>git log --oneline -5</code>.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. A script change on its own branch</h3>
+      <div class="req">Requires: a Pro plan and Git for Windows. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Make a new folder, run <code>git init</code> and add a PowerShell script that reads a CSV file of users (name, department, email) and removes empty rows and duplicates. Make the first commit. Then ask Claude: "Create a branch cleanup, add an email address check with a regex to the script and make a commit." Finally look at <code>git log --oneline</code> and <code>git diff main</code>.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude creates the branch (<code>git switch -c cleanup</code>), adds the check, for example in the form <code>$email -match '^[^@\s]+@[^@\s]+\.[^@\s]+$'</code>, and makes a commit with a descriptive message. The diff shows only the added lines. If the main branch is named <code>master</code>, use the command <code>git diff master</code>. Test the regex yourself with example addresses: it is simple and does not accept everything that email addresses allow.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. An issue with Claude (GitHub or GitLab)</h3>
+      <div class="req">Requires: a Pro plan, and a GitHub or GitLab account and a test repo where you may create issues. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Install <code>gh</code> or <code>glab</code> and sign in. Ask Claude to create an issue in the test repo: "Create an issue: 'Runbook: restarting the service'. In the description a checklist: check the status, stop, start, verify." Then ask it to list the open issues and close the issue you created.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude uses the command <code>gh issue create</code> (in GitLab <code>glab issue create</code>), lists the issues with <code>gh issue list</code> and closes the issue with <code>gh issue close</code> (<code>glab issue close</code>). Every command asks permission unless you have allowed it: read the command before approving. Check the result in the browser. Use a test repo, not a real working repo.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: Projects, boards and a safe way of working</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>GitHub Projects:</b> the <code>gh project</code> commands (for example <code>item-list</code>, <code>item-add</code>) require the <code>project</code> scope: <code>gh auth refresh -s project</code>. Ask Claude: "List the open tasks in the project and suggest which one to take next."</li>
+        <li><b>GitLab boards</b> are based on labels: when an issue's label changes, it moves from one column to another. Ask: "Add the label 'In progress' to issue 12."</li>
+        <li><b>Limit the permissions:</b> sign in with an account that has only the permissions needed, and test in a test repo first.</li>
+        <li><b>Fixing git mistakes:</b> a wrong commit can usually be fixed, but pushed history should not be rewritten. Ask Claude for the options before you run commands with <code>--force</code> or <code>reset --hard</code> in their name.</li>
+        <li>Read more: <a href="https://cli.github.com/manual/gh_issue">gh issue</a> and <a href="https://docs.gitlab.com/cli/issue/">glab issue</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

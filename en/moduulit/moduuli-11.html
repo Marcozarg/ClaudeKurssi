@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>11 Demos and next steps - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="11">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev">&larr; Previous</a>
+    <a class="btn" id="next" href="../index.html">Home &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 11 &middot; Session 4</span>
+  <h1>Demos and next steps</h1>
+  <div class="meta"><span class="chip">Core ~20 min</span><span class="chip opt">Optional ~10 min</span><span class="chip plan">Free</span></div>
+
+  <section>
+    <h2>What can you build with Claude Code?</h2>
+    <p>At the end the instructor shows three of their own hobby projects. They were made in free time for a home network, not at work. Each was built with Claude Code in the same way of working you learned in modules 9 and 10:</p>
+    <ol>
+      <li>The idea is worked through with Claude one question at a time (grilling).</li>
+      <li>Claude writes the specification and breaks it into tickets.</li>
+      <li>Claude implements one ticket at a time, tests first, and the instructor reviews and tests every change.</li>
+    </ol>
+    <p>The instructor's job was to decide what to build, answer Claude's questions, check the result and test it in the real environment.</p>
+    <div class="note">The demos do not show server names, addresses or secrets. The same goes for you: when you show your own work, hide them first.</div>
+  </section>
+
+  <section>
+    <h2>Electricity tracker</h2>
+    <p>A web application that reads a household's electricity bills and consumption data as they are, compares years with each other and forecasts the future cost. The pages are in Finnish.</p>
+    <ul>
+      <li><b>What Claude did:</b> readers for the bills of several electricity companies, the comparison and forecast calculation, and tests that check the figures against example bills.</li>
+      <li><b>Lesson:</b> give Claude an example file (with personal data removed) and the expected result. Then a test tells you whether the answer is right, and you do not have to guess.</li>
+      <li>About 140 commits in three weeks.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-sahkonseuranta - the comparison page, two years side by side]</div>
+  </section>
+
+  <section>
+    <h2>LinuxManager</h2>
+    <p>A web application that keeps a set of Linux servers updated and monitored over SSH from one page: updates, shared configuration files, disk space, Docker containers and a security check.</p>
+    <ul>
+      <li><b>What Claude did:</b> the whole application, its scheduled jobs and SSH connections, a preview before every change to a server, and a block list of servers the application must not touch.</li>
+      <li><b>Lesson:</b> plan dangerous operations first. In the planning phase, ask Claude what can go wrong and how to see the change before it is made.</li>
+      <li>About 240 commits in a month.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-linuxmanager - the Dashboard, server names blurred]</div>
+  </section>
+
+  <section>
+    <h2>3D Print Manager</h2>
+    <p>An application that follows a 3D printer through its own interface: print history, control of power sockets and the camera image on the same page. It replaced a ready-made program used before.</p>
+    <ul>
+      <li><b>What Claude did:</b> monitoring of the printer's state, saving the history, the camera image and tests that are run without a real printer.</li>
+      <li><b>Lesson:</b> Claude runs all the tests it can reach and gives the human only the steps that need a real device.</li>
+      <li>About 70 commits in two weeks.</li>
+    </ul>
+    <div class="shot">[KUVA: m11-printmanager - the print view and the camera image]</div>
+  </section>
+
+  <section>
+    <h2>Where to learn more</h2>
+    <ul>
+      <li><a href="https://code.claude.com/docs/en/overview">The Claude Code documentation</a> and its <a href="https://code.claude.com/docs/en/best-practices">best practices</a></li>
+      <li><a href="https://support.claude.com/">The Claude help center</a>: plans, usage limits and settings</li>
+      <li><a href="https://anthropic.skilljar.com/">Anthropic Academy</a>: Anthropic's free online courses</li>
+      <li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">The prompt engineering guide</a> (module 2 in more depth)</li>
+      <li><a href="https://github.com/mattpocock/skills">Matt Pocock's skills</a>, used in module 9</li>
+      <li>The source code of this course and the Copyables: <a href="https://github.com/Marcozarg/ClaudeKurssi">github.com/Marcozarg/ClaudeKurssi</a></li>
+    </ul>
+    <p>The best way to learn is to take one small, recurring task of your own and do it with Claude next week.</p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Your own idea, one question at a time</h3>
+      <div class="req">Requires: a Claude account (Free is enough).</div>
+      <p>Pick one small tool that would make your work easier, for example a script that lists expiring certificates. Write to Claude: "I want to make a tool that &lt;description&gt;. Ask me one question at a time until you know enough, and then write a short specification: goal, inputs, outputs, what it does not do." Answer the questions.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude asks, for example: where the certificates come from (the Windows certificate store, files, remote servers), how many days ahead to look, what form the result should take (CSV, email, screen) and whether the tool runs on a schedule. Finally it writes a specification that also has a limit, for example "does not renew certificates". If it did not ask about the limit, ask it to add one.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Your own follow-up plan</h3>
+      <div class="req">Requires: a Claude account (Free is enough).</div>
+      <p>Write down three recurring work tasks where Claude could help. For each, mark whether claude.ai (modules 0-5) is enough or whether Claude Code (modules 6-10) is needed, and which information in the task is something that must not be pasted in (module 0).</p>
+      <details><summary>Show example answer</summary>
+        <div><ul>
+          <li>Drafts of ticket replies: claude.ai is enough; customers' names and contact details are removed first.</li>
+          <li>Explaining errors in logs: claude.ai is enough; the logs are anonymized.</li>
+          <li>Maintaining PowerShell scripts in a repo: Claude Code; credentials stay in a secret store, not in the script or the conversation.</li>
+        </ul></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: before you build your own</h2>
+    <div class="optbox">
+      <ul>
+        <li>Start small: one script or one page, not a whole system.</li>
+        <li>Keep the work in git from the start (module 8), so every change can be undone.</li>
+        <li>Check your organization's guidance on whether work tasks may be done with AI and with which account.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

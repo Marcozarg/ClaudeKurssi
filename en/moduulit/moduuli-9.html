@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>9 Way of working - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="9">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-8.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 9 &middot; Session 4</span>
+  <h1>Way of working</h1>
+  <div class="meta"><span class="chip">Core ~40 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Why the way of working decides</h2>
+    <p>Claude does a lot quickly, including wrong things. A good result does not come from one perfect prompt but from repeated habits: a plan before code, a question instead of guessing, a test before a fix, a check before the work is declared done. In this module you adopt the core habits, install Matt Pocock's skills plugin and go through the whole flow from idea to implementation.</p>
+    <p>The module builds on earlier ones: plan mode and <code>CLAUDE.md</code> (module 7) and git (module 8) are the tools here.</p>
+  </section>
+
+  <section id="ydintavat">
+    <h2>Core habits</h2>
+    <p>A checklist you can give Claude as its own instructions. Every rule has a reason, and the reasons are found in the <a href="#kopioi-coding-style">coding-style.md base</a> on this page.</p>
+    <ol>
+      <li><b>Plan first.</b> For a non-trivial change, Claude first states the approach, the options and a recommendation. Code only after you say "proceed". Plan mode (<code>Shift+Tab</code>) makes this mandatory.</li>
+      <li><b>Ask, do not guess.</b> An unknown path, version or setting is looked up in the repository or asked from you. A confident guess looks exactly like a fact.</li>
+      <li><b>Test first.</b> Every new behaviour and every confirmed bug gets a test that fails without the change. The test is run first and seen red, then the change that turns it green is made.</li>
+      <li><b>Check before "done".</b> Claude runs the tests and says what was run and what was not. The words "works" and "verified" belong only to things that were run.</li>
+      <li><b>Short commits.</b> One short line, one logical change. Commit and push are separate steps.</li>
+      <li><b>No secrets.</b> Passwords, keys and <code>.env</code> files do not belong in the conversation, in plans or in commits. Refer to the place where the secret is.</li>
+    </ol>
+    <div class="note">Follow your organization's rules on what information may be given to an AI service. When in doubt, ask first.</div>
+  </section>
+
+  <section>
+    <h2>Matt Pocock's skills plugin</h2>
+    <p><b>Matt Pocock</b> has published a collection of skills that implement the way of working above as ready-made commands: interview, spec, tickets, test-driven implementation and code review. Source and descriptions: <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>. The content of the skills is his work, so this page only describes them and does not copy them.</p>
+    <h3>Installation</h3>
+    <p>The plugin's README gives Claude Code one command. Run it in a normal terminal:</p>
+    <div class="codebox"><pre><code>claude plugin install mattpocock-skills@claude-plugins-official</code></pre></div>
+    <p>You can run the same inside Claude Code with the command <code>/plugin install mattpocock-skills@claude-plugins-official</code>. Then the <code>/plugin</code> panel opens, where you choose the installation scope: <b>Install for you (user scope)</b> is enough for your own use. Claude Code adds the official <code>claude-plugins-official</code> catalog itself the first time you start an interactive session. Guide: <a href="https://code.claude.com/docs/en/discover-plugins">code.claude.com/docs/en/discover-plugins</a>.</p>
+    <p>Check the installation by typing <code>/</code>: the plugin's skills show up in the form <code>/mattpocock-skills:name</code>.</p>
+    <div class="note">A plugin can contain instructions that Claude follows. Read the description in the installation view before you approve the installation.</div>
+    <h3>Per-repo setup: once in every repo</h3>
+    <p>Open <code>claude</code> in the repo's folder and run <code>/setup-matt-pocock-skills</code>. The skill asks where issues and tickets are kept (GitHub, GitLab or local markdown files), which status labels are used and where documentation is saved. The answers are saved in the repo, so the other skills know where to write the result. If the command is not found by its short name, type <code>/setup</code> and choose the row in the list that starts with the plugin's name.</p>
+    <div class="shot">[KUVA: m9-asennus - the /plugin install view and the / list after installation, with mattpocock-skills showing]</div>
+  </section>
+
+  <section>
+    <h2>The flow: from interview to implementation</h2>
+    <p>An example task: write a PowerShell script that reports certificates that are about to expire or AD accounts that have been disabled. The task is the right size: it needs decisions that are worth making before code.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Step</th><th>You type</th><th>Claude does</th></tr></thead>
+      <tbody>
+        <tr><td>1. Interview</td><td><code>/mattpocock-skills:grilling</code> and a description: "I want a script that reports certificates expiring within 30 days."</td><td>Asks questions and proposes a recommended answer to each: which certificate stores, what the threshold is, where the report goes, whether the script may change anything. This is the plan before code.</td></tr>
+        <tr><td>2. Spec</td><td><code>/mattpocock-skills:to-spec</code></td><td>Gathers the conversation into a spec without a new interview and saves it to the ticket system you chose in the setup.</td></tr>
+        <tr><td>3. Tickets</td><td><code>/mattpocock-skills:to-tickets</code></td><td>Breaks the spec into small tickets, each of which works from start to finish (for example "read one store and print a list"), and marks which ticket waits for which.</td></tr>
+        <tr><td>4. Clean context</td><td><code>/clear</code></td><td>Empties the conversation. The spec and tickets are in files or in the tracker, so nothing is lost, and implementation starts without the interview's baggage.</td></tr>
+        <tr><td>5. Implementation</td><td><code>/mattpocock-skills:implement #1</code></td><td>Fetches the ticket, writes a test first (for example Pester), writes the code, runs the tests and reviews the change before the commit.</td></tr>
+        <tr><td>6. Next</td><td><code>/clear</code>, then <code>/mattpocock-skills:implement #2</code></td><td>The same round for the next ticket. One ticket, one commit.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Plan mode fits in like this: the interview and the spec are planning, so they can be done in plan mode (<code>Shift+Tab</code>), where Claude does not edit files. Implementation starts only when you approve. For a small fix the whole chain is too heavy: then ask for just a plan and continue.</p>
+    <p>Other useful skills from the same collection: <code>tdd</code> (test-driven development), <code>code-review</code> (review against the spec and the repo's conventions) and <code>diagnosing-bugs</code> (bug hunting).</p>
+    <div class="shot">[KUVA: m9-grilling - the grilling skill asks about the scope of the certificate report and proposes an answer]</div>
+    <div class="note">The spec and tickets are written by Claude: read them before implementation. A mistake in the spec is cheapest to fix before any code exists.</div>
+  </section>
+
+  <section id="kehote-5">
+    <h2>Example: a complete starting prompt</h2>
+    <p>The fifth, complete version of the coffee prompts from module 2. It is a good start for an interview (grilling): the decisions are made, and it asks for the rest to be asked.</p>
+    <div class="codebox" data-prompt="coffee-5"><pre><code>Build a container under Portainer with a web interface built in Python, a SQLite database for history, and a postal code field in the settings. When I press a button, search for the cheapest coffee deals by that postal code, sorted by distance and price. Ask me for the missing details until we agree on the result. Base everything on facts, and if you don't know something, don't guess; say that you don't know.</code></pre></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Part of the prompt</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>"a container under Portainer"</td><td>Says where the application runs: as a Docker container managed by Portainer. Claude can make a matching Dockerfile and start-up method.</td></tr>
+        <tr><td>"a web interface built in Python"</td><td>Chooses the language and the shape of the application: a user interface in the browser.</td></tr>
+        <tr><td>"a SQLite database for history"</td><td>Decides where the search history is stored. Claude knows what SQLite is.</td></tr>
+        <tr><td>"a postal code field in the settings"</td><td>Decides how the location is given, and avoids guessing where you are.</td></tr>
+        <tr><td>"When I press a button, search for the cheapest coffee deals"</td><td>Says what starts the search: a button, not a schedule.</td></tr>
+        <tr><td>"sorted by distance and price"</td><td>Defines the order of the results.</td></tr>
+        <tr><td>"Ask me for the missing details until we agree"</td><td>Asks for an interview before code: where the deals come from, what the distance limit is, what is stored. The same way as in the grilling skill.</td></tr>
+        <tr><td>"Base everything on facts, and if you don't know something, don't guess"</td><td>Reduces guessing: Claude says it does not know, for example if it cannot find a suitable source of deal data.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Run <code>/mattpocock-skills:grilling</code> and give the prompt as the description, or give the prompt as it is without the skill. Answer the questions and continue only when the plan looks right to you.</p>
+  </section>
+
+  <section>
+    <h2>Test-suite optimization and style alignment</h2>
+    <p>Two tools that come with the course continue the same thinking. Both installation guides and the full content are in module 10.</p>
+    <ul>
+      <li><b>optimize-testsuite</b> measures a project's test suite, cuts the unnecessary delay the measurements show, proves the suite stays stable and reports before/after times. Use it when the tests are slow. Copyable: <a href="moduuli-10.html#kopioi-optimize-testsuite">optimize-testsuite in module 10</a>.</li>
+      <li><b>align-style</b> compares a project's instructions (CLAUDE.md, git files, settings) with the way of working on this page, finds conflicts, duplicates and stale information, asks about every decision and carries the changes through. Use it when you adopt the way of working in an existing project. Copyable: <a href="moduuli-10.html#kopioi-align-style">align-style in module 10</a>.</li>
+    </ul>
+    <div class="note">Always run these on a branch that can be discarded, and read the proposed changes before approving.</div>
+  </section>
+
+  <section id="kopioi-coding-style" data-tool="coding-style">
+    <h2>Copyable: coding-style and the global CLAUDE.md</h2>
+    <p>Two files: <code>coding-style.md</code> holds the rules of the way of working with their reasons, and <code>CLAUDE.md</code> is a short global instruction that brings it into every session. Edit the texts to be your own after installing.</p>
+    <div class="tablewrap manifest"><table>
+      <tbody>
+        <tr><th>Files</th><td><code>coding-style.md</code> &rarr; <code>%USERPROFILE%\.claude\coding-style.md</code><br><code>CLAUDE.md</code> &rarr; <code>%USERPROFILE%\.claude\CLAUDE.md</code></td></tr>
+        <tr><th>Prerequisites</th><td>Claude Code</td></tr>
+        <tr><th>Hook</th><td>No hook.</td></tr>
+        <tr><th>Backup</th><td>If a file with the same name already exists at the destination, first rename it with a <code>.bak</code> ending (e.g. CLAUDE.md.bak). If .bak already exists, do not continue: first find out which file is which. If needed, add your earlier instructions to the end of the new file.</td></tr>
+        <tr><th>Removal</th><td>First save the changes you made to the files after installing. Then delete the files and restore the .bak files to their original names.</td></tr>
+      </tbody></table></div>
+    <h3>Installation</h3>
+    <ol>
+      <li>Open the folder <code>%USERPROFILE%\.claude</code> in File Explorer or in PowerShell: <code>explorer "$HOME\.claude"</code>. If the folder does not exist, start <code>claude</code> once.</li>
+      <li>If the folder already has a <code>CLAUDE.md</code> or <code>coding-style.md</code>, rename it with a <code>.bak</code> ending. If <code>.bak</code> already exists, stop and find out which file is which.</li>
+      <li>Download the two files below with the buttons and save them in the folder <code>%USERPROFILE%\.claude</code> with the names <code>coding-style.md</code> and <code>CLAUDE.md</code>.</li>
+      <li>If you had an earlier <code>CLAUDE.md</code>, copy your own instructions to the end of the new file.</li>
+      <li>Start a new <code>claude</code> session and ask: "What rules do you have about the way of working?" The answer should describe the core habits.</li>
+    </ol>
+<div class="codebox" data-file="coding-style/coding-style.md"><pre><code># Coding style
+
+How I want Claude Code to work with me, with the reason behind each rule. My global `CLAUDE.md` imports this file,
+so every session reads it. A project's own `CLAUDE.md` adds to these rules or overrides them for that project.
+
+## Workflow
+
+- **Plan before code.** For anything non-trivial, explain the approach first: the options, a recommendation, the
+  files it touches. Write code only after I say "proceed". *Why: a wrong approach found in the plan costs a minute;
+  found in the code it costs an hour.*
+- **Small steps.** One change, one check, then the next change. *Why: a small diff is easy to review and easy to undo.*
+- **No guessing.** When a path, version, setting, credential or name is unknown, look it up in the repo or ask me.
+  *Why: a confident guess looks exactly like a fact.*
+- **Stay in scope.** Fix what was asked. No unrequested refactoring, renames or clean-ups. *Why: unrelated changes
+  hide the real change in the diff.*
+
+## Questions
+
+- Ask instead of guessing. Put several independent questions in one round, each with a recommended answer first.
+- Never answer your own question and carry on as if I had decided.
+- Answer my direct questions in the reply, not only inside a plan or a file.
+
+## Verification
+
+- **Test first.** Every new behaviour and every confirmed bug gets a test that fails without the change. Run it, see it
+  fail, then make it pass. *Why: a test that never failed may not test anything.*
+- **Check before "done".** Before saying a change is finished, run the tests and the checks you can reach yourself and
+  report what was run and what was not. Never write "verified" or "works" for something that was not run.
+- **Test plan.** When something needs me (a login, hardware, a judgement by eye), give numbered steps with the exact
+  commands and the expected result of each step.
+- **Read before you call.** Read a function's definition before calling or changing it; never assume its parameters
+  or what it returns.
+
+## Git
+
+- **Short commits.** One short line per commit message, in English, imperative: `Fix login timeout`,
+  `Add CSV export`. One logical change per commit.
+- **Commit and push are separate steps.** Push only when I ask or when the project's rules say so.
+- **Never commit secrets:** passwords, API keys, tokens, `.env` files, private keys, customer data. If one gets
+  tracked, stop and tell me; removing it from history is my decision.
+- **Look before you overwrite.** Check what a file holds before deleting or replacing it; never force-push without
+  asking.
+
+## Code
+
+- **Comments explain why, not what.** Add one only for a hidden constraint, a workaround or a surprising rule.
+- **Never fail silently.** A failed read, request or parse is shown or allowed to surface; it is never swallowed or
+  counted as success.
+- **Minimal scope.** No feature flags, compatibility layers or abstractions the task does not need.
+
+## Safety
+
+- **No secrets in chat, plans, memory or commits.** Refer to where a secret lives (a file name, a vault entry), never
+  to its value.
+- **Ask before destructive actions:** deleting files, dropping data, changing permissions, anything that cannot be
+  undone. Also ask before adding, removing or weakening a confirmation step.
+- **Follow my organization's rules** on what data may be given to an AI service. When unsure, ask me first.
+
+## Communication
+
+- Short and direct: one or two sentences per update, no long summary at the end.
+- No emoji.
+</code></pre></div>
+    <p><a class="btn" href="../../kopioi/coding-style/coding-style.md" download>Download coding-style.md</a></p>
+<div class="codebox" data-file="coding-style/CLAUDE.md"><pre><code># Global instructions
+
+These apply to every project. The full rule set with the reasons is imported here:
+
+@~/.claude/coding-style.md
+
+## Always
+
+- Plan before code: explain the approach and wait for "proceed" before writing code for anything non-trivial.
+- Ask instead of guessing; put questions to me with a recommended answer first.
+- Test first: a new behaviour or a fixed bug gets a test that fails without the change.
+- Check before "done": run the tests and say what was run and what was not.
+- Commit messages are one short English line. Never commit secrets.
+- Answer me in the language I write in. No emoji.
+</code></pre></div>
+    <p><a class="btn" href="../../kopioi/coding-style/CLAUDE.md" download>Download CLAUDE.md</a></p>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Install the plugin and set up a repo</h3>
+      <div class="req">Requires: a Pro plan and Git for Windows. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Install <code>mattpocock-skills</code>, make a new folder, run <code>git init</code> and start <code>claude</code>. Run <code>/setup-matt-pocock-skills</code> and choose local markdown files as the tracker.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>When you type <code>/</code>, the list has rows in the form <code>/mattpocock-skills:...</code>. The setup asks for the tracker, the labels and the place for documentation and writes the answers to the repo (typically to the CLAUDE.md file and the <code>docs/</code> folder). Check the result with <code>git status</code>: the new or changed files are visible, and you can read them before committing.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. From interview to tickets</h3>
+      <div class="req">Requires: a Pro plan and the repo from exercise 1. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Run <code>/mattpocock-skills:grilling</code> and describe the task: a PowerShell script that lists AD accounts that are disabled but still have group memberships. Answer the questions and then run <code>to-spec</code> and <code>to-tickets</code>. Read the tickets.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>A good result has a spec and 3-5 tickets, for example: (1) list the disabled accounts, (2) add the group memberships, (3) export to CSV, (4) scheduling. The first ticket already produces a small working report. If a ticket is just "write everything", ask Claude to split it. Record in the spec, as a limit, that the script only reads and changes nothing.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Implement one ticket</h3>
+      <div class="req">Requires: a Pro plan and the tickets from exercise 2; it is good to have the Pester module installed. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Run <code>/clear</code> and then <code>/mattpocock-skills:implement #1</code> (or the ticket's number). Watch whether Claude writes the test first, and finally check <code>git diff</code> and <code>git log --oneline</code>.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude fetches the ticket, writes a failing test, writes the code, runs the tests and proposes a short commit message. If the tests were not run, Claude must say so directly: ask "What did you run and what did you not?" If Active Directory is not available, the tests use example data. Do not let Claude run the script against the real AD without reading the command.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: adopt the way of working permanently</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Global instructions:</b> the Copyable at the end of the page gives you the <code>coding-style.md</code> base and a <code>CLAUDE.md</code> that brings it into all your sessions. Edit the rules to be your own: remove the ones you do not want and add your own.</li>
+        <li><b>A project-specific CLAUDE.md</b> adds rules or overrides the global ones only for that project (module 7).</li>
+        <li><b>Keep the list short:</b> every rule consumes context in every session. Remove a rule that Claude follows anyway.</li>
+        <li><b>align-style</b> brings an existing project into line: see <a href="moduuli-10.html#kopioi-align-style">module 10</a>.</li>
+        <li>Read more: <a href="https://github.com/mattpocock/skills">mattpocock/skills</a> and <a href="https://code.claude.com/docs/en/discover-plugins">installing plugins</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+</div>
+</body>
+</html>

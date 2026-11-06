@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6 Claude Code: installation - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="6">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-5.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 6 &middot; Session 2</span>
+  <h1>Claude Code: installation</h1>
+  <div class="meta"><span class="chip">Core ~20 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>What is Claude Code?</h2>
+    <p>Claude Code is a version of Claude that runs on your machine, in your own folder. It reads files, edits them and runs commands (for example PowerShell scripts and git commands) when you approve it. In chat you copy text to Claude and back. In Claude Code, Claude works directly with your files.</p>
+    <ul>
+      <li>Good for working on scripts, logs, guides and configurations, not just programming.</li>
+      <li>Available on the command line, as a VS Code extension and on the <b>Code</b> tab of the desktop app. They all use the same settings.</li>
+      <li>Using it consumes the same usage limit as claude.ai (<a href="moduuli-0.html#kayttorajat">module 0, usage limits</a>).</li>
+    </ul>
+    <div class="note">Claude Code requires a Pro, Max, Ultra, Team or Enterprise plan or a Console account. <b>A free claude.ai account does not include Claude Code.</b> No Pro? Follow the instructor's demo or work with a partner.</div>
+  </section>
+
+  <section>
+    <h2>Before installing</h2>
+    <ul>
+      <li><b>Windows:</b> Windows 10 version 1809 or newer, or Windows Server 2019 or newer.</li>
+      <li><b>Hardware:</b> at least 4 GB of RAM, an x64 or ARM64 processor, an internet connection.</li>
+      <li><b>Administrator rights are not needed.</b> Do not open the terminal as administrator.</li>
+      <li><b>Git for Windows</b> is optional but recommended. Without it Claude Code uses PowerShell to run commands; with it, it uses Git Bash. Module 8 needs git in any case.</li>
+    </ul>
+    <p>The Claude Code version tested for this course is <b>2.1.318</b> (checked 11/2026). In a newer version the menus and commands may differ slightly; the <a href="https://code.claude.com/docs/en/setup">installation guide</a> is always up to date.</p>
+  </section>
+
+  <section>
+    <h2>Installing on Windows</h2>
+    <p>Open PowerShell (from the Start menu) and run:</p>
+    <div class="codebox"><pre><code>irm https://claude.ai/install.ps1 | iex</code></pre></div>
+    <p>The installation shows no progress while it downloads. When it is done, <b>open a new terminal window</b> and check:</p>
+    <div class="codebox"><pre><code>claude --version</code></pre></div>
+    <p>The command prints the version number. If the terminal says <code>claude</code> is not a known command, the installation folder is not in the PATH variable yet; a new terminal usually fixes it.</p>
+    <h3>Alternatives</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Method</th><th>Command</th><th>Updating</th></tr></thead>
+      <tbody>
+        <tr><td>PowerShell (recommended)</td><td><code>irm https://claude.ai/install.ps1 | iex</code></td><td>Automatic</td></tr>
+        <tr><td>CMD (command prompt)</td><td><code>curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code></td><td>Automatic</td></tr>
+        <tr><td>WinGet</td><td><code>winget install Anthropic.ClaudeCode</code></td><td>Manual: <code>winget upgrade Anthropic.ClaudeCode</code></td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">The PowerShell and CMD commands are not interchangeable. If you see the error <code>The token '&amp;&amp;' is not a valid statement separator</code>, you are in PowerShell but ran the CMD command. If you see the error <code>'irm' is not recognized</code>, you are in CMD.</div>
+    <div class="shot">[KUVA: m6-install - PowerShell, the install command and claude --version]</div>
+  </section>
+
+  <section>
+    <h2>First launch and signing in</h2>
+    <ol>
+      <li>Go to the folder where you want to work, for example a practice folder: <code>cd %USERPROFILE%\Documents\harjoitus</code> (CMD) or <code>cd $env:USERPROFILE\Documents\harjoitus</code> (PowerShell).</li>
+      <li>Type <code>claude</code>.</li>
+      <li>The first time, Claude Code opens the browser. Sign in with the same Claude account that has Pro or Max.</li>
+      <li>Claude Code asks whether you trust the folder. Answer yes only for folders whose contents you know.</li>
+      <li>Type a message, for example "What is in this folder?", and watch how Claude asks for permission to read files.</li>
+    </ol>
+    <div class="shot">[KUVA: m6-login - the browser sign-in window and a ready session]</div>
+    <p>You can check the state of the installation with the command <code>claude doctor</code>. The native installation updates itself; other installation methods need a manual update (<code>claude update</code> for the native installation).</p>
+  </section>
+
+  <section>
+    <h2>The VS Code extension</h2>
+    <ol>
+      <li>Open VS Code (version 1.94.0 or newer).</li>
+      <li>Open Extensions (<b>Ctrl+Shift+X</b>), search for "Claude Code" and choose <b>Claude Code for VS Code</b>, published by Anthropic. The extension's identifier is <code>anthropic.claude-code</code>. Choose <b>Install</b>.</li>
+      <li>Open Claude: click the Spark icon in the top right corner of the editor (visible when a file is open) or the <b>Claude Code</b> text in the bottom bar.</li>
+      <li>If the extension does not show after installing, restart VS Code or run <b>Developer: Reload Window</b> from the command palette (<b>Ctrl+Shift+P</b>).</li>
+    </ol>
+    <p>The benefit: Claude sees your open file and selection, and changes appear in the editor as a diff that you accept or reject. <b>Alt+K</b> adds a reference to the current file and selection to the conversation.</p>
+    <div class="shot">[KUVA: m6-vscode - VS Code, the Claude Code panel and a proposed change as a diff]</div>
+  </section>
+
+  <section>
+    <h2>The desktop app: the Code tab</h2>
+    <p>If you have already installed the Claude desktop app (module 4), Claude Code is on its <b>Code</b> tab. A separate command-line installation or Node.js is not needed.</p>
+    <ol>
+      <li>Open the app and sign in.</li>
+      <li>Choose <b>Code</b> at the top of the sidebar.</li>
+      <li>Choose <b>Local</b> as the environment and open the working folder (<b>Open folder...</b>).</li>
+      <li>Choose a model and type what Claude should do.</li>
+    </ol>
+    <p>The permission mode shows under the prompt field: <b>Manual</b> asks before changes, <b>Accept edits</b> accepts file changes by itself, <b>Plan</b> only plans. Start with Manual. You see the changes in the diff view.</p>
+    <div class="shot">[KUVA: m6-desktop - the Code tab of the desktop app with a Local folder selected]</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Way of using it</th><th>Good when</th></tr></thead>
+      <tbody>
+        <tr><td>Command line</td><td>you want full control and all the commands; the course examples use this</td></tr>
+        <tr><td>VS Code</td><td>you edit code or scripts in an editor and want to see the diffs there</td></tr>
+        <tr><td>Desktop app</td><td>you do not want to use a terminal; several sessions in parallel</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Install and check</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Install Claude Code with PowerShell, open a new terminal and sign in. Ask Claude which Windows version the machine has and whether git is installed. Compare the answer with the output of the commands <code>winver</code> and <code>git --version</code> that you run yourself.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude suggests commands (for example <code>Get-ComputerInfo</code> and <code>git --version</code>) and asks permission to run them. When you approve, it reports the version and whether git is available. If git is missing, Claude says so from the error message; install Git for Windows before module 8. Check that the version Claude reports matches the <code>winver</code> window.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Ask about files</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Make an empty folder with one PowerShell script (for example one that checks disk space) and a small log file. Start <code>claude</code> in the folder and ask: "What is in these files? Summarize the script in two sentences and tell me what the log shows." Notice how Claude asks permission to read the files.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude reads the files in the folder (reading in the working folder usually does not ask permission), summarizes the script and picks out the repeated errors from the log. Check that the summary matches what the script actually does: open the script and compare. If Claude suggests changing the script, reject the suggestion; editing is practiced in module 7.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. The same in VS Code</h3>
+      <div class="req">Requires: a Pro plan and VS Code. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Install the VS Code extension, open the folder from exercise 2 in VS Code and open the script. Select a few lines of the script, add the selection to the conversation (<b>Alt+K</b>) and ask: "Explain these lines line by line."</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude explains exactly the selected lines without you copying them into the conversation. If the extension does not show, restart VS Code or run <b>Developer: Reload Window</b>. Note that this is the same Claude Code as on the command line: sessions and settings are shared.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: troubleshooting and WSL</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Installation fails (403 or another error):</b> a corporate proxy or filter may block the download. Try the CMD or WinGet alternative and see <a href="https://code.claude.com/docs/en/troubleshoot-install">installation troubleshooting</a>.</li>
+        <li><b>Claude Code cannot find Git Bash:</b> in the <code>env</code> block of the settings file you can set the variable <code>CLAUDE_CODE_GIT_BASH_PATH</code> to the path of bash.exe.</li>
+        <li><b>WSL:</b> if you work with Linux tools, install Claude Code inside WSL with the Linux command and start it in a WSL terminal. Then sandboxing is also available, which native Windows does not support.</li>
+        <li><b>Uninstalling:</b> a native installation is removed by deleting the program file and the version folder (instructions on the installation page); a WinGet installation with the command <code>winget uninstall Anthropic.ClaudeCode</code>.</li>
+        <li><b>Version:</b> <code>claude --version</code> shows the version. If a menu or command in this course does not match yours, check your version and compare it with the version tested for the course, 2.1.318.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: a usage meter for VS Code</h2>
+    <div class="optbox">
+      <p>The extension <b>Claude Code Usage</b> (identifier <code>growthjack.claude-code-usage</code>) shows the token usage, cache and quota of Claude Code (and OpenAI Codex) in the VS Code status bar.</p>
+      <div class="note"><b>A third-party extension, not Anthropic's.</b> The publisher is GrowthJack, and the page has no verified-publisher badge. Before installing, check the publisher and whether your organization's guidance allows the extension. You can always see the official figures in Claude Code with the command <code>/usage</code>.</div>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

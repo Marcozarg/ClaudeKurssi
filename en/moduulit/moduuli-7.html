@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7 Basic use - Claude course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../assets/kurssi.css">
+<script src="../../assets/kurssi.js" defer></script>
+</head>
+<body data-moduuli="7">
+<header class="top">
+  <a class="brand" href="../index.html">Claude course</a>
+  <div class="pagebar">
+    <button class="btn" id="slideBtn" type="button">Slide mode (S)</button>
+    <a class="btn" id="prev" href="moduuli-6.html">&larr; Previous</a>
+    <a class="btn" id="next">Next &rarr;</a>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Modules"></nav>
+<main class="page" id="page">
+  <span class="label">Module 7 &middot; Session 3</span>
+  <h1>Basic use</h1>
+  <div class="meta"><span class="chip">Core ~65 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+
+  <section>
+    <h2>Basic commands</h2>
+    <p>In a Claude Code session you write in plain language. Commands that start with a slash control the tool itself. Type <code>/</code> and you see the list.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>/help</code></td><td>Shows help and the commands</td></tr>
+        <tr><td><code>/usage</code></td><td>Shows the session's consumption and your plan's usage limits</td></tr>
+        <tr><td><code>/context</code></td><td>Shows how much context has been used</td></tr>
+        <tr><td><code>/compact</code></td><td>Summarizes the conversation and frees context</td></tr>
+        <tr><td><code>/clear</code></td><td>Starts a new conversation with an empty context</td></tr>
+        <tr><td><code>/rewind</code></td><td>Restores the code and/or the conversation to an earlier point</td></tr>
+        <tr><td><code>/init</code></td><td>Creates a CLAUDE.md file for the project</td></tr>
+        <tr><td><code>/memory</code></td><td>Edits CLAUDE.md files and memory</td></tr>
+        <tr><td><code>/resume</code></td><td>Continues an earlier conversation</td></tr>
+        <tr><td><code>/permissions</code></td><td>Shows and edits the permission rules</td></tr>
+        <tr><td><code>/model</code></td><td>Switches the model</td></tr>
+        <tr><td><code>/exit</code></td><td>Ends the session</td></tr>
+      </tbody>
+    </table></div>
+    <p>Other useful ones: <code>@file</code> adds a file to the conversation, and a <code>!</code> at the start of a line runs a command directly (for example <code>!git status</code>) and adds the output to the conversation.</p>
+    <div class="shot">[KUVA: m7-komennot - the command list that opens with a slash]</div>
+  </section>
+
+  <section>
+    <h2>Context, /compact and /clear</h2>
+    <p>Claude remembers only what is in the conversation's context: the messages, the files you have read and the output of commands. The context is limited, and in a long conversation it fills up, which makes the answers worse and the consumption higher.</p>
+    <ul>
+      <li><code>/context</code> shows what the context contains.</li>
+      <li><code>/compact</code> summarizes the conversation and continues the same work. You can steer the summary: <code>/compact focus on the script's errors</code>.</li>
+      <li><code>/clear</code> starts from scratch. Use it when you move to a completely different task. You can find the previous conversation with <code>/resume</code>.</li>
+    </ul>
+    <div class="note">Rule of thumb: one task, one conversation. When the task changes, use <code>/clear</code>. When the same task continues but the conversation is long, use <code>/compact</code>.</div>
+  </section>
+
+  <section>
+    <h2>Use and limits: /usage</h2>
+    <p>The command <code>/usage</code> shows the cost of the session and how much of your plan's usage limit has been used. The limit is the same as in claude.ai: read the principle in the <a href="moduuli-0.html#kayttorajat">usage limits section of module 0</a>.</p>
+    <ul>
+      <li>A long context, many files and a heavy model consume more.</li>
+      <li>Check <code>/usage</code> before big work and when the limit starts to approach.</li>
+      <li>Switching to a smaller model (<code>/model</code>) for light tasks saves the limit.</li>
+    </ul>
+    <div class="shot">[KUVA: m7-usage - the /usage view]</div>
+  </section>
+
+  <section>
+    <h2>Plan mode and /rewind</h2>
+    <h3>Plan mode</h3>
+    <p>In plan mode Claude reads and proposes a plan but changes nothing. Switch modes with <b>Shift+Tab</b> (it cycles: Manual, Accept edits, Plan) or start <code>claude --permission-mode plan</code>. With some Windows settings the switch key is <b>Alt+M</b>.</p>
+    <p>Use plan mode when a change is large or risky: look at the plan first, correct it and allow the implementation only then.</p>
+    <h3>/rewind</h3>
+    <p>Claude Code saves the state before every message you send. The command <code>/rewind</code> (or <b>Esc</b> twice in an empty prompt field) opens a list from which you can restore the code, the conversation or both to the chosen point.</p>
+    <div class="note"><b>An important limitation:</b> the restore tracks only changes made by Claude's own file tools. If a file was changed only by a shell command (Bash or PowerShell, for example <code>Remove-Item</code> or <code>Move-Item</code>), the change is not tracked and /rewind does not undo it. Save your work in git (module 8): /rewind does not replace version control.</div>
+    <div class="shot">[KUVA: m7-rewind - the rewind menu and the restore options]</div>
+  </section>
+
+  <section id="muistin-tasot">
+    <h2>Memory levels</h2>
+    <p>Every session starts with an empty context. There are two ways to give Claude lasting information:</p>
+    <ul>
+      <li><b>CLAUDE.md</b> is an instruction file that you write. It is loaded in every session. The command <code>/init</code> creates a first version of it by analyzing the folder.</li>
+      <li><b>Automatic memory</b> (auto memory) is notes that Claude writes itself about your corrections and preferences. They are stored under the user folder <code>%USERPROFILE%\.claude\projects\</code>.</li>
+    </ul>
+    <p>Together these make six levels. The level tells who writes the file and who it applies to.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Level</th><th>File</th><th>Writer</th><th>Applies to</th><th>In git?</th></tr></thead>
+      <tbody>
+        <tr><td><b>Organization</b></td><td><code>%ProgramFiles%\ClaudeCode\CLAUDE.md</code></td><td>IT</td><td>All users of the machine</td><td>No, IT distributes it to the machines</td></tr>
+        <tr><td><b>You, all projects</b></td><td><code>%USERPROFILE%\.claude\CLAUDE.md</code></td><td>You</td><td>Only you, in all projects</td><td>No</td></tr>
+        <tr><td><b>Project, team</b></td><td><code>.\CLAUDE.md</code> or <code>.\.claude\CLAUDE.md</code></td><td>The team</td><td>Everyone working on the project</td><td>Yes, the team shares it through git</td></tr>
+        <tr><td><b>You, this project</b></td><td><code>.\CLAUDE.local.md</code></td><td>You</td><td>Only you, in this project</td><td>No, add it to <code>.gitignore</code></td></tr>
+        <tr><td><b>Path rules</b></td><td><code>.\.claude\rules\</code> or <code>%USERPROFILE%\.claude\rules\</code></td><td>You or the team</td><td>All files or only files matched by a <code>paths</code> restriction</td><td>Project rules yes, your own rules no</td></tr>
+        <tr><td><b>Automatic memory</b></td><td><code>%USERPROFILE%\.claude\projects\&lt;project&gt;\memory\</code></td><td>Claude</td><td>You, one repo</td><td>No, stored only on this machine</td></tr>
+      </tbody>
+    </table></div>
+    <p>From automatic memory, the first 200 lines or 25 kilobytes of the <code>MEMORY.md</code> file are loaded at the start of the session, whichever is reached first. The rest is not loaded.</p>
+    <figure class="scopes">
+      <div class="scope-row">
+        <div class="scope"><b>Organization</b><small>IT sets it</small><code>%ProgramFiles%\ClaudeCode\CLAUDE.md</code></div>
+        <div class="scope"><b>You, all projects</b><small>you write it</small><code>%USERPROFILE%\.claude\CLAUDE.md</code></div>
+        <div class="scope"><b>Project, team</b><small>in git</small><code>CLAUDE.md</code></div>
+        <div class="scope"><b>You, this project</b><small>not in git</small><code>CLAUDE.local.md</code></div>
+        <div class="scope"><b>Path rules</b><small>by file type</small><code>.claude\rules\</code></div>
+        <div class="scope"><b>Automatic memory</b><small>Claude writes it</small><code>MEMORY.md</code></div>
+      </div>
+      <div class="scope-join" aria-hidden="true">&darr;</div>
+      <div class="scope-ctx">Session context</div>
+      <figcaption>everything is loaded together, none overrides another</figcaption>
+    </figure>
+    <p>This applies to Claude Code. Memory in claude.ai is a different thing: <a href="moduuli-3.html#muisti-claudeaissa">Module 3</a>.</p>
+  </section>
+
+  <section id="muisti-kaytannossa">
+    <h2>Memory in practice</h2>
+    <p>A good CLAUDE.md is short and precise: tell Claude things it cannot work out from the code.</p>
+    <div class="codebox"><pre><code># Instructions
+
+- The scripts are PowerShell 7 scripts. Use Verb-Noun names.
+- Never run scripts against production servers; all tests are done in the test environment.
+- Write instructions and comments in English.
+- Tests: Invoke-Pester .\tests</code></pre></div>
+    <h3>Example: three instructions, three levels</h3>
+    <p>You have three instructions, and each belongs in a different place:</p>
+    <ul>
+      <li>Your own style preference, for example "Answer briefly and without filler words", belongs in the file <code>%USERPROFILE%\.claude\CLAUDE.md</code>. It applies in all your projects.</li>
+      <li>A team rule, for example "Run the tests with <code>Invoke-Pester .\tests</code> before every commit", belongs in the project's <code>CLAUDE.md</code> file. It travels with git to everyone.</li>
+      <li>Your own test address belongs in the file <code>CLAUDE.local.md</code>. It stays only with you.</li>
+    </ul>
+    <div class="codebox"><pre><code># My settings in this project
+
+- The local test server is http://localhost:8080</code></pre></div>
+    <p>Add <code>CLAUDE.local.md</code> to <code>.gitignore</code> so it does not end up in the repo. You can check which files were loaded into the session with the command <code>/context all</code>: the list is under <b>Memory files</b>.</p>
+    <h3>When instructions conflict</h3>
+    <p>Claude Code joins the files it finds into one context, and no level overrides another. The project's instructions come into the context after the user's own instructions, but that does not make them the winner: if two instructions conflict, Claude may follow either one. Keep the levels consistent and do not assume that the more specific level wins.</p>
+    <h3>An instruction is not enforcement</h3>
+    <p>Claude treats CLAUDE.md files as context, not as a monitored setting. If something must be prevented for certain, do not rely on an instruction alone. Use permissions or a <code>PreToolUse</code> hook, which stops the action regardless of what Claude decides. For an organization this means managed settings, not an organization-level CLAUDE.md file.</p>
+    <h3>Imports</h3>
+    <p>A CLAUDE.md can import another file by writing <code>@</code> before its path, for example <code>@docs/git-guide.md</code>. The path is counted from the importing file, and imports can chain up to four steps. The imported file is loaded into the context together with the importing file, so an import tidies the file but does not save context.</p>
+    <h3>Turning memory off</h3>
+    <ul>
+      <li>The command <code>/memory</code> opens a list and a switch for automatic memory.</li>
+      <li>The setting <code>"autoMemoryEnabled": false</code> in the file <code>%USERPROFILE%\.claude\settings.json</code> turns it off in all projects, and in a project's own settings file only for that project.</li>
+      <li>The environment variable <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY=1</code> also turns it off.</li>
+    </ul>
+    <p>Do not write passwords or other secrets in a CLAUDE.md file: the file often travels with the repo.</p>
+  </section>
+
+  <section>
+    <h2>Continuing, files and images</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Need</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td>Continue the latest conversation in this folder</td><td><code>claude --continue</code> (short: <code>claude -c</code>)</td></tr>
+        <tr><td>Pick an earlier conversation from a list</td><td><code>claude --resume</code> or <code>/resume</code> inside a session</td></tr>
+        <tr><td>Add a file to the conversation</td><td>Type <code>@</code> and the file name; Tab completes</td></tr>
+        <tr><td>Paste a screenshot</td><td>Copy the image to the clipboard and press <b>Ctrl+V</b> (if the terminal intercepts it, <b>Alt+V</b>)</td></tr>
+      </tbody>
+    </table></div>
+    <p>A screenshot of an error window is often the fastest way to describe a problem. Do not paste an image that shows passwords or personal data.</p>
+    <div class="shot">[KUVA: m7-kuva - a screenshot attached to the conversation, [Image #1]]</div>
+  </section>
+
+  <section>
+    <h2>Permissions in practice</h2>
+    <p>Claude Code asks permission before it edits a file or runs a command. Reading in the working folder and known read-only commands do not ask.</p>
+    <h3>What "allow always" writes</h3>
+    <p>When you choose <b>Yes, and don't ask again</b>, Claude Code saves an <code>allow</code> rule for the command in the project's <code>.claude\settings.local.json</code> file (in a git repo at the repo root, on Windows in the <code>.claude</code> folder of the working folder). The rule stays in force in later sessions. Approval of file writes is not saved: it is valid only until the end of the session.</p>
+    <div class="codebox"><pre><code>{
+  "permissions": {
+    "allow": [
+      "Bash(npm test *)"
+    ]
+  }
+}</code></pre></div>
+    <p>Check and remove rules with the command <code>/permissions</code>. Do not permanently approve a broad rule you do not understand.</p>
+    <h3>A deny rule protects secrets</h3>
+    <p>A deny rule stops Claude from reading a file. Add it, for example, to the user settings <code>%USERPROFILE%\.claude\settings.json</code>:</p>
+    <div class="codebox"><pre><code>{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}</code></pre></div>
+    <p>Deny always beats an allow rule. It applies to Claude's file tools and recognized file commands (for example <code>cat</code>), but not to every way of reading a file, for example a script that opens the file itself. Strict isolation needs a sandbox, and you should keep secrets outside the repo.</p>
+    <div class="note"><b>Do not bypass permissions.</b> The flag <code>--dangerously-skip-permissions</code> removes the permission prompts: Claude can then run commands and change or delete files without asking. Use it at most in a disposable, isolated environment (for example a virtual machine) that has no secrets and no production connections. Never use it on a workstation or server that has real data. An administrator can forbid the mode with the setting <code>permissions.disableBypassPermissionsMode</code>.</div>
+  </section>
+
+  <section>
+    <h2>Exercises</h2>
+    <div class="ex">
+      <h3>1. Reading a log and /compact</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Make a file <code>log.txt</code> with about 30 lines of a service log: mostly INFO lines, but with a few ERRORs, such as "Timeout connecting to 203.0.113.15:1433" and "Login failed for user svc-backup". Ask: "Read log.txt, group the errors by cause and suggest what to check." Then run <code>/context</code> and <code>/compact focus on the errors</code>.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude groups the errors (for example the network connection to the SQL server and authentication) and suggests checking the state of the service, the firewall rule and the validity of the account's password. The command /context shows the file has added context, and /compact summarizes the conversation so that the errors are kept. Make sure that after the summary Claude still remembers both errors: ask "Which errors were found?"</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>2. Plan mode and /rewind</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>Make a folder with a PowerShell script that deletes files older than 30 days from a folder. Switch to plan mode with <b>Shift+Tab</b> and ask: "Add -WhatIf support to the script and a log of the deleted files. Show me the plan first." Approve the plan, let Claude edit the script and then try <code>/rewind</code> to restore the original script.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The plan usually includes: add <code>[CmdletBinding(SupportsShouldProcess)]</code>, call the deletion as <code>Remove-Item -WhatIf:$WhatIfPreference</code> and write the deleted paths to a log. After the edit, /rewind &gt; <b>Restore code</b> returns the script to the original, because Claude's file tool made the change. If you ask Claude to delete test files with a PowerShell command, /rewind does not restore them: changes made by shell commands are not tracked.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>3. Protect secrets</h3>
+      <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
+      <p>In a test folder, make a file <code>.env</code> with an invented line <code>API_KEY=example-not-real</code>. Ask Claude to add a rule that blocks reading the <code>.env</code> file, and then try asking it to read the file. Check the rule with the command <code>/permissions</code>.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>Claude adds <code>"deny": ["Read(./.env)"]</code> to the settings file (and possibly <code>Read(./.env.*)</code>). When you ask it to read the file, Claude Code blocks the read and Claude says it cannot access the file. The rule shows in the /permissions list. Remember the limitation: the rule does not block every indirect way of reading the file, so real secrets still should not be kept in the project folder.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Optional: sessions and ways of working</h2>
+    <div class="optbox">
+      <ul>
+        <li><b>Name a conversation</b> with <code>/clear name</code> or bring it back later with <code>claude --resume "name"</code>.</li>
+        <li><b>Your own CLAUDE.md</b> in the home folder (<code>%USERPROFILE%\.claude\CLAUDE.md</code>) holds instructions that apply to all projects. Personal project-specific things can go in the file <code>CLAUDE.local.md</code>, which is not committed to git.</li>
+        <li><b>Esc</b> interrupts Claude in the middle of an answer; the work is kept. This lets you steer when Claude goes in the wrong direction.</li>
+        <li><b>Read more:</b> <a href="https://code.claude.com/docs/en/memory">memory</a>, <a href="https://code.claude.com/docs/en/permissions">permissions</a> and <a href="https://code.claude.com/docs/en/checkpointing">checkpoints</a>.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>
