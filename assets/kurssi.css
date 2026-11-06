@@ -53,7 +53,7 @@ img{max-width:100%;height:auto}
 .chip.plan{background:var(--warn-soft);color:var(--warn)}
 .foot{border-top:1px solid var(--line);margin-top:40px;padding-top:16px;color:var(--muted);font-size:15px}
 
-.layout{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1400px;margin:0 auto}
 .side{border-right:1px solid var(--line);padding:14px 0;font-size:15px;position:sticky;top:57px;align-self:start;
   max-height:calc(100vh - 57px);overflow-y:auto}
 .side a,.side span.off{display:block;padding:5px 16px;color:var(--fg);text-decoration:none}
@@ -64,7 +64,8 @@ img{max-width:100%;height:auto}
 .page{padding:28px clamp(16px,4vw,48px) 64px;min-width:0}
 .page h1{font-size:clamp(28px,4vw,38px);margin-top:4px}
 .page .meta{margin-top:12px}
-.page section{max-width:70ch;margin-top:32px}
+.page section{margin-top:32px}
+.page section :is(h2,h3,p,ul,ol,.note,.optbox,.req,details){max-width:90ch}
 .page section h2{font-size:24px;margin-bottom:8px}
 .page section h3{font-size:18px;margin:18px 0 6px}
 .page table{border-collapse:collapse;width:100%;font-size:16px}
@@ -83,6 +84,22 @@ details summary{cursor:pointer;color:var(--accent);font-weight:600;margin-top:6p
 .optbox{border-left:3px solid var(--muted);padding:4px 0 4px 14px;margin:14px 0}
 .optbox > b:first-child{color:var(--muted)}
 .note{background:var(--warn-soft);border-radius:8px;padding:10px 14px;margin:12px 0}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:16px 0}
+.chart figcaption{font-size:15px;color:var(--muted);margin-bottom:8px}
+.chart figcaption b,.effort-head b{color:var(--fg)}
+.chart table{table-layout:fixed;border-collapse:collapse;width:100%;font-size:16px}
+.chart th,.chart td{text-align:left;padding:6px 10px 6px 0;border-top:1px solid var(--line);vertical-align:top}
+.chart thead th{width:35%;font:500 12px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-top:0}
+.chart thead th:first-child{width:30%}
+.chart tbody th{font:600 15px var(--f-body);color:var(--fg);text-transform:none;letter-spacing:0}
+.chart small{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.chart td{font-variant-numeric:tabular-nums}
+.bar{display:block;height:10px;min-width:2px;width:calc(var(--w) * 1%);background:var(--accent);border-radius:2px;margin:6px 0 2px}
+.effort-head{font-size:15px;color:var(--muted);margin:20px 0 0}
+.page section .effort{max-width:none}
+.effort{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.effort li{border-top:3px solid var(--accent);padding-top:6px;font-size:15px}
+.effort li > b{font:500 14px var(--f-mono);display:block}
 
 .slides{position:fixed;inset:0;z-index:50;background:var(--surface);display:flex;flex-direction:column;padding:24px 24px 16px}
 .slide-body{flex:1;overflow:auto;display:flex;flex-direction:column;justify-content:safe center;max-width:960px;margin:0 auto;width:100%;font-size:clamp(18px,2.2vw,24px)}

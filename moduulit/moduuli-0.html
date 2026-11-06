@@ -124,15 +124,72 @@
   </section>
 
   <section id="kayttorajat">
-    <h2>Käyttörajat</h2>
+    <h2>Käyttörajat: miten ne toimivat</h2>
     <p>Jokaisessa tilauksessa on käyttöraja. Se ei ole viestien määrä, vaan riippuu siitä, kuinka paljon Claude joutuu käsittelemään: pitkä keskustelu, isot liitteet ja raskaampi malli kuluttavat enemmän.</p>
-    <ul>
-      <li><b>5 tunnin ikkuna:</b> raja nollautuu viiden tunnin jaksoissa. Jos raja tulee vastaan, Claude kertoo, milloin voit jatkaa.</li>
-      <li><b>7 päivän raja:</b> maksullisissa tilauksissa on lisäksi viikkoraja, joka koskee kaikkia malleja yhteensä.</li>
-      <li><b>Yhteinen raja:</b> claude.ai, sovellukset ja Claude Code käyttävät samaa rajaa.</li>
-    </ul>
-    <p>Jäljellä olevan käytön näet kohdasta <b>Settings &gt; Usage</b>. Claude Codessa saman näyttää komento <code>/usage</code> (moduuli 7).</p>
+    <ol>
+      <li><b>5 tunnin raja:</b> käyttöä mitataan viiden tunnin jaksoissa, ja raja nollautuu viiden tunnin välein. Ultrassa vahvistetuilla tileillä tätä rajaa ei ole. Jos raja tulee vastaan, Claude kertoo, milloin voit jatkaa.</li>
+      <li><b>Viikkoraja:</b> maksullisissa tilauksissa on lisäksi viikkoraja, joka koskee kaikkia malleja yhteensä. Viikko nollautuu tilikohtaisena hetkenä, joka näkyy käyttönäkymässä.</li>
+      <li><b>Yhteinen raja:</b> claude.ai, työpöytäsovellus ja Claude Code kuluttavat samaa rajaa. Iltapäivän Claude Code -työ näkyy siis myös selaimen puolella.</li>
+    </ol>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Tilaus</th><th>5 tunnin raja</th><th>Viikkoraja</th><th>Fable-mallit</th></tr></thead>
+      <tbody>
+        <tr><td>Free</td><td>Kyllä, nollautuu 5 tunnin välein</td><td>Hinnastosivu mainitsee myös viikkorajan</td><td>Ei käytössä</td></tr>
+        <tr><td>Pro</td><td>Kyllä, perustaso</td><td>Kyllä, kaikki mallit yhteensä</td><td>Eivät sisälly rajaan, maksetaan erikseen käyttökrediiteillä</td></tr>
+        <tr><td>Max</td><td>5 kertaa Pro</td><td>5 kertaa Pro</td><td>Oma viikkoraja Fable-malleille</td></tr>
+        <tr><td>Ultra</td><td>Ei 5 tunnin rajaa vahvistetuilla tileillä</td><td>10 kertaa Pro</td><td>Oma viikkoraja Fable-malleille</td></tr>
+      </tbody>
+    </table></div>
+    <p>Jäljellä olevan käytön näet kohdasta <b>Settings &gt; Usage</b>: nykyisen jakson jäljellä oleva aika ja seuraava viikkorajan nollautuminen. Claude Codessa saman näyttää komento <code>/usage</code> (moduuli 7).</p>
     <div class="shot">[KUVA: m0-usage - Settings &gt; Usage, nykyinen jakso ja viikkoraja]</div>
+    <p>Tiedot tarkistettu 11/2026 artikkelista <a href="https://support.claude.com/en/articles/11647753-usage-and-length-limits">Usage and length limits</a> ja tilausten ohjesivuilta. Rajat muuttuvat, joten tarkista ajantasainen tieto sieltä.</p>
+  </section>
+
+  <section>
+    <h2>Mallin ja effortin vaikutus</h2>
+    <p>Rajaa kuluttaa se, kuinka paljon tekstiä Claude lukee ja tuottaa. Siihen vaikuttavat:</p>
+    <ul>
+      <li><b>Malli:</b> raskaampi malli kuluttaa rajaa nopeammin kuin kevyt.</li>
+      <li><b>Effort:</b> korkeampi effort-taso tarkoittaa enemmän ajattelua ja siten enemmän käsiteltyä tekstiä.</li>
+      <li><b>Keskustelun pituus:</b> jokaisella viestillä Claude käsittelee koko siihenastisen keskustelun uudelleen.</li>
+      <li><b>Liitteet:</b> isot tiedostot ja lokit luetaan mukaan jokaisella viestillä.</li>
+      <li><b>Välimuisti:</b> Projektin sisältö on välimuistissa, ja uudelleen käytettynä se kuluttaa rajaa vähemmän (moduuli 3).</li>
+      <li><b>Claude Coden agentit:</b> yksi pyyntö voi käynnistää monta mallikutsua ja aliagenttia, joten yksi tehtävä voi kuluttaa paljon.</li>
+    </ul>
+    <div class="note"><b>Tilausta ei laskuteta tokeneittain.</b> Raskaampi malli ja korkeampi effort kuluttavat rajaa enemmän, mutta Anthropic ei julkaise suhdelukua. Alla olevat API-hinnat näyttävät mallien hintaerot API-käytössä, eivät sitä, kuinka paljon tilauksesi rajaa kuluu.</div>
+    <figure class="chart">
+      <figcaption><b>API-listahinta</b>, perushinta dollareina miljoonaa tokenia kohden, tarkistettu 11/2026 (<a href="https://platform.claude.com/docs/en/about-claude/pricing">Pricing</a>)</figcaption>
+      <table>
+        <thead><tr><th>Malli</th><th>Syöte (input)</th><th>Tuloste (output)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Haiku 5.5<small>enintään 100 000 tokenin kehotteet; pidemmillä 0,50 $ / 2,50 $</small></th><td><span class="bar" style="--w:1"></span>0,10 $</td><td><span class="bar" style="--w:1"></span>0,50 $</td></tr>
+          <tr><th scope="row">Sonnet 5.5</th><td><span class="bar" style="--w:20"></span>2 $</td><td><span class="bar" style="--w:20"></span>10 $</td></tr>
+          <tr><th scope="row">Opus 5.5</th><td><span class="bar" style="--w:40"></span>4 $</td><td><span class="bar" style="--w:40"></span>20 $</td></tr>
+          <tr><th scope="row">Fable 5.1</th><td><span class="bar" style="--w:100"></span>10 $</td><td><span class="bar" style="--w:100"></span>50 $</td></tr>
+        </tbody>
+      </table>
+      <div class="effort-head"><b>Effort-tasot</b> pienimmästä suurimpaan</div>
+      <ol class="effort" aria-label="Effort-tasot pienimmästä suurimpaan">
+        <li><b>low</b>Tehokkain. Säästää selvästi tokeneita, kyvykkyys heikkenee hieman.</li>
+        <li><b>medium</b>Tasapainoinen, säästää kohtuullisesti tokeneita.<small>Oletus: Opus 5.5 ja Haiku 5.5</small></li>
+        <li><b>high</b>Käyttää niin monta tokenia kuin tehtävä tarvitsee erinomaiseen tulokseen.<small>Oletus: muut mallit</small></li>
+        <li><b>xhigh</b>Laajennettu kyvykkyys pitkäkestoiseen työhön.</li>
+        <li><b>max</b>Suurin mahdollinen kyvykkyys ilman rajoja tokenien käytölle.</li>
+      </ol>
+    </figure>
+    <p>Effort-tasojen kuvaukset ovat suomennos Anthropicin <a href="https://platform.claude.com/docs/en/build-with-claude/effort">effort-dokumentaatiosta</a>. Tasot ovat järjestys, eivät mitattuja kertoimia: korkeampi taso ajattelee enemmän ja kuluttaa enemmän, mutta kuinka paljon, riippuu tehtävästä.</p>
+  </section>
+
+  <section>
+    <h2>Näin säästät rajaa</h2>
+    <ul>
+      <li><b>Aloita kevyemmällä mallilla.</b> Sonnet riittää useimpiin töihin; vaihda raskaampaan vain, jos vastaus ei riitä.</li>
+      <li><b>Laske effortia yksinkertaisissa kysymyksissä.</b> Lyhyt kysymys ei tarvitse paljon ajattelua.</li>
+      <li><b>Aloita uusi keskustelu uudelle aiheelle.</b> Pitkä keskustelu luetaan joka viestillä uudelleen (moduuli 1).</li>
+      <li><b>Liitä vain tarvittava.</b> Rajaa loki tai tiedosto siihen osaan, jota kysymys koskee.</li>
+      <li><b>Kirjoita pyyntö kerralla valmiiksi.</b> Tarkka ensimmäinen viesti säästää korjauskierroksia.</li>
+      <li><b>Seuraa kulutusta.</b> Katso Settings &gt; Usage tai Claude Codessa <code>/usage</code>, ja tyhjennä Claude Coden konteksti tehtävien välillä komennolla <code>/clear</code> (moduuli 7).</li>
+    </ul>
   </section>
 
   <section>
