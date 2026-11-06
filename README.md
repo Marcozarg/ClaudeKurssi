@@ -29,7 +29,7 @@ Kurssi verkossa: https://marcozarg.github.io/ClaudeKurssi/
 ### Istunto 4: Työtapa ja omat työkalut
 
 - [9 Työtapa](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-9.html)
-- [10 Omat skillit ja agentit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-10.html)
+- [10 Omat skillit ja subagentit](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-10.html)
 - [11 Demot ja jatko](https://marcozarg.github.io/ClaudeKurssi/moduulit/moduuli-11.html)
 
 ## English edition
@@ -59,7 +59,7 @@ An English edition of the course is available. Finnish is the default; the FI | 
 ### Session 4: Way of working and your own tools
 
 - [9 Way of working](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-9.html)
-- [10 Your own skills and agents](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-10.html)
+- [10 Your own skills and subagents](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-10.html)
 - [11 Demos and next steps](https://marcozarg.github.io/ClaudeKurssi/en/moduulit/moduuli-11.html)
 
 ## Lisenssi

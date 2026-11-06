@@ -18,10 +18,10 @@
   const NIMET = EN
     ? ["What is Claude?", "The first conversation", "A good prompt", "Files, Projects and Artifacts",
        "Claude on different devices", "Connectors and workflows", "Claude Code: installation", "Basic use",
-       "Git and GitHub / GitLab", "Way of working", "Your own skills and agents", "Demos and next steps"]
+       "Git and GitHub / GitLab", "Way of working", "Your own skills and subagents", "Demos and next steps"]
     : ["Mikä Claude on?", "Ensimmäinen keskustelu", "Hyvä kehote", "Tiedostot, Projektit ja Artifactit",
        "Claude eri laitteilla", "Liitännät ja työnkulut", "Claude Code: asennus", "Peruskäyttö",
-       "Git ja GitHub / GitLab", "Työtapa", "Omat skillit ja agentit", "Demot ja jatko"];
+       "Git ja GitHub / GitLab", "Työtapa", "Omat skillit ja subagentit", "Demot ja jatko"];
   const ISTUNNOT = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 4];
   const MODUULIT = NIMET.map((nimi, n) => ({ n, istunto: ISTUNNOT[n], nimi, valmis: !EN || EN_PAGES.includes(n) }));
   const href = (m) => `moduuli-${m.n}.html`;
