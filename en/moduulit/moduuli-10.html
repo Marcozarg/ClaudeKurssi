@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Module 10 &middot; Session 4</span>
   <h1>Your own skills and subagents</h1>
-  <div class="meta"><span class="chip">Core ~30 min</span><span class="chip opt">Optional ~35 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Core ~40 min</span><span class="chip opt">Optional ~35 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>What you need and what you do not</h2>
@@ -57,7 +57,7 @@
     <h2>Subagents</h2>
     <p>A <b>subagent</b> is a specialized helper to which Claude hands a task. It has its own window, its own instructions, its own tools and often a different model. The benefit: long output (search results, logs) stays out of the main conversation, and only a summary returns to Claude.</p>
     <p>A subagent is a Markdown file that begins with a YAML header: <code>name</code>, <code>description</code> (says when Claude uses it), <code>tools</code> and <code>model</code>. The file is saved in the folder <code>%USERPROFILE%\.claude\agents\</code> (all projects) or in the project's folder <code>.claude\agents\</code>. Claude Code also has ready-made subagents, such as <b>Explore</b> (fast search) and <b>Plan</b> (for plan mode).</p>
-    <p>A beginner does not need to write their own. The Copyable <code>routing</code> contains three ready-made examples from which you can see the structure.</p>
+    <p>You make your own subagent below in <b>Your own subagent</b>. The Copyable <code>routing</code> contains three ready-made examples from which you can see the structure.</p>
     <p>Source: <a href="https://code.claude.com/docs/en/sub-agents">code.claude.com/docs/en/sub-agents</a></p>
   </section>
 
@@ -77,6 +77,53 @@
         <tr><td>MCP server</td><td><code>claude mcp add</code></td><td>A connection to an external system</td></tr>
       </tbody>
     </table></div>
+  </section>
+
+  <section>
+    <h2>Your own skill in five minutes</h2>
+    <p>When you ask for the same thing the third time, it is worth making a skill of it. Let's build one in a practice folder so that your own setup stays untouched.</p>
+    <ol>
+      <li>Make a folder and open Claude Code in it: <code>mkdir harjoitus-skill</code>, <code>cd harjoitus-skill</code>, <code>claude</code>.</li>
+      <li>Ask Claude to make the skill:
+        <div class="codebox" data-prompt="m10-skill-create"><pre><code>Make a skill in this project named ticket-reply in the folder .claude\skills\ticket-reply\. It writes a reply to an end user's ticket in our team's tone: a greeting with the first name, the cause in one sentence, numbered fix steps and a closing line. Write the description so that it says what the skill does and when it is used.</code></pre></div>
+      </li>
+      <li>Read the <code>SKILL.md</code> that Claude wrote. It looks roughly like this. All header fields are optional, but you should always write the <code>description</code>, and <code>name</code> defaults to the folder name:
+        <div class="codebox" data-text="m10-skill-example"><pre><code>---
+name: ticket-reply
+description: Writes a reply to an end user's ticket in the team's tone. Use when the user asks for a reply, message or acknowledgement to a ticket or to an end user.
+---
+
+Write the reply in this order:
+
+1. A greeting with the user's first name.
+2. The cause in one sentence, without technical jargon.
+3. Numbered fix steps, at most five.
+4. Closing: "If the problem continues, reply to this message."</code></pre></div>
+      </li>
+      <li>The skills folder is new in this session, so type <code>/reload-skills</code>. Then type <code>/skills</code> or ask "What skills are available?" and check that <code>ticket-reply</code> is listed.</li>
+      <li>Start a new session: type <code>/exit</code> and start <code>claude</code> again. Ask in plain words, without the command <code>/ticket-reply</code>: "Customer Liisa wrote in the ticket that the printer does not print. The cause was a stuck print queue. Write her a reply." Claude Code shows the line <code>Launching skill: ticket-reply</code>. Then ask for something unrelated, for example "What is 17 times 23?": the line should not appear.</li>
+      <li>If the line did not appear, add words you naturally say to the description. If the skill starts too often, make the description more specific. A new session notices the edit by itself. In the same session where the folder was created, type <code>/reload-skills</code> after an edit, because that folder is not watched.</li>
+    </ol>
+    <div class="note">When the skill is ready, move it to the folder <code>%USERPROFILE%\.claude\skills\</code> so it is available in all projects. If the same name exists as both a personal skill and a project skill, the personal one wins. If a skill has side effects (it sends, deletes or publishes something), add <code>disable-model-invocation: true</code> to the header, and it starts only with the command <code>/name</code>.</div>
+    <p>Source: <a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, checked 11/2026.</p>
+  </section>
+
+  <section>
+    <h2>Your own subagent</h2>
+    <p>You get a subagent the same way: ask Claude to make it in the practice folder.</p>
+    <div class="codebox" data-prompt="m10-subagent-create"><pre><code>Create a subagent in this project named log-reader in the folder .claude\agents\. It finds the errors in log files and their times and does not change any files. Give it only the tools Read, Grep and Glob and the model haiku.</code></pre></div>
+    <p>Read the file that was created, <code>.claude\agents\log-reader.md</code>. It looks roughly like this:</p>
+    <div class="codebox" data-text="m10-subagent-example"><pre><code>---
+name: log-reader
+description: Finds the errors and their times in log files. Use when asked to go through the logs.
+tools: Read, Grep, Glob
+model: haiku
+---
+
+Go through the given log files. List every error, its time and the file. Do not change any files.</code></pre></div>
+    <p>The required fields are <code>name</code> and <code>description</code>. If <code>tools</code> is missing, the subagent gets every tool, so a reader or a reviewer is given only reading tools. New and edited files are noticed within a few seconds, but the folder <code>.claude\agents\</code> did not exist when the session started, so restart Claude Code now (<code>/exit</code> and <code>claude</code>). Then ask Claude to make a small <code>app.log</code> with a few error lines in the practice folder.</p>
+    <p>Call the subagent by typing <code>@</code> and picking it from the list, for example <code>@log-reader go through app.log</code>, or by name: "Use the log-reader subagent to go through app.log."</p>
+    <p>Source: <a href="https://code.claude.com/docs/en/sub-agents">code.claude.com/docs/en/sub-agents</a>, checked 11/2026.</p>
   </section>
 
   <section>
@@ -2161,9 +2208,13 @@ Report: the files changed, the commands you ran with their results, and anything
     <div class="ex">
       <h3>1. Install done-check and run it on a small change</h3>
       <div class="req">Requires: a Pro plan and PowerShell 7. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
-      <p>Install the Copyable <code>done-check</code> following the instructions above. Make a practice folder, ask Claude to add a small script to it and then type <code>/done-check</code>.</p>
+      <ol>
+        <li>Download the Copyable <code>done-check</code> but do not install it yet. Ask Claude: "Read these files and tell me what they read, write or send. Is there anything I would not expect?"</li>
+        <li>Install the Copyable <code>done-check</code> following the instructions above.</li>
+        <li>Make a practice folder, ask Claude to add a small script to it and then type <code>/done-check</code>.</li>
+      </ol>
       <details><summary>Show example answer</summary>
-        <div><p>The file is at <code>%USERPROFILE%\.claude\commands\done-check.md</code>. The command lists the points of your request and links each to a change, runs what it can and finally says separately what was not checked. If the command is not found, restart <code>claude</code> and check the file's path.</p></div>
+        <div><p>A good answer to the first step says that the command does not run anything itself but gives Claude instructions. The same approach suits any script or hook downloaded from the web. The file is at <code>%USERPROFILE%\.claude\commands\done-check.md</code>. The command lists the points of your request and links each to a change, runs what it can and finally says separately what was not checked. If the command is not found, restart <code>claude</code> and check the file's path.</p></div>
       </details>
     </div>
     <div class="ex">
@@ -2175,11 +2226,11 @@ Report: the files changed, the commands you ran with their results, and anything
       </details>
     </div>
     <div class="ex">
-      <h3>3. Read before installing</h3>
+      <h3>3. Make your own skill</h3>
       <div class="req">Requires: a Pro plan. No Pro? Follow the instructor's demo (Max) or work with a partner.</div>
-      <p>Download the Copyable <code>retrospective</code> but do not install it. Ask Claude: "Read these files and tell me what they read, write or send. Is there anything I would not expect?"</p>
+      <p>In the practice folder, make a skill for a task you repeat yourself. Then start a new session and get the skill to start from a plain request, without the command <code>/name</code>, by tuning the description. You succeeded when, after a matching request, Claude Code shows the line <code>Launching skill: &lt;name&gt;</code> and an unrelated request does not show it.</p>
       <details><summary>Show example answer</summary>
-        <div><p>A good answer says that the script reads Claude Code's local conversation logs and writes a report, and points out any places that require permission. The same approach suits any script or hook downloaded from the web.</p></div>
+        <div><p>Example: a skill <code>weekly-report</code> whose description is "Formats the weekly report into the team's template. Use when the user asks for a weekly report, a weekly review or a summary of the week's work." The request "Make a report of this week's work" shows the line <code>Launching skill: weekly-report</code>, the request "What is 17 times 23?" does not. If the line does not appear, add words you naturally say to the description, type <code>/reload-skills</code> and try again in a new session.</p></div>
       </details>
     </div>
   </section>
@@ -2192,6 +2243,7 @@ Report: the files changed, the commands you ran with their results, and anything
         <li><b>The description decides:</b> Claude decides from the description when the skill is loaded. Write what it does and when it is used.</li>
         <li><b>Keep it small:</b> one skill, one task. Long instructions and scripts go to supporting files.</li>
         <li><b>Limit the tools:</b> a subagent or a skill can be given only the tools it needs, with the field <code>tools</code> or <code>allowed-tools</code>.</li>
+        <li><b>Skill-creator:</b> a plugin that builds test cases for a skill, compares the work with and without the skill and tunes the description when the skill starts on the wrong requests. Install: <code>/plugin install skill-creator@claude-plugins-official</code> (<a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, checked 11/2026).</li>
         <li><b>Learn from examples:</b> open the <code>SKILL.md</code> files of the Copyables above and the agents' Markdown files and see how the header and the instructions are built.</li>
       </ul>
     </div>

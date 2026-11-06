@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Moduuli 10 &middot; Istunto 4</span>
   <h1>Omat skillit ja subagentit</h1>
-  <div class="meta"><span class="chip">Ydin ~30 min</span><span class="chip opt">Lisä ~35 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Ydin ~40 min</span><span class="chip opt">Lisä ~35 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Mitä tarvitset ja mitä et</h2>
@@ -57,7 +57,7 @@
     <h2>Subagentit</h2>
     <p><b>Subagentti</b> on erikoistunut apulainen, jolle Claude antaa tehtävän. Sillä on oma ikkunansa, oma ohjeensa, omat työkalunsa ja usein eri malli. Hyöty: pitkä tulostus (hakutulokset, lokit) jää sivuun pääkeskustelusta, ja Claudelle palaa vain yhteenveto.</p>
     <p>Subagentti on Markdown-tiedosto, jonka alussa on YAML-otsake: <code>name</code>, <code>description</code> (kertoo, milloin Claude käyttää sitä), <code>tools</code> ja <code>model</code>. Tiedosto tallennetaan kansioon <code>%USERPROFILE%\.claude\agents\</code> (kaikki projektit) tai projektin kansioon <code>.claude\agents\</code>. Claude Codessa on myös valmiit subagentit, kuten <b>Explore</b> (nopea haku) ja <b>Plan</b> (suunnittelutilaan).</p>
-    <p>Aloittelijan ei tarvitse kirjoittaa omia. Kopioitava <code>routing</code> sisältää kolme valmista esimerkkiä, joista näet rakenteen.</p>
+    <p>Oman subagentin teet alla kohdassa <b>Oma subagentti</b>. Kopioitava <code>routing</code> sisältää kolme valmista esimerkkiä, joista näet rakenteen.</p>
     <p>Lähde: <a href="https://code.claude.com/docs/en/sub-agents">code.claude.com/docs/en/sub-agents</a></p>
   </section>
 
@@ -77,6 +77,53 @@
         <tr><td>MCP-palvelin</td><td><code>claude mcp add</code></td><td>Yhteys ulkoiseen järjestelmään</td></tr>
       </tbody>
     </table></div>
+  </section>
+
+  <section>
+    <h2>Oma skill viidessä minuutissa</h2>
+    <p>Kun pyydät samaa kolmatta kertaa, siitä kannattaa tehdä skill. Rakennetaan yksi harjoituskansiossa, jotta oma asetuksesi pysyy koskemattomana.</p>
+    <ol>
+      <li>Tee kansio ja avaa siinä Claude Code: <code>mkdir harjoitus-skill</code>, <code>cd harjoitus-skill</code>, <code>claude</code>.</li>
+      <li>Pyydä Claudea tekemään skill:
+        <div class="codebox" data-prompt="m10-skill-create"><pre><code>Tee tähän projektiin skill nimeltä tikettivastaus kansioon .claude\skills\tikettivastaus\. Se kirjoittaa vastauksen loppukäyttäjän tikettiin tiimimme sävyllä: tervehdys etunimellä, syy yhdellä lauseella, korjaavat askeleet numeroituna ja lopetus. Kirjoita description niin, että siinä lukee, mitä skill tekee ja milloin sitä käytetään.</code></pre></div>
+      </li>
+      <li>Lue Clauden kirjoittama <code>SKILL.md</code>. Se näyttää suunnilleen tältä. Kaikki otsakekentät ovat vapaaehtoisia, mutta <code>description</code> kannattaa aina kirjoittaa, ja <code>name</code> on oletuksena kansion nimi:
+        <div class="codebox" data-text="m10-skill-example"><pre><code>---
+name: tikettivastaus
+description: Kirjoittaa vastauksen loppukäyttäjän tikettiin tiimin sävyllä. Käytä, kun käyttäjä pyytää vastausta, viestiä tai kuittausta tikettiin tai loppukäyttäjälle.
+---
+
+Kirjoita vastaus tässä järjestyksessä:
+
+1. Tervehdys käyttäjän etunimellä.
+2. Syy yhdellä lauseella ilman teknistä jargonia.
+3. Korjaavat askeleet numeroituna, enintään viisi.
+4. Lopetus: "Jos ongelma jatkuu, vastaa tähän viestiin."</code></pre></div>
+      </li>
+      <li>Skills-kansio on uusi tässä istunnossa, joten kirjoita <code>/reload-skills</code>. Kirjoita sitten <code>/skills</code> tai kysy "Mitä skillejä on käytettävissä?" ja varmista, että <code>tikettivastaus</code> on listalla.</li>
+      <li>Aloita uusi istunto: kirjoita <code>/exit</code> ja käynnistä <code>claude</code> uudelleen. Pyydä tavallisesti, ilman komentoa <code>/tikettivastaus</code>: "Asiakas Liisa kirjoitti tikettiin, ettei tulostin tulosta. Syy oli jumiin jäänyt tulostusjono. Kirjoita hänelle vastaus." Claude Code näyttää rivin <code>Launching skill: tikettivastaus</code>. Pyydä sitten jotain asiaan kuulumatonta, esimerkiksi "Paljonko on 17 kertaa 23?": riviä ei pitäisi tulla.</li>
+      <li>Jos riviä ei tullut, lisää descriptioniin sanoja, joita sanot luonnostaan. Jos skill käynnistyy liian usein, tee descriptionista tarkempi. Uusi istunto huomaa muokkauksen itse. Samassa istunnossa, jossa kansio syntyi, kirjoita muokkauksen jälkeen <code>/reload-skills</code>, koska sitä kansiota ei seurata.</li>
+    </ol>
+    <div class="note">Kun skill on valmis, siirrä se kansioon <code>%USERPROFILE%\.claude\skills\</code>, jolloin se on käytössä kaikissa projekteissa. Jos sama nimi on sekä henkilökohtaisena että projektin skillinä, henkilökohtainen voittaa. Jos skillillä on sivuvaikutuksia (se lähettää, poistaa tai julkaisee jotain), lisää otsakkeeseen <code>disable-model-invocation: true</code>, jolloin se käynnistyy vain komennolla <code>/nimi</code>.</div>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, tarkistettu 11/2026.</p>
+  </section>
+
+  <section>
+    <h2>Oma subagentti</h2>
+    <p>Subagentin saa samalla tavalla: pyydä Claudea tekemään se harjoituskansioon.</p>
+    <div class="codebox" data-prompt="m10-subagent-create"><pre><code>Luo tähän projektiin subagentti nimeltä lokien-lukija kansioon .claude\agents\. Se etsii lokitiedostoista virheet ja niiden ajat eikä muuta tiedostoja. Anna sille vain työkalut Read, Grep ja Glob ja malli haiku.</code></pre></div>
+    <p>Lue syntynyt tiedosto <code>.claude\agents\lokien-lukija.md</code>. Se näyttää suunnilleen tältä:</p>
+    <div class="codebox" data-text="m10-subagent-example"><pre><code>---
+name: lokien-lukija
+description: Etsii lokitiedostoista virheet ja niiden ajat. Käytä, kun pyydetään käymään lokit läpi.
+tools: Read, Grep, Glob
+model: haiku
+---
+
+Käy annetut lokitiedostot läpi. Listaa jokainen virhe, sen aika ja tiedosto. Älä muuta tiedostoja.</code></pre></div>
+    <p>Pakolliset kentät ovat <code>name</code> ja <code>description</code>. Jos <code>tools</code> puuttuu, subagentti saa kaikki työkalut, joten lukijalle ja tarkastajalle annetaan vain lukutyökalut. Uudet ja muokatut tiedostot huomataan muutamassa sekunnissa, mutta kansiota <code>.claude\agents\</code> ei ollut istunnon alkaessa, joten käynnistä Claude Code nyt uudelleen (<code>/exit</code> ja <code>claude</code>). Pyydä sitten Claudea tekemään harjoituskansioon pieni <code>app.log</code>, jossa on muutama virherivi.</p>
+    <p>Kutsu subagenttia kirjoittamalla <code>@</code> ja valitsemalla se listasta, esimerkiksi <code>@lokien-lukija käy app.log läpi</code>, tai nimellä: "Käytä lokien-lukija-subagenttia käymään läpi app.log."</p>
+    <p>Lähde: <a href="https://code.claude.com/docs/en/sub-agents">code.claude.com/docs/en/sub-agents</a>, tarkistettu 11/2026.</p>
   </section>
 
   <section>
@@ -2161,9 +2208,13 @@ Report: the files changed, the commands you ran with their results, and anything
     <div class="ex">
       <h3>1. Asenna done-check ja aja se pienellä muutoksella</h3>
       <div class="req">Edellyttää: Pro-tilaus ja PowerShell 7. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
-      <p>Asenna Kopioitava <code>done-check</code> yllä olevien ohjeiden mukaan. Tee kokeilukansio, pyydä Claudea lisäämään siihen pieni skripti ja kirjoita sitten <code>/done-check</code>.</p>
+      <ol>
+        <li>Lataa Kopioitava <code>done-check</code> mutta älä asenna sitä vielä. Pyydä Claudea: "Lue nämä tiedostot ja kerro, mitä ne lukevat, kirjoittavat tai lähettävät. Onko niissä jotain, mitä en odottaisi?"</li>
+        <li>Asenna Kopioitava <code>done-check</code> yllä olevien ohjeiden mukaan.</li>
+        <li>Tee kokeilukansio, pyydä Claudea lisäämään siihen pieni skripti ja kirjoita sitten <code>/done-check</code>.</li>
+      </ol>
       <details><summary>Näytä esimerkkivastaus</summary>
-        <div><p>Tiedosto on kohteessa <code>%USERPROFILE%\.claude\commands\done-check.md</code>. Komento listaa pyyntösi kohdat ja yhdistää kunkin muutokseen, ajaa mitä voi ja kertoo lopuksi erikseen, mitä ei tarkistettu. Jos komentoa ei löydy, käynnistä <code>claude</code> uudelleen ja tarkista tiedoston polku.</p></div>
+        <div><p>Hyvä vastaus ensimmäiseen kohtaan kertoo, että komento ei aja mitään itse vaan antaa Claudelle ohjeet. Sama tapa sopii mihin tahansa verkosta ladattuun skriptiin tai hookiin. Tiedosto on kohteessa <code>%USERPROFILE%\.claude\commands\done-check.md</code>. Komento listaa pyyntösi kohdat ja yhdistää kunkin muutokseen, ajaa mitä voi ja kertoo lopuksi erikseen, mitä ei tarkistettu. Jos komentoa ei löydy, käynnistä <code>claude</code> uudelleen ja tarkista tiedoston polku.</p></div>
       </details>
     </div>
     <div class="ex">
@@ -2175,11 +2226,11 @@ Report: the files changed, the commands you ran with their results, and anything
       </details>
     </div>
     <div class="ex">
-      <h3>3. Lue ennen asennusta</h3>
+      <h3>3. Tee oma skill</h3>
       <div class="req">Edellyttää: Pro-tilaus. Ei Prota? Seuraa kouluttajan demoa (Max) tai tee parin kanssa.</div>
-      <p>Lataa Kopioitava <code>retrospective</code> mutta älä asenna sitä. Pyydä Claudea: "Lue nämä tiedostot ja kerro, mitä ne lukevat, kirjoittavat tai lähettävät. Onko niissä jotain, mitä en odottaisi?"</p>
+      <p>Tee harjoituskansiossa skill tehtävälle, jonka toistat itse. Aloita sitten uusi istunto ja saa skill käynnistymään tavallisesta pyynnöstä ilman komentoa <code>/nimi</code> säätämällä descriptionia. Onnistuit, kun sopivan pyynnön jälkeen Claude Code näyttää rivin <code>Launching skill: &lt;nimi&gt;</code> eikä asiaan kuulumaton pyyntö näytä sitä.</p>
       <details><summary>Näytä esimerkkivastaus</summary>
-        <div><p>Hyvä vastaus kertoo, että skripti lukee Claude Coden paikallisia keskustelulokeja ja kirjoittaa raportin, ja osoittaa mahdolliset kohdat, jotka vaativat luvan. Sama tapa sopii mihin tahansa verkosta ladattuun skriptiin tai hookiin.</p></div>
+        <div><p>Esimerkki: skill <code>viikkoraportti</code>, jonka description on "Muotoilee viikkoraportin tiimin pohjaan. Käytä, kun käyttäjä pyytää viikkoraporttia, viikkokatsausta tai yhteenvetoa viikon töistä." Pyyntö "Tee tästä viikon töistä raportti" näyttää rivin <code>Launching skill: viikkoraportti</code>, pyyntö "Paljonko on 17 kertaa 23?" ei. Jos riviä ei tule, lisää descriptioniin sanoja, joita sanot luonnostaan, kirjoita <code>/reload-skills</code> ja kokeile uudessa istunnossa.</p></div>
       </details>
     </div>
   </section>
@@ -2192,6 +2243,7 @@ Report: the files changed, the commands you ran with their results, and anything
         <li><b>Description ratkaisee:</b> Claude päättää kuvauksen perusteella, milloin skill ladataan. Kirjoita, mitä se tekee ja milloin sitä käytetään.</li>
         <li><b>Pidä pienenä:</b> yksi skill, yksi tehtävä. Pitkät ohjeet ja skriptit tukitiedostoihin.</li>
         <li><b>Rajaa työkalut:</b> subagentille ja skillille voi antaa vain tarvittavat työkalut kentällä <code>tools</code> tai <code>allowed-tools</code>.</li>
+        <li><b>Skill-creator:</b> lisäosa, joka tekee skillille testitapaukset, vertaa työtä skillin kanssa ja ilman sitä ja hienosäätää descriptionia, kun skill käynnistyy vääriin pyyntöihin. Asennus: <code>/plugin install skill-creator@claude-plugins-official</code> (<a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, tarkistettu 11/2026).</li>
         <li><b>Opi esimerkeistä:</b> avaa yllä olevien Kopioitavien <code>SKILL.md</code>-tiedostot ja agenttien Markdown-tiedostot ja katso, miten otsake ja ohjeet on rakennettu.</li>
       </ul>
     </div>
