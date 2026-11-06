@@ -130,7 +130,7 @@ Go through the given log files. List every error, its time and the file. Do not 
     <h2>Model routing</h2>
     <p>Different models cost different amounts. Searching, running tests and implementing a clear ticket do not usually need the most expensive model, whereas planning, difficult debugging and the final check do. <b>Model routing</b> means the main session stays the planner and hands suitable work to a cheaper agent.</p>
     <div class="tablewrap"><table>
-      <thead><tr><th>Agent</th><th>Model</th><th>Task</th></tr></thead>
+      <thead><tr><th>Subagent</th><th>Model</th><th>Task</th></tr></thead>
       <tbody>
         <tr><td><code>scout</code></td><td>Haiku, low effort</td><td>Search across many files; returns paths and line numbers</td></tr>
         <tr><td><code>runner</code></td><td>Haiku, low effort</td><td>Running tests and builds; returns the errors as they are</td></tr>
@@ -144,7 +144,7 @@ Go through the given log files. List every error, its time and the file. Do not 
       <li><code>/routing status</code>: tells the state on one line.</li>
       <li><code>/routing report</code>: shows the cost tables and says what stands out.</li>
     </ul>
-    <p>The SessionStart hook prints the rule at the start of a new session only when routing is on. When it is off, the hook is silent and adds nothing to the context. Routing is worthwhile only when the agent's model is cheaper than the session's model: in a Sonnet session <code>implementer</code> is not worthwhile, but a Haiku search still is. If an agent's result does not pass the check, the work is redone at a higher level and the problem is recorded.</p>
+    <p>The SessionStart hook prints the rule at the start of a new session only when routing is on. When it is off, the hook is silent and adds nothing to the context. Routing is worthwhile only when the subagent's model is cheaper than the session's model: in a Sonnet session <code>implementer</code> is not worthwhile, but a Haiku search still is. If a subagent's result does not pass the check, the work is redone at a higher level and the problem is recorded.</p>
     <div class="shot">[KUVA: m10-routing-report - the tables of the /routing report command]</div>
   </section>
 
@@ -253,7 +253,7 @@ Don't change anything yet.</code></pre></div>
         <tr><td><a href="#kopioi-codex-plan-review"><code>codex-plan-review</code></a></td><td>Skill and script</td><td>No</td></tr>
         <tr><td><a href="#kopioi-retrospective"><code>retrospective</code></a></td><td>Skill and script</td><td>No</td></tr>
         <tr><td><a href="#kopioi-optimize-testsuite"><code>optimize-testsuite</code></a></td><td>Skill and scripts</td><td>SessionStart</td></tr>
-        <tr><td><a href="#kopioi-routing"><code>routing</code></a></td><td>Command, agents, script</td><td>SessionStart</td></tr>
+        <tr><td><a href="#kopioi-routing"><code>routing</code></a></td><td>Command, subagents, script</td><td>SessionStart</td></tr>
       </tbody>
     </table></div>
     <div class="note">These run scripts and commands on your machine. Read the files (or ask Claude to tell you what they do) before installing. The Copyables are generalized copies of the instructor's own tools, not products.</div>
@@ -1718,7 +1718,7 @@ def pytest_configure(config):
 
 <section id="kopioi-routing" data-tool="routing">
   <h2>Copyable: routing</h2>
-  <p>Model routing: the <code>/routing</code> command, the routing rule, a price table, three agents (<code>scout</code>, <code>runner</code>, <code>implementer</code>) and a SessionStart hook. When routing is on, Claude hands suitable work to cheaper models.</p>
+  <p>Model routing: the <code>/routing</code> command, the routing rule, a price table, three subagents (<code>scout</code>, <code>runner</code>, <code>implementer</code>) and a SessionStart hook. When routing is on, Claude hands suitable work to cheaper models.</p>
   <p><b>When:</b> See the section Model routing above. Try it only when you know the basic use: this is primarily cost control.</p>
   <div class="tablewrap manifest"><table><tbody>
     <tr><th>Files</th><td><code>commands/routing.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\routing.md</code><br><code>routing/routing.ps1</code> &rarr; <code>%USERPROFILE%\.claude\routing\routing.ps1</code><br><code>routing/rule.md</code> &rarr; <code>%USERPROFILE%\.claude\routing\rule.md</code><br><code>routing/prices.json</code> &rarr; <code>%USERPROFILE%\.claude\routing\prices.json</code><br><code>agents/scout.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\scout.md</code><br><code>agents/runner.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\runner.md</code><br><code>agents/implementer.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\implementer.md</code></td></tr>
@@ -2244,7 +2244,7 @@ Report: the files changed, the commands you ran with their results, and anything
         <li><b>Keep it small:</b> one skill, one task. Long instructions and scripts go to supporting files.</li>
         <li><b>Limit the tools:</b> a subagent or a skill can be given only the tools it needs, with the field <code>tools</code> or <code>allowed-tools</code>.</li>
         <li><b>Skill-creator:</b> a plugin that builds test cases for a skill, compares the work with and without the skill and tunes the description when the skill starts on the wrong requests. Install: <code>/plugin install skill-creator@claude-plugins-official</code> (<a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, checked 11/2026).</li>
-        <li><b>Learn from examples:</b> open the <code>SKILL.md</code> files of the Copyables above and the agents' Markdown files and see how the header and the instructions are built.</li>
+        <li><b>Learn from examples:</b> open the <code>SKILL.md</code> files of the Copyables above and the subagents' Markdown files and see how the header and the instructions are built.</li>
       </ul>
     </div>
   </section>

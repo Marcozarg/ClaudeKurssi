@@ -130,7 +130,7 @@ Käy annetut lokitiedostot läpi. Listaa jokainen virhe, sen aika ja tiedosto. �
     <h2>Mallireititys</h2>
     <p>Eri mallit maksavat eri verran. Haku, testien ajo ja selkeän tiketin toteutus eivät yleensä vaadi kalleinta mallia, kun taas suunnittelu, vaikea virheenetsintä ja lopputarkistus vaativat. <b>Mallireititys</b> tarkoittaa, että pääistunto pysyy suunnittelijana ja antaa sopivan työn halvemmalle agentille.</p>
     <div class="tablewrap"><table>
-      <thead><tr><th>Agentti</th><th>Malli</th><th>Tehtävä</th></tr></thead>
+      <thead><tr><th>Subagentti</th><th>Malli</th><th>Tehtävä</th></tr></thead>
       <tbody>
         <tr><td><code>scout</code></td><td>Haiku, matala työmäärä</td><td>Haku monesta tiedostosta; palauttaa polut ja rivinumerot</td></tr>
         <tr><td><code>runner</code></td><td>Haiku, matala työmäärä</td><td>Testien ja buildien ajo; palauttaa virheet sellaisenaan</td></tr>
@@ -144,7 +144,7 @@ Käy annetut lokitiedostot läpi. Listaa jokainen virhe, sen aika ja tiedosto. �
       <li><code>/routing status</code>: kertoo tilan yhdellä rivillä.</li>
       <li><code>/routing report</code>: näyttää kustannustaulukot ja kertoo, mikä erottuu.</li>
     </ul>
-    <p>SessionStart-hook tulostaa säännön uuden istunnon alussa vain, kun reititys on päällä. Kun se on pois, hook on hiljainen eikä lisää mitään kontekstiin. Reititys kannattaa vain silloin, kun agentin malli on halvempi kuin istunnon malli: Sonnet-istunnossa <code>implementer</code> ei kannata, mutta Haiku-haku kannattaa yhä. Jos agentin tulos ei läpäise tarkistusta, työ tehdään uudelleen ylemmällä tasolla ja ongelma kirjataan.</p>
+    <p>SessionStart-hook tulostaa säännön uuden istunnon alussa vain, kun reititys on päällä. Kun se on pois, hook on hiljainen eikä lisää mitään kontekstiin. Reititys kannattaa vain silloin, kun subagentin malli on halvempi kuin istunnon malli: Sonnet-istunnossa <code>implementer</code> ei kannata, mutta Haiku-haku kannattaa yhä. Jos subagentin tulos ei läpäise tarkistusta, työ tehdään uudelleen ylemmällä tasolla ja ongelma kirjataan.</p>
     <div class="shot">[KUVA: m10-routing-report - /routing report -komennon taulukot]</div>
   </section>
 
@@ -253,7 +253,7 @@ Don't change anything yet.</code></pre></div>
         <tr><td><a href="#kopioi-codex-plan-review"><code>codex-plan-review</code></a></td><td>Skill ja skripti</td><td>Ei</td></tr>
         <tr><td><a href="#kopioi-retrospective"><code>retrospective</code></a></td><td>Skill ja skripti</td><td>Ei</td></tr>
         <tr><td><a href="#kopioi-optimize-testsuite"><code>optimize-testsuite</code></a></td><td>Skill ja skriptit</td><td>SessionStart</td></tr>
-        <tr><td><a href="#kopioi-routing"><code>routing</code></a></td><td>Komento, agentit, skripti</td><td>SessionStart</td></tr>
+        <tr><td><a href="#kopioi-routing"><code>routing</code></a></td><td>Komento, subagentit, skripti</td><td>SessionStart</td></tr>
       </tbody>
     </table></div>
     <div class="note">Nämä ajavat skriptejä ja komentoja koneellasi. Lue tiedostot (tai pyydä Claudea kertomaan, mitä ne tekevät) ennen asennusta. Kopioitavat ovat yleistettyjä kopioita kouluttajan omista työkaluista, ei tuotteita.</div>
@@ -1718,7 +1718,7 @@ def pytest_configure(config):
 
 <section id="kopioi-routing" data-tool="routing">
   <h2>Kopioitava: routing</h2>
-  <p>Mallireititys: komento <code>/routing</code>, reititysohje, hintataulukko, kolme agenttia (<code>scout</code>, <code>runner</code>, <code>implementer</code>) ja SessionStart-hook. Kun reititys on päällä, Claude antaa sopivan työn halvemmille malleille.</p>
+  <p>Mallireititys: komento <code>/routing</code>, reititysohje, hintataulukko, kolme subagenttia (<code>scout</code>, <code>runner</code>, <code>implementer</code>) ja SessionStart-hook. Kun reititys on päällä, Claude antaa sopivan työn halvemmille malleille.</p>
   <p><b>Milloin:</b> Katso kohta Mallireititys yllä. Kokeile vasta, kun tunnet peruskäytön: tämä on ensisijaisesti kustannusten hallintaa.</p>
   <div class="tablewrap manifest"><table><tbody>
     <tr><th>Tiedostot</th><td><code>commands/routing.md</code> &rarr; <code>%USERPROFILE%\.claude\commands\routing.md</code><br><code>routing/routing.ps1</code> &rarr; <code>%USERPROFILE%\.claude\routing\routing.ps1</code><br><code>routing/rule.md</code> &rarr; <code>%USERPROFILE%\.claude\routing\rule.md</code><br><code>routing/prices.json</code> &rarr; <code>%USERPROFILE%\.claude\routing\prices.json</code><br><code>agents/scout.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\scout.md</code><br><code>agents/runner.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\runner.md</code><br><code>agents/implementer.md</code> &rarr; <code>%USERPROFILE%\.claude\agents\implementer.md</code></td></tr>
@@ -2244,7 +2244,7 @@ Report: the files changed, the commands you ran with their results, and anything
         <li><b>Pidä pienenä:</b> yksi skill, yksi tehtävä. Pitkät ohjeet ja skriptit tukitiedostoihin.</li>
         <li><b>Rajaa työkalut:</b> subagentille ja skillille voi antaa vain tarvittavat työkalut kentällä <code>tools</code> tai <code>allowed-tools</code>.</li>
         <li><b>Skill-creator:</b> lisäosa, joka tekee skillille testitapaukset, vertaa työtä skillin kanssa ja ilman sitä ja hienosäätää descriptionia, kun skill käynnistyy vääriin pyyntöihin. Asennus: <code>/plugin install skill-creator@claude-plugins-official</code> (<a href="https://code.claude.com/docs/en/skills">code.claude.com/docs/en/skills</a>, tarkistettu 11/2026).</li>
-        <li><b>Opi esimerkeistä:</b> avaa yllä olevien Kopioitavien <code>SKILL.md</code>-tiedostot ja agenttien Markdown-tiedostot ja katso, miten otsake ja ohjeet on rakennettu.</li>
+        <li><b>Opi esimerkeistä:</b> avaa yllä olevien Kopioitavien <code>SKILL.md</code>-tiedostot ja subagenttien Markdown-tiedostot ja katso, miten otsake ja ohjeet on rakennettu.</li>
       </ul>
     </div>
   </section>
