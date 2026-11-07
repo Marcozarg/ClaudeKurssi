@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Module 7 &middot; Session 3</span>
   <h1>Basic use</h1>
-  <div class="meta"><span class="chip">Core ~70 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Core ~75 min</span><span class="chip opt">Optional ~20 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Basic commands</h2>
@@ -206,6 +206,24 @@
     <div class="note"><b>Do not bypass permissions.</b> The flag <code>--dangerously-skip-permissions</code> removes the permission prompts: Claude can then run commands and change or delete files without asking. Use it at most in a disposable, isolated environment (for example a virtual machine) that has no secrets and no production connections. Never use it on a workstation or server that has real data. An administrator can forbid the mode with the setting <code>permissions.disableBypassPermissionsMode</code>.</div>
   </section>
 
+  <section id="remote-control">
+    <h2>Remote Control: continue on your phone</h2>
+    <span class="chip plan">Pro / Max</span>
+    <p><b>Remote Control</b> connects the Claude mobile app (module 4) or a browser at <a href="https://claude.ai/code">claude.ai/code</a> to a Claude Code session running on your computer. You start work on the computer and carry on from your phone: read the answers, send a new prompt and answer permission prompts. Claude keeps running on your computer the whole time, so files, permissions, MCP servers and settings are the same as in the terminal.</p>
+    <ol>
+      <li>Sign in to Claude Code with your claude.ai account (<code>/login</code>). Remote Control needs a Pro, Max, Ultra, Team or Enterprise plan; it does not work with an API key. On Team and Enterprise, an owner must first allow it in the admin settings.</li>
+      <li>In a running session, type <code>/remote-control</code> (short: <code>/rc</code>). The first time, accept the confirmation <b>Enable Remote Control</b>. To start a new session with it on, run <code>claude --remote-control</code>. The command is the same in the VS Code extension and the desktop app's Code tab.</li>
+      <li>Once connected, the terminal shows <code>/rc active</code>. Run <code>/remote-control</code> again to see the session's address and a QR code. Scan the code with your phone, or open <b>Code</b> in the Claude app and pick the session from the list. If you do not have the app yet, <code>/mobile</code> shows a QR code to the app store.</li>
+      <li>To disconnect, run <code>/remote-control</code> and choose disconnect. The session carries on on the computer.</li>
+    </ol>
+    <ul>
+      <li><b>The computer stays on:</b> if you close the terminal or the Claude Code process ends, the session can no longer be reached. After sleep or a network drop the session comes back by itself.</li>
+      <li><b>Notifications:</b> with <code>/config</code> your phone gets a notification when Claude is waiting for a permission or an answer (<b>Push when actions required</b>).</li>
+      <li><b>Not every command works from the phone:</b> for example <code>/plugin</code> and <code>/resume</code> work only in the terminal. <code>/compact</code>, <code>/clear</code>, <code>/context</code> and <code>/usage</code> work.</li>
+    </ul>
+    <div class="note"><b>A permission prompt on the phone is the same permission.</b> When you approve a command on the phone, it runs on your computer. Read the whole command on the small screen too (module 12). The connection is outbound HTTPS only, and no ports are opened on your computer. In your account settings you can also turn on <b>Require trusted devices</b>, so the session can be steered only from a known device. Read more: <a href="https://code.claude.com/docs/en/remote-control">Remote Control</a>.</div>
+  </section>
+
   <section>
     <h2>Exercises</h2>
     <div class="ex">
@@ -230,6 +248,14 @@
       <p>In a test folder, make a file <code>.env</code> with an invented line <code>API_KEY=example-not-real</code>. Ask Claude to add a rule that blocks reading the <code>.env</code> file, and then try asking it to read the file. Check the rule with the command <code>/permissions</code>.</p>
       <details><summary>Show example answer</summary>
         <div><p>Claude adds <code>"deny": ["Read(./.env)"]</code> to the settings file (and possibly <code>Read(./.env.*)</code>). When you ask it to read the file, Claude Code blocks the read and Claude says it cannot access the file. The rule shows in the /permissions list. Remember the limitation: the rule does not block every indirect way of reading the file, so real secrets still should not be kept in the project folder.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>4. Continue on your phone</h3>
+      <div class="req">Requires: a Pro plan, Claude Code and the Claude mobile app on the same account. No phone? Open the session in a browser on another computer at claude.ai/code. No Pro? Follow the instructor's demo (Max).</div>
+      <p>Start Claude Code in a test folder and run <code>/remote-control</code>. Open the session on your phone with the QR code and ask from the phone: "Make a file memo.txt with today's date." Approve the permission prompt on the phone. Then check on the computer that the file was created and the conversation shows in the terminal. Finally, disconnect.</p>
+      <details><summary>Show example answer</summary>
+        <div><p>The prompt from the phone also shows in the terminal, and the permission prompt for creating the file comes to the phone. After approval, <code>memo.txt</code> is in the test folder on the computer, not on the phone: Claude runs on the computer, the phone only steers. When you run <code>/remote-control</code> and disconnect, the session carries on in the terminal, but the phone can no longer reach it. If the session does not show in the app, check that you are signed in to the same account and that <code>/rc active</code> shows in the terminal.</p></div>
       </details>
     </div>
   </section>

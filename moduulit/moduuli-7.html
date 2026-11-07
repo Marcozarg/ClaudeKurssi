@@ -24,7 +24,7 @@
 <main class="page" id="page">
   <span class="label">Moduuli 7 &middot; Istunto 3</span>
   <h1>Peruskäyttö</h1>
-  <div class="meta"><span class="chip">Ydin ~70 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
+  <div class="meta"><span class="chip">Ydin ~75 min</span><span class="chip opt">Lisä ~20 min</span><span class="chip plan">Pro / Max</span></div>
 
   <section>
     <h2>Peruskomennot</h2>
@@ -206,6 +206,24 @@
     <div class="note"><b>Älä ohita lupia.</b> Lippu <code>--dangerously-skip-permissions</code> poistaa lupakysymykset: Claude voi silloin ajaa komentoja ja muuttaa tai poistaa tiedostoja kysymättä. Käytä sitä korkeintaan kertakäyttöisessä, eristetyssä ympäristössä (esimerkiksi virtuaalikoneessa), jossa ei ole salaisuuksia eikä tuotantoyhteyksiä. Älä koskaan käytä sitä työasemalla tai palvelimella, jolla on oikeaa dataa. Ylläpito voi kieltää tilan asetuksella <code>permissions.disableBypassPermissionsMode</code>.</div>
   </section>
 
+  <section id="remote-control">
+    <h2>Remote Control: jatka puhelimella</h2>
+    <span class="chip plan">Pro / Max</span>
+    <p><b>Remote Control</b> yhdistää Clauden mobiilisovelluksen (moduuli 4) tai selaimen osoitteessa <a href="https://claude.ai/code">claude.ai/code</a> koneellasi käynnissä olevaan Claude Code -istuntoon. Aloitat työn koneella ja jatkat sitä puhelimella: luet vastaukset, lähetät uuden kehotteen ja vastaat lupakysymyksiin. Claude toimii koko ajan koneellasi, joten tiedostot, luvat, MCP-palvelimet ja asetukset ovat samat kuin terminaalissa.</p>
+    <ol>
+      <li>Kirjaudu Claude Codeen claude.ai-tilillä (<code>/login</code>). Remote Control vaatii Pro-, Max-, Ultra-, Team- tai Enterprise-tilauksen; API-avaimella se ei toimi. Team- ja Enterprise-tileillä omistajan on ensin sallittava se hallinta-asetuksista.</li>
+      <li>Kirjoita käynnissä olevaan istuntoon <code>/remote-control</code> (lyhyesti <code>/rc</code>). Ensimmäisellä kerralla hyväksy vahvistus <b>Enable Remote Control</b>. Uuden istunnon voi aloittaa suoraan komennolla <code>claude --remote-control</code>. VS Coden laajennuksessa ja työpöytäsovelluksen Code-välilehdellä komento on sama.</li>
+      <li>Kun yhteys on auki, terminaalissa näkyy <code>/rc active</code>. Aja <code>/remote-control</code> uudestaan, niin näet istunnon osoitteen ja QR-koodin. Skannaa koodi puhelimella, tai avaa Claude-sovelluksessa <b>Code</b> ja valitse istunto listasta. Jos sovellusta ei vielä ole, <code>/mobile</code> näyttää QR-koodin sovelluskauppaan.</li>
+      <li>Katkaise yhteys ajamalla <code>/remote-control</code> ja valitsemalla katkaisu. Istunto jatkuu koneella.</li>
+    </ol>
+    <ul>
+      <li><b>Kone pysyy päällä:</b> jos suljet terminaalin tai Claude Code -prosessi päättyy, istunto ei ole enää tavoitettavissa. Lepotilasta ja verkkokatkosta istunto palaa itsestään.</li>
+      <li><b>Ilmoitukset:</b> komennolla <code>/config</code> saat puhelimeen ilmoituksen, kun Claude odottaa lupaa tai vastausta (<b>Push when actions required</b>).</li>
+      <li><b>Kaikki komennot eivät toimi puhelimesta:</b> esimerkiksi <code>/plugin</code> ja <code>/resume</code> toimivat vain terminaalissa. <code>/compact</code>, <code>/clear</code>, <code>/context</code> ja <code>/usage</code> toimivat.</li>
+    </ul>
+    <div class="note"><b>Lupakysymys puhelimessa on sama lupa.</b> Kun hyväksyt komennon puhelimessa, se ajetaan koneellasi. Lue komento kokonaan myös pieneltä näytöltä (moduuli 12). Yhteys on vain lähtevää HTTPS-liikennettä, eikä koneeseesi avata portteja. Tilin asetuksista voi lisäksi ottaa käyttöön <b>Require trusted devices</b>, jolloin istuntoa voi ohjata vain tunnetulta laitteelta. Lue lisää: <a href="https://code.claude.com/docs/en/remote-control">Remote Control</a>.</div>
+  </section>
+
   <section>
     <h2>Harjoitukset</h2>
     <div class="ex">
@@ -230,6 +248,14 @@
       <p>Tee testikansioon tiedosto <code>.env</code>, jossa on keksitty rivi <code>API_KEY=esimerkki-ei-oikea</code>. Pyydä Claudea lisäämään sääntö, joka estää <code>.env</code>-tiedoston lukemisen, ja kokeile sitten pyytää sitä lukemaan tiedosto. Tarkista sääntö komennolla <code>/permissions</code>.</p>
       <details><summary>Näytä esimerkkivastaus</summary>
         <div><p>Claude lisää asetustiedostoon <code>"deny": ["Read(./.env)"]</code> (ja mahdollisesti <code>Read(./.env.*)</code>). Kun pyydät lukemaan tiedoston, Claude Code estää luvun ja Claude kertoo, ettei pääse tiedostoon. Sääntö näkyy /permissions-listassa. Muista rajaus: sääntö ei estä kaikkia epäsuoria tapoja lukea tiedosto, joten oikeita salaisuuksia ei silti pidä säilyttää projektikansiossa.</p></div>
+      </details>
+    </div>
+    <div class="ex">
+      <h3>4. Jatka puhelimella</h3>
+      <div class="req">Edellyttää: Pro-tilaus, Claude Code ja Claude-mobiilisovellus samalla tilillä. Ei puhelinta? Avaa istunto toisen koneen selaimessa osoitteessa claude.ai/code. Ei Prota? Seuraa kouluttajan demoa (Max).</div>
+      <p>Käynnistä Claude Code testikansiossa ja aja <code>/remote-control</code>. Avaa istunto puhelimella QR-koodilla ja pyydä puhelimesta: "Tee tiedosto muistio.txt, jossa on tämän päivän päivämäärä." Hyväksy lupakysymys puhelimessa. Katso sitten koneelta, että tiedosto syntyi ja keskustelu näkyy terminaalissa. Katkaise lopuksi yhteys.</p>
+      <details><summary>Näytä esimerkkivastaus</summary>
+        <div><p>Puhelimen kehote näkyy myös terminaalissa, ja lupakysymys tiedoston luonnista tulee puhelimeen. Hyväksynnän jälkeen <code>muistio.txt</code> on koneen testikansiossa, ei puhelimessa: Claude toimii koneella, puhelin vain ohjaa. Kun ajat <code>/remote-control</code> ja katkaiset yhteyden, istunto jatkuu terminaalissa, mutta puhelin ei enää pääse siihen. Jos istunto ei näy sovelluksessa, tarkista, että olet kirjautunut samalle tilille ja että <code>/rc active</code> näkyy terminaalissa.</p></div>
       </details>
     </div>
   </section>
